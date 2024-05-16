@@ -1,5 +1,32 @@
 <script setup>
 import Header from "@/components/layout/Header.vue";
+import { ref } from 'vue'
+
+const isDropdownOpen = ref(false)
+
+const categories = [
+  { id: 1, name: "Mockups" },
+  { id: 2, name: "Templates" },
+  { id: 3, name: "Design" },
+  { id: 4, name: "Logos" }
+]
+
+const selectedCategory = ref({ id: 1, name: "All categories" })
+
+const searchText = ref("")
+
+const toggleDropdown = () => {
+  isDropdownOpen.value = !isDropdownOpen.value
+}
+
+const selectCategory = (category) => {
+  selectedCategory.value = category;
+  isDropdownOpen.value = false;
+}
+
+const search = () => {
+  // search logic here
+}
 </script>
 
 <template>
@@ -34,36 +61,73 @@ import Header from "@/components/layout/Header.vue";
       ></div>
     </div>
     <div class="mx-auto py-16 sm:py-24 lg:py-28">
-      <div class="mb-8 flex justify-center">
-        <form class="max-w-lg mx-auto">
-          <div class="flex">
-            <label class="relative block">
-              <span class="sr-only">Search</span>
-              <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+      <div class="mb-20 flex justify-center">
+        <form class="max-w-lg mx-auto" @submit.prevent="search">
+    <div class="flex items-center">
+        <div class="relative">
+            <button
+                id="dropdown-button"
+                @click="toggleDropdown"
+                class="w-36 z-10 flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-pink-50 border border-red-200 rounded-s-lg hover:bg-pink-100 focus:ring-4 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                type="button"
+            >
+                {{ selectedCategory.name }}
                 <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                  class="w-6 h-6"
+                    :class="{ 'transform rotate-180': isDropdownOpen }"
+                    class="w-2.5 h-2.5 ms-auto"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 10 6"
                 >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
-                  />
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 1 4 4 4-4"
+                    />
                 </svg>
-              </span>
-              <input
-                class="placeholder:italic placeholder:text-slate-400 block bg-white w-full border border-slate-300 rounded-md py-3 pl-10 pr-4 shadow-sm focus:outline-none focus:border-sky-500 focus:ring-sky-500 focus:ring-1 sm:text-base"
-                placeholder="원하시는 동/건물명을 입력하세요"
-                type="text"
-                name="search"
-              />
-            </label>
-          </div>
-        </form>
+            </button>
+            <div
+                id="dropdown"
+                :class="{ 'block': isDropdownOpen, 'hidden': !isDropdownOpen }"
+                class="z-20 absolute top-full left-0 mt-1 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700"
+            >
+                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdown-button">
+                    <li v-for="category in categories" :key="category.id">
+                        <button
+                            type="button"
+                            @click="selectCategory(category)"
+                            class="w-full px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                        >
+                            {{ category.name }}
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="relative flex w-96">
+            <input
+                v-model="searchText"
+                type="search"
+                id="search-dropdown"
+                class="block w-full pl-5 pr-10 py-2.5 text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
+                placeholder="Search Mockups, Logos, Design Templates..."
+                required
+            />
+            <button
+                type="submit"
+                class="absolute inset-y-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border border-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            >
+                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+                </svg>
+                <span class="sr-only">Search</span>
+            </button>
+        </div>
+    </div>
+</form>
       </div>
       <div class="text-center">
         <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">

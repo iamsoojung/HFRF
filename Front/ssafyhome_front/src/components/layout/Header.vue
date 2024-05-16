@@ -15,7 +15,7 @@
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-12">
+      <div class="hidden lg:flex lg:gap-x-20">
         <template v-for="item in menuList" :key="item.routeName">
           <template v-if="item.show">
             <RouterLink :to="{ name: item.routeName }" class="text-lg font-semibold leading-6 text-gray-900">{{
