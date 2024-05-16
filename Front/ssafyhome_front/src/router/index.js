@@ -65,7 +65,6 @@ const router = createRouter({
     {
       path: "/user",
       name: "user",
-      component: () => import("../views/AppUser.vue"),
       children: [
         {
           path: "/user/login",
