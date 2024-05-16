@@ -10,7 +10,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-@Schema(title = "DongCodeDto : 동별 코드 정보", description = "각 동의 코드 정보를 나타낸다.")
+@Schema(title = "DongCodeDto : 동별 정보", description = "각 동의 정보를 나타낸다.")
 public class DongCodeDto {                                                                                                                                                                                                                                                                                                          
 
 	@Schema(description = "동코드", requiredMode = Schema.RequiredMode.REQUIRED, example = "2711013100")
