@@ -28,4 +28,8 @@ async function join(joinUser, success, fail) {
 async function checkId(userId, success, fail) {
     await local.get(`/user/${userId}`).then(success).catch(fail);
 }
-export { userConfirm, findById, tokenRegeneration, logout, join, checkId };
+
+async function modify(modifyUser, success, fail) {
+    await local.post(`/user/${modifyUser.userId}`, modifyUser).then(success).catch(fail)
+}
+export { userConfirm, findById, tokenRegeneration, logout, join, checkId, modify };

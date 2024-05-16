@@ -65,6 +65,7 @@ const router = createRouter({
     {
       path: "/user",
       name: "user",
+      component: () => import("@/views/AppUser.vue"),
       children: [
         {
           path: "/user/login",
@@ -81,6 +82,12 @@ const router = createRouter({
           name: "user-mypage",
           beforeEnter: onlyAuthUser,
           component: () => import("@/components/user/UserMyPage.vue"),
+        },
+        {
+          path: "/user/modify",
+          name: "user-modify",
+          beforeEnter: onlyAuthUser,
+          component: () => import("@/components/user/UserModify.vue"),
         },
       ],
     },

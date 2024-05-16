@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout, join } from "@/api/user";
+import { userConfirm, findById, tokenRegeneration, logout, join, modify } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -145,6 +145,22 @@ export const useMemberStore = defineStore("memberStore", () => {
       }
     )
   };
+  const userModify = async (modifyUser) => {
+    await modify(
+      modifyUser.value,
+      (response) => {
+        if(response.status === httpStatusCode.OK) {
+          alert('정보 수정 성공');
+          router.push({ name: 'user-mypage'})
+        } else {
+          console.error('수정 실패')
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  };
   // 첫 번째 로딩 시, 세션 스토리지에서 로그인 상태를 가져옴
   if (sessionStorage.getItem("accessToken")) {
     isLogin.value = true;
@@ -161,5 +177,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     tokenRegenerate,
     userLogout,
     userJoin,
+    userModify,
   };
 });
