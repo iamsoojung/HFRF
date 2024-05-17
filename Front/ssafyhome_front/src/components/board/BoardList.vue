@@ -32,12 +32,11 @@ onMounted(() => {
 });
 
 const changeKey = (val) => {
-  console.log("BoarList에서 선택한 조건 : " + val);
+  console.log("BoardList에서 선택한 조건 : " + val);
   param.value.key = val;
 };
 
 const getArticleList = () => {
-  console.log("서버에서 글목록 얻어오자!!!", param.value);
   listArticle(
     param.value,
     ({ data }) => {
