@@ -1,12 +1,15 @@
 package com.ssafy.hfrf.board.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.hfrf.board.model.service.CommentService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,6 +26,12 @@ public class CommentController {
 		super();
 		this.commentService = commentService;
 	}
+//	
+//	@Operation(summary = "댓글작성", description = "새로운 댓글을 입력한다.")
+//	@PostMapping("/write")
+//	public ResponseEntity<?> write(@RequestBody CommentDto commentDto) {
+//		
+//	}
 	
 	
 
