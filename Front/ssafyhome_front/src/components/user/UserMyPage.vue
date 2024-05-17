@@ -2,12 +2,14 @@
     <div class="grid grid-cols-4 mt-52 mx-20">
         <div class="col-span-1 divide-y-[1px] text-lg text-center mx-10 divide-gray-100">
             <div class="font-bold py-4 text-lg text-center">
-                <RouterLink :to="{name: 'user-mypage'}">내 정보</RouterLink>
+                <RouterLink :to="{ name: 'user-mypage' }">내 정보</RouterLink>
             </div>
             <div class="text-gray-500 py-4 text-lg text-center">
-                <RouterLink :to="{name: 'user-modify'}">내 정보 수정</RouterLink>
+                <RouterLink :to="{ name: 'user-modify' }">내 정보 수정</RouterLink>
             </div>
-            <div class="text-gray-500 py-4 text-lg text-center">회원 탈퇴</div>
+            <div class="text-gray-500 py-4 text-lg text-center">
+                <RouterLink :to="{ name: 'user-delete' }">회원 탈퇴</RouterLink>
+            </div>
         </div>
         <div class="col-span-3">
             <div class="px-8 border-x-2 t-20">
@@ -52,7 +54,5 @@
 import { useMemberStore } from '@/stores/member'
 const memberStore = useMemberStore()
 const { userInfo } = storeToRefs(memberStore)
-import Header from '../layout/Header.vue';
-import Footer from '@/components/layout/Footer.vue'
 import { storeToRefs } from 'pinia'
 </script>

@@ -1,6 +1,5 @@
 <script setup>
 import Header from '@/components/layout/Header.vue';
-import Footer from "@/components/layout/Footer.vue"
 </script>
 
 <template>
@@ -9,7 +8,6 @@ import Footer from "@/components/layout/Footer.vue"
     <div class="text-3xl mb-[30px]">QnA 게시판</div>
     <RouterView />
   </div>
-  <Footer></Footer>
 </template>
 
 <style></style>

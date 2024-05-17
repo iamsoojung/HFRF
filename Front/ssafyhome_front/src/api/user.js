@@ -8,7 +8,6 @@ async function userConfirm(param, success, fail) {
 
 async function findById(userid, success, fail) {
     local.defaults.headers["Authorization"] = sessionStorage.getItem("accessToken");
-    console.log(local.defaults.headers["Authorization"]);
     await local.get(`/user/info/${userid}`).then(success).catch(fail);
 }
 
@@ -32,4 +31,8 @@ async function checkId(userId, success, fail) {
 async function modify(modifyUser, success, fail) {
     await local.post(`/user/${modifyUser.userId}`, modifyUser).then(success).catch(fail)
 }
-export { userConfirm, findById, tokenRegeneration, logout, join, checkId, modify };
+
+async function deleteUser(userId, success, fail) {
+    await local.delete(`/user/${userId}`).then(success).catch(fail);
+}
+export { userConfirm, findById, tokenRegeneration, logout, join, checkId, modify, deleteUser };

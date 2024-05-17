@@ -31,7 +31,7 @@ const search = () => {
 
 <template>
   <Header />
-  <div class="relative isolate px-6 lg:px-8">
+  <div class="relative isolate px-6 lg:px-8" style="min-height: 650px">
     <div
       class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80"
       aria-hidden="true"

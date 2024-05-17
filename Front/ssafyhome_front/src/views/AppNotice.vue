@@ -1,6 +1,5 @@
 <script setup>
 import Header from '@/components/layout/Header.vue';
-import Footer from "@/components/layout/Footer.vue"
 </script>
 
 <template>
@@ -9,7 +8,6 @@ import Footer from "@/components/layout/Footer.vue"
     <div class="text-3xl mb-[30px]">자유롭게 글쓰는 공간</div>
     <RouterView></RouterView>
   </div>
-  <Footer></Footer>
 </template>
 
 <style></style>

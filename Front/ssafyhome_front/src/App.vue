@@ -1,12 +1,13 @@
 <script setup>
 import { RouterView } from "vue-router";
-import Header from '@/components/layout/Header.vue'
+import Footer from '@/components/layout/Footer.vue'
 </script>
 
 <template>
-  <div class="bg-white">
+  <div class="bg-white" style="height: auto; min-height: 100%; padding-bottom: 100px">
     <RouterView></RouterView>
   </div>
+  <Footer/>
 </template>
 
 <style scoped></style>

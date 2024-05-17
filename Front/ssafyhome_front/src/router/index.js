@@ -6,8 +6,7 @@ const onlyAuthUser = async (to, from, next) => {
   const memberStore = useMemberStore();
   const { userInfo, isValidToken, isLogin } = storeToRefs(memberStore);
   const { getUserInfo } = memberStore;
-
-  console.log(isValidToken.value);
+  
   let token = sessionStorage.getItem("accessToken");
   if (isLogin.value != false && token) {
     await getUserInfo(token);
@@ -89,6 +88,12 @@ const router = createRouter({
           beforeEnter: onlyAuthUser,
           component: () => import("@/components/user/UserModify.vue"),
         },
+        {
+          path: "/user/delete",
+          name: "user-delete",
+          beforeEnter: onlyAuthUser,
+          component: () => import("@/components/user/UserDelete.vue"),
+        }
       ],
     },
     {
