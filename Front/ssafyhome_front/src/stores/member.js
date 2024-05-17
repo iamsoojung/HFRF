@@ -3,7 +3,7 @@ import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
 
-import { userConfirm, findById, tokenRegeneration, logout, join, modify } from "@/api/user";
+import { userConfirm, findById, tokenRegeneration, logout, join, modify, deleteUser } from "@/api/user";
 import { httpStatusCode } from "@/util/http-status";
 
 export const useMemberStore = defineStore("memberStore", () => {
@@ -17,16 +17,22 @@ export const useMemberStore = defineStore("memberStore", () => {
     const token = sessionStorage.getItem("accessToken");
     if (token) {
       let decodeToken = jwtDecode(token);
-      console.log(decodeToken);
       await findById(
         decodeToken.userId,
         (response) => {
           if (response.status === httpStatusCode.OK) {
-            isValidToken.value = true;
-            userInfo.value = response.data.userInfo;
+            if(response.data.userInfo != null) {
+              isValidToken.value = true;
+              userInfo.value = response.data.userInfo;
+            }
+            else {
+              console.log("유저 정보 없음");
+              isLogin.value = false;
+            }
           } else {
             console.log("유저 정보 없음");
-          }
+            isLogin.value = false;
+          } 
         },
         async (error) => {
           console.error(
@@ -161,6 +167,21 @@ export const useMemberStore = defineStore("memberStore", () => {
       }
     )
   };
+  const userDelete = async (userId) => {
+    await deleteUser(
+      userId,
+      (response) => {
+        if(response.status === httpStatusCode.OK) {
+          alert('회원 탈퇴 성공');
+        } else {
+          console.error('탈퇴 실패')
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
+  };
   // 첫 번째 로딩 시, 세션 스토리지에서 로그인 상태를 가져옴
   if (sessionStorage.getItem("accessToken")) {
     isLogin.value = true;
@@ -178,5 +199,6 @@ export const useMemberStore = defineStore("memberStore", () => {
     userLogout,
     userJoin,
     userModify,
+    userDelete
   };
 });

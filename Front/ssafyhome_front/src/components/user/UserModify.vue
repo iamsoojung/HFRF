@@ -7,7 +7,9 @@
             <div class="font-bold py-4 text-lg text-center">
                 <RouterLink :to="{ name: 'user-modify' }">내 정보 수정</RouterLink>
             </div>
-            <div class="text-gray-500 py-4 text-lg text-center">회원 탈퇴</div>
+            <div class="text-gray-500 py-4 text-lg text-center">
+                <RouterLink :to="{ name: 'user-delete' }">회원 탈퇴</RouterLink>
+            </div>
         </div>
         <div class="col-span-3">
             <div class="px-8 border-x-2 t-20">
@@ -113,8 +115,6 @@ import { ref, reactive, watch } from 'vue'
 const memberStore = useMemberStore()
 const { userInfo } = storeToRefs(memberStore)
 const { userModify } = memberStore
-import Header from '../layout/Header.vue';
-import Footer from '@/components/layout/Footer.vue'
 import { storeToRefs } from 'pinia'
 const emails = [
     { id: 1, name: "naver.com" },
@@ -130,19 +130,22 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 
-const modifyUser = userInfo
+const modifyUser = reactive(userInfo)
 
 const checkPwd = ref('')
 const isPwdError = ref(false)
 const modify = async () => {
     console.log(modifyUser)
-    // if (isPwdError.value) {
-        // alert("비밀번호가 다릅니다")
-    // } else {
+    if (isPwdError.value) {
+        alert("비밀번호가 다릅니다")
+    } else {
         await userModify(modifyUser)
-    // }
+    }
 }
 watch(() => checkPwd.value, (newParam, oldParam) => {
-    isPwdError.value = newParam != modifyUser.userPwd
+    isPwdError.value = newParam != modifyUser.value.userPwd
+})
+watch(() => selected.value, (newParam, oldParam) => {
+    modifyUser.value.emailDomain = newParam.name
 })
 </script>
