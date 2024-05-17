@@ -1,12 +1,22 @@
 package com.ssafy.hfrf.board.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.hfrf.board.model.CommentDto;
 import com.ssafy.hfrf.board.model.service.CommentService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,14 +36,64 @@ public class CommentController {
 		super();
 		this.commentService = commentService;
 	}
-//	
-//	@Operation(summary = "댓글작성", description = "새로운 댓글을 입력한다.")
-//	@PostMapping("/write")
-//	public ResponseEntity<?> write(@RequestBody CommentDto commentDto) {
-//		
-//	}
 	
-	
+	@Operation(summary = "댓글 작성", description = "새로운 댓글을 입력한다.")
+	@PostMapping("/write")
+	public ResponseEntity<?> write(@RequestBody CommentDto commentDto) {
+		try {
+			commentService.writeComment(commentDto);
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("data", "success");
+			return new ResponseEntity<Map<String,Object>>(resultMap, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
 
+	@Operation(summary = "댓글 리스트 보기", description = "해당 게시글의 댓글들을 모아본다.")
+	@GetMapping("/list")
+	public ResponseEntity<?> list(@RequestParam("articleNo") int articleNo) {
+		List<CommentDto> list;
+		try {
+			list = commentService.listComment(articleNo);
+			if (list != null) {
+				return new ResponseEntity<List<CommentDto>>(list, HttpStatus.OK);
+			} else {
+				return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);
+			}
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	@Operation(summary = "댓글 수정", description = "댓글을 수정한다.")
+	@PostMapping("/modify")
+	public ResponseEntity<?> modify(@RequestBody CommentDto commentDto, @RequestParam Map<String, String> map) {
+		try {
+			commentService.modifyComment(commentDto);
+			return new ResponseEntity<Void>(HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+
+	@Operation(summary = "댓글 삭제", description = "댓글을 삭제한다.")
+	@DeleteMapping("/delete")
+	public ResponseEntity<?> delete(@RequestParam("commentNo") int commentNo, @RequestParam Map<String, String> map) {
+		try {
+			commentService.deleteComment(commentNo);
+			Map<String, Object> resultMap = new HashMap<>();
+			resultMap.put("data", "success");
+			return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+		} catch (Exception e) {
+			return exceptionHandling(e);
+		}
+	}
+	
+	
+	private ResponseEntity<String> exceptionHandling(Exception e) {
+		e.printStackTrace();
+		return new ResponseEntity<String>("Error : " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+	}
 }
 

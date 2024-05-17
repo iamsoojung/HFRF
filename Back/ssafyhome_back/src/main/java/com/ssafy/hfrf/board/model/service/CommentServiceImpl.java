@@ -32,10 +32,10 @@ public class CommentServiceImpl implements CommentService{
 		return commentMapper.listComment(articleNo);
 	}
 
-	@Override
-	public int getTotalCommentCount(Map<String, Object> map) throws Exception {
-		return commentMapper.getTotalCommentCount(map);
-	}
+	/*
+	 * @Override public int getTotalCommentCount(Map<String, Object> map) throws
+	 * Exception { return commentMapper.getTotalCommentCount(map); }
+	 */
 
 	@Override
 	public void modifyComment(CommentDto commentDto) throws Exception {
