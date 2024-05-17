@@ -97,8 +97,8 @@
   
   <style scoped>
   #map {
-    width: 75%;
-    height: 600px;
+    width: 100%;
+    height: 1500px;
   }
   </style>
   

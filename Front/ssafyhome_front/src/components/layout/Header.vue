@@ -1,11 +1,11 @@
 <template>
-  <div class="mb-[150px]"></div>
-  <header class="absolute inset-x-0 top-0 z-50">
-    <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+  <div class="mb-[100px]"></div>
+  <header class="absolute inset-x-0 top-0 z-50    ">
+    <nav class="flex items-center justify-between lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
-        <RouterLink :to="{ name: 'home' }" class="-m-1.5 p-1.5">
+        <RouterLink :to="{ name: 'home' }" class="p-1.5">
           <span class="sr-only">Go Home</span>
-          <img class="h-24 w-auto" src="@/assets/logo.png" alt="" />
+          <img class="h-20 w-auto" src="@/assets/logo.png" alt="" />
         </RouterLink>
       </div>
       <div class="flex lg:hidden">

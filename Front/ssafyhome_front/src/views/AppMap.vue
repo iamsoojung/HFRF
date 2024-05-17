@@ -5,8 +5,10 @@ import Header from "@/components/layout/Header.vue";
 
 <template>
     <Header />
-    <div class="mt-[200px] ">
-        <ViewMap class="shadow-2xl border-solid border-2 border-rose-300 rounded-lg" />
+    <div>
+        <div class="col-span-3">
+            <ViewMap />
+        </div>
     </div>
 </template>
 
