@@ -5,7 +5,7 @@ import Header from '@/components/layout/Header.vue';
 <template>
   <Header />
   <div class="min-w-[750px] min-h-[775px] container text-center mt-[120px] mx-auto px-24">
-    <div class="xl:text-3xl mb-[30px]">QnA 게시판</div>
+    <div class="font-bold xl:text-3xl mb-[30px]">QnA 게시판</div>
     <RouterView></RouterView>
   </div>
 </template>

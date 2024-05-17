@@ -4,8 +4,8 @@ import Header from '@/components/layout/Header.vue';
 
 <template>
   <Header />
-  <div class="min-w-[1000px] container text-center mt-[120px] mx-auto mb-10">
-    <div class="xl:text-3xl mb-[30px]">공지사항</div>
+  <div class="min-w-[750px] min-h-[775px] container text-center mt-[120px] mx-auto px-24">
+    <div class="font-bold xl:text-3xl mb-[30px]">공지사항</div>
     <RouterView></RouterView>
   </div>
 </template>
