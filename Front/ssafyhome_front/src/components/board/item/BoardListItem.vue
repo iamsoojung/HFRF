@@ -14,15 +14,9 @@ defineProps({ article: Object });
     </td>
     <td>{{ article.userName }}</td>
     <td>{{ article.hit }}</td>
-    <td>{{ article.registerTime }}</td>
+    <td class="hidden xl:block">{{ article.registerTime }}</td>
+    <td class="block xl:hidden">{{ article.registerTime.slice(-0, -8) }}</td>
   </tr>
-  <!-- <tr class="grid grid-cols-8">
-              <th class="col-span-1">글번호</th>
-              <th class="col-span-4">제목</th>
-              <th class="col=span-2">작성자</th>
-              <th>조회수</th>
-              <th>작성일</th>
-            </tr> -->
 </template>
 
 <style scoped>

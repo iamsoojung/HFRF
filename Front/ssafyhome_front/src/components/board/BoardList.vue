@@ -86,6 +86,12 @@ const moveWrite = () => {
         </table>
       </div>
       <div class="mt-10">
+        <PageNavigation
+        :current-page="currentPage"
+        :total-page="totalPage"
+        @pageChange="onPageChange"
+        class="mt-5"
+      ></PageNavigation>
         <form class="d-flex">
           <div>
             <VSelect class="border-solid border-2 p-1 rounded-md shadow-sm" :selectOption="selectOption" @onKeySelect="changeKey" />
@@ -101,12 +107,7 @@ const moveWrite = () => {
           </div>
         </form>
       </div>
-      <PageNavigation
-        :current-page="currentPage"
-        :total-page="totalPage"
-        @pageChange="onPageChange"
-        class="mt-5"
-      ></PageNavigation>
+      
     </div>
   </div>
 </template>
