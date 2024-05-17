@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper
+	namespace="com.ssafy.hfrf.board.model.mapper.CommentMapper">
+
+	<resultMap type="commentDto" id="comment">
+		<result column="comment_no" property="commentNo" />
+		<result column="user_id" property="userId" />
+		<result column="article_no" property="articleNo" />
+		<result column="content" property="content" />
+		<result column="register_time" property="registerTime" />
+	</resultMap>
+
+	<!-- 댓글 작성 -->
+	<insert id="writeComment" parameterType="commentDto">
+		insert into comment (user_id, article_no, content, register_time)
+		values (#{userId}, #{articleNo}, #{content}, now())
+		<selectKey resultType="int" keyProperty="commentNo"
+			order="AFTER">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+
+	<!-- 댓글 리스트 보기 -->
+	<select id="listComment" parameterType="int" resultMap="comment">
+		select
+		c.comment_no, c.user_id, c.article_no, c.content, c.register_time
+		from
+		comment c, users m
+		where c.user_id = m.user_id
+		and c.article_no = #{articleNo}
+		order by
+		c.comment_no desc
+	</select>
+
+	<!-- 댓글 수 얻기 -->
+	<select id="getTotalCommentCount" parameterType="commentDto"
+		resultMap="int">
+		select count(*)
+		from comment
+		where user_id = #{userId} and article_no = #{articleNo}
+	</select>
+
+	<!-- 댓글 수정 -->
+	<update id="modifyComment" parameterType="commentDto">
+		update comment
+		set content = #{content}
+		where comment_no = #{commentNo}
+	</update>
+
+	<!-- 댓글 삭제 -->
+	<delete id="deleteComment" parameterType="int">
+		delete from comment
+		where comment_no = #{commentNo}
+	</delete>
+
+</mapper>

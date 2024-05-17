@@ -112,6 +112,32 @@ commit;
 select * from board;
 
 -- -----------------------------------------------------
+-- Table `happyhouse`.`comment`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hfrf`.`comment` ;
+
+CREATE TABLE IF NOT EXISTS `hfrf`.`comment` (
+  `comment_no` INT NOT NULL AUTO_INCREMENT,
+  `user_id` VARCHAR(16) NOT NULL,
+  `article_no` INT NOT NULL,
+  `content` VARCHAR(2000) NOT NULL,
+  `register_time` VARCHAR(45) NULL DEFAULT 'CURRENT_TIMESTAMP',
+  PRIMARY KEY (`comment_no`),
+  INDEX `user_id_idx` (`user_id` ASC) VISIBLE,
+  INDEX `article_no_idx` (`article_no` ASC) VISIBLE,
+  CONSTRAINT `article_no_fk`
+    FOREIGN KEY (`article_no`)
+    REFERENCES `hfrf`.`board` (`article_no`)
+    ON DELETE CASCADE,
+  CONSTRAINT `user_id_fk`
+    FOREIGN KEY (`user_id`)
+    REFERENCES `hfrf`.`members` (`user_id`)
+    ON DELETE CASCADE)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
 -- Table `hfrf`.`file_info`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `hfrf`.`file_info` ;

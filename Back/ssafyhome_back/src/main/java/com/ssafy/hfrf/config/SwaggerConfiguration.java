@@ -36,7 +36,7 @@ public class SwaggerConfiguration {
 	
 	@Bean
 	public GroupedOpenApi mapApi() {
-		return GroupedOpenApi.builder().group("Map").pathsToMatch("/map/**").build();
+		return GroupedOpenApi.builder().group("House").pathsToMatch("/house/**").build();
 	}
 	
 }
