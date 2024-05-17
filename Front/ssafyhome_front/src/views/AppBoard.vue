@@ -4,9 +4,9 @@ import Header from '@/components/layout/Header.vue';
 
 <template>
   <Header />
-  <div class="container text-center mt-[200px] mx-auto">
-    <div class="text-3xl mb-[30px]">QnA 게시판</div>
-    <RouterView />
+  <div class="min-w-[1000px] container text-center mt-[120px] mx-auto mb-10">
+    <div class="xl:text-3xl mb-[30px]">QnA 게시판</div>
+    <RouterView></RouterView>
   </div>
 </template>
 

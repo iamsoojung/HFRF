@@ -56,7 +56,7 @@ const getArticleList = () => {
 
 <template>
   <Header />
-  <div class="relative isolate px-6 lg:px-8" style="min-height: 600px">
+  <div class="relative isolate px-6 lg:px-8 min-h-[805px]">
     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
       <div
         class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#fc9c9c] to-[#fff9a0] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
@@ -132,30 +132,29 @@ const getArticleList = () => {
         <p class="mt-6 text-2xl leading-8 text-gray-600">반갑습니다</p>
       </div>
     </div>
-    <div class="grid grid-cols-4 pt-5">
-      <div class="col-span-1"></div>
-      <div class="col-span-1 p-5 ms-5">
+    <div class="grid grid-cols-2 xl:grid-cols-6 pt-5 pb-20">
+      <div class="col-span-1 xl:col-span-2 xl:col-start-2 p-5 ms-5">
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           공지사항
         </div>
         <div class="grid grid-cols-4 ps-4 pb-1" v-for="article in articles" :key="article.articleNo">
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1">{{ article.userName }}</router-link>
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3">{{ article.subject }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1 truncate">{{ article.userName }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3 truncate">{{ article.subject }}</router-link>
         </div>
       </div>
-      <div class="col-span-1 p-5 ms-5">
+      <div class="col-span-1 xl:col-span-2 p-5 ms-5">
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           QnA 게시판
         </div>
         <div class="grid grid-cols-4 ps-4 pb-1" v-for="article in articles" :key="article.articleNo">
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1">{{ article.userName }}</router-link>
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3">{{ article.subject }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1 truncate">{{ article.userName }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3 truncate">{{ article.subject }}</router-link>
         </div>
       </div>
       <div class="col-span-1"></div>
     </div>
     <div
-      class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[23%]"
+      class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[20%]"
       aria-hidden="true">
       <div
         class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#fc9c9c] to-[#fff9a0] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"

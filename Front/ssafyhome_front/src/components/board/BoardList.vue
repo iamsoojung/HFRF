@@ -66,9 +66,6 @@ const moveWrite = () => {
   <div>
     <div>
       <div>
-        <div class="flex justify-end mb-3">
-          <button type="button" class="border-solid border-2 p-1 rounded-md me-10" @click="moveWrite">글쓰기</button>
-        </div>
         <table class="container">
           <thead>
             <tr class="grid grid-cols-8 shadow-sm p-1 text-white bg-gradient-to-r from-red-500 via-green-300 to-purple-500">

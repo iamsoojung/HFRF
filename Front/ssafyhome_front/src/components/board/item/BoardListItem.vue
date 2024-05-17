@@ -3,7 +3,7 @@ defineProps({ article: Object });
 </script>
 
 <template>
-  <tr class="grid grid-cols-8 text-center shadow-sm p-1.5">
+  <tr class="grid grid-cols-8 text-center shadow-sm p-1">
     <th scope="col-span-1">{{ article.articleNo }}</th>
     <td class="col-span-4">
       <router-link

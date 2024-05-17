@@ -4,7 +4,7 @@ import Footer from '@/components/layout/Footer.vue'
 </script>
 
 <template>
-  <div class="bg-white" style="height: auto; min-height: 100%; padding-bottom: 75px">
+  <div style="height: auto; min-height: 100%;">
     <RouterView></RouterView>
   </div>
   <Footer/>

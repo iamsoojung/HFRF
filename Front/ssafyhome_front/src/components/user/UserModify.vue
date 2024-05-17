@@ -1,5 +1,5 @@
 <template>
-    <div class="grid grid-cols-4 mt-52 mx-20">
+    <div class="grid grid-cols-4 pt-[50px] mx-20">
         <div class="col-span-1 divide-y-[1px] text-lg text-center mx-10 divide-gray-100">
             <div class="text-gray-500 py-4 text-lg text-center">
                 <RouterLink :to="{ name: 'user-mypage' }">내 정보</RouterLink>

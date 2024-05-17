@@ -1,5 +1,5 @@
 <template>
-    <div id="map" class="m-auto"></div>
+    <div id="map"></div>
   </template>
   
   <script setup>
@@ -96,9 +96,5 @@
   </script>
   
   <style scoped>
-  #map {
-    width: 100%;
-    height: 1500px;
-  }
   </style>
   
