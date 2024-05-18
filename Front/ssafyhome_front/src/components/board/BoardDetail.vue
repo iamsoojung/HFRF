@@ -21,7 +21,6 @@ onMounted(() => {
   getArticle();
   getComments();
   getCommentCount();
-  console.log(commentCount)
 });
 
 const getArticle = () => {
@@ -92,6 +91,7 @@ function onDeleteComment(commentNo) {
         let msg = "댓글삭제가 완료되었습니다.";
         alert(msg);
         comments.value = comments.value.filter(comment => comment.commentNo !== commentNo);
+        commentCount.value--;
       }
     },
     (error) => {
@@ -113,6 +113,7 @@ function submitComment() {
     () => {
       getComments();
       document.getElementById("comment-content").value = "";
+      commentCount.value++;
     },
     (error) => {
       console.log(error);
