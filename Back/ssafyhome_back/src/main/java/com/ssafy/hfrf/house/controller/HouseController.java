@@ -43,21 +43,21 @@ public class HouseController {
 		return new ResponseEntity<List<SidoGugunDto>>(houseService.getSido(), HttpStatus.OK);
 	}
 
-	@Operation(summary = "구군 찾기", description = "시도 이름으로 구군 찾기")
+	@Operation(summary = "구군 찾기", description = "시도 코드로 구군 찾기")
 	@GetMapping("/gugun")
 	public ResponseEntity<List<SidoGugunDto>> gugun(@RequestParam("sido") String sido) throws Exception {
 		log.debug("sido : {}", sido);
 		return new ResponseEntity<List<SidoGugunDto>>(houseService.getGugunInSido(sido), HttpStatus.OK);
 	}
 
-	@Operation(summary = "동 찾기", description = "구군 이름으로 동 찾기")
+	@Operation(summary = "동 찾기", description = "구군 코드로 동 찾기")
 	@GetMapping("/dong")
 	public ResponseEntity<List<HouseInfoDto>> dong(@RequestParam("gugun") String gugun) throws Exception {
 		log.debug("gugun : {}",gugun);
 		return new ResponseEntity<List<HouseInfoDto>>(houseService.getDongInGugun(gugun), HttpStatus.OK);
 	}
 
-	@Operation(summary = "아파트 찾기", description = "동 이름으로 아파트 찾기")
+	@Operation(summary = "아파트 찾기", description = "시/군구 코드로 아파트 찾기")
 	@GetMapping("/apt")
 	public ResponseEntity<List<HouseInfoDto>> apt(@RequestParam("dong") String dong) throws Exception {
 		log.debug("dong : {}", dong);

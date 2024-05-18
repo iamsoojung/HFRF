@@ -49,27 +49,22 @@
 
 	<select id="getAptName" parameterType="string"
 		resultType="houseInfoDto">
-		select h.aptCode, h.roadName, h.roadNameBonbun,
+		SELECT
+		h.aptCode, h.roadName, h.roadNameBonbun,
 		h.roadNameBubun, h.roadNameSeq, h.roadNameCode, h.bonbun,
 		h.apartmentName, h.buildYear, h.dongCode, h.dong, h.jibun, h.lat,
-		h.lng, si.sidoname, gu.gugunname,
-		(select
-		round(avg(cast(replace(dealAmount, ',' ,'')as unsigned))) from
-		housedeal hd where hd.aptCode=h.aptCode) avgPrice,
-		(select
-		count(r.rate) from aptreview r where r.aptCode = h.aptCode) cnt,
-		(select round(avg(r.rate) ,2) from aptreview r where r.aptCode =
-		h.aptCode) avgrate
-		from houseinfo h
-		left join sidocode si
-		on
-		left(h.dongcode,2) = left(si.sidocode,2)
-		left join guguncode gu
-		on
-		left(h.dongcode,5) = left(gu.guguncode,5)
-		where h.apartmentName like
-		concat('%', #{aptName},'%')
-		order by h.apartmentName;
+		h.lng, si.sidoname, gu.gugunname
+		FROM
+		houseinfo h
+		LEFT JOIN
+		sidocode si ON LEFT(h.dongcode, 2) = LEFT(si.sidocode, 2)
+		LEFT JOIN
+		guguncode gu ON LEFT(h.dongcode, 5) = LEFT(gu.guguncode, 5)
+		WHERE
+		h.apartmentName LIKE CONCAT('%', #{aptName}, '%')
+		ORDER BY
+		h.apartmentName;
+
 	</select>
 
 	<select id="getDealsByCode" parameterType="string"
