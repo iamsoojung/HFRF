@@ -11,10 +11,10 @@ import com.ssafy.hfrf.board.model.CommentDto;
 import com.ssafy.hfrf.board.model.mapper.CommentMapper;
 
 @Service
-public class CommentServiceImpl implements CommentService{
-	
+public class CommentServiceImpl implements CommentService {
+
 	private CommentMapper commentMapper;
-	
+
 	@Autowired
 	public CommentServiceImpl(CommentMapper commentMapper) {
 		super();
@@ -32,10 +32,10 @@ public class CommentServiceImpl implements CommentService{
 		return commentMapper.listComment(articleNo);
 	}
 
-	/*
-	 * @Override public int getTotalCommentCount(Map<String, Object> map) throws
-	 * Exception { return commentMapper.getTotalCommentCount(map); }
-	 */
+	@Override
+	public int getTotalCommentCount(int articleNo) throws Exception {
+		return commentMapper.getTotalCommentCount(articleNo);
+	}
 
 	@Override
 	public CommentDto getComment(int commentNo) throws Exception {

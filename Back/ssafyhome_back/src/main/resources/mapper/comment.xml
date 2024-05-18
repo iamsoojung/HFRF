@@ -36,11 +36,11 @@
 	</select>
 
 	<!-- 댓글 수 얻기 -->
-	<!-- <select id="getTotalCommentCount" parameterType="commentDto">
+	<select id="getTotalCommentCount" parameterType="int">
 		select count(*)
 		from comment
-		where user_id = #{userId} and article_no = #{articleNo}
-	</select> -->
+		where article_no = #{articleNo}
+	</select>
 	
 	<!-- 수정할 댓글 얻기 -->
 	<select id="getComment" parameterType="int" resultMap="comment">

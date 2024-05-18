@@ -49,6 +49,10 @@ function deleteComment(commentNo, success, fail) {
   local.delete(`/comment/delete?commentNo=${commentNo}`).then(success).catch(fail);
 }
 
+function getCommentCnt(articleNo, success, fail) {
+  local.get(`/comment/count?articleNo=${articleNo}`).then(success).catch(fail);
+}
+
 export {
   listArticle,
   detailArticle,
@@ -60,5 +64,6 @@ export {
   writeComment,
   getModifyComment,
   modifyComment,
-  deleteComment
+  deleteComment,
+  getCommentCnt
 };

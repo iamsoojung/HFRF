@@ -68,6 +68,19 @@ public class CommentController {
 		}
 	}
 
+	@Operation(summary = "댓글 수 얻기", description = "글번호에 해당하는 댓글의 갯수를 반환한다.")
+	@GetMapping("/count")
+	public ResponseEntity<?> getTotalCommentCount(@RequestParam("articleNo") int articleNo) {
+	    try {
+	        int count = commentService.getTotalCommentCount(articleNo);
+	        Map<String, Object> resultMap = new HashMap<>();
+	        resultMap.put("count", count);
+	        return new ResponseEntity<Map<String, Object>>(resultMap, HttpStatus.OK);
+	    } catch (Exception e) {
+	        return exceptionHandling(e);
+	    }
+	}
+
 	@Operation(summary = "수정 할 댓글 얻기", description = "글번호에 해당하는 댓글의 정보를 반환한다.")
 	@GetMapping("/modify/{commentno}")
 	public ResponseEntity<CommentDto> getModifyComment(
@@ -100,7 +113,6 @@ public class CommentController {
 			return exceptionHandling(e);
 		}
 	}
-	
 	
 	private ResponseEntity<String> exceptionHandling(Exception e) {
 		e.printStackTrace();

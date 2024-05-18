@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { detailArticle, deleteArticle } from "@/api/board";
-import { listComment, writeComment, getModifyComment, modifyComment, deleteComment } from "@/api/board";
+import { listComment, writeComment, getModifyComment, modifyComment, deleteComment, getCommentCnt } from "@/api/board";
 import { useMemberStore } from '@/stores/member';
 import { storeToRefs } from 'pinia';
 
@@ -15,10 +15,13 @@ const router = useRouter();
 const { articleno } = route.params;
 const article = ref({});
 const comments = ref([]);
+const commentCount = ref(0);
 
 onMounted(() => {
   getArticle();
   getComments();
+  getCommentCount();
+  console.log(commentCount)
 });
 
 const getArticle = () => {
@@ -38,6 +41,18 @@ const getComments = () => {
     articleno,
     ({ data }) => {
       comments.value = data;
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
+
+const getCommentCount = () => {
+  getCommentCnt(
+    articleno,
+    ({ data }) => {
+      commentCount.value = data.count;
     },
     (error) => {
       console.log(error);
@@ -132,7 +147,7 @@ function submitComment() {
             </div>
             <div class="text-end mt-3">
               <span class="me-5">조회 : {{ article.hit }}</span>
-              <span>댓글 : ?</span>
+              <span>댓글 : {{ commentCount }}</span>
             </div>
           </div>
           <div class="my-5">

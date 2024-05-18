@@ -11,7 +11,7 @@ public interface CommentService {
 
 	List<CommentDto> listComment(int articleNo) throws Exception;
 
-//	int getTotalCommentCount(Map<String, Object> map) throws Exception;
+	int getTotalCommentCount(int articleNo) throws Exception;
 	
 	CommentDto getComment(int commentNo) throws Exception;
 
