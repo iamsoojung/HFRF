@@ -16,6 +16,8 @@ public interface CommentMapper {
 	List<CommentDto> listComment(int articleNo) throws SQLException;
 
 //	int getTotalCommentCount(Map<String, Object> map) throws SQLException;
+	
+	CommentDto getComment(int commentNo) throws Exception;
 
 	void modifyComment(CommentDto commentDto) throws SQLException;
 

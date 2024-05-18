@@ -38,6 +38,11 @@ public class CommentServiceImpl implements CommentService{
 	 */
 
 	@Override
+	public CommentDto getComment(int commentNo) throws Exception {
+		return commentMapper.getComment(commentNo);
+	}
+
+	@Override
 	public void modifyComment(CommentDto commentDto) throws Exception {
 		commentMapper.modifyComment(commentDto);
 	}

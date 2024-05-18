@@ -37,7 +37,15 @@ function writeComment(comment, success, fail) {
   local.post(`/comment/write`, JSON.stringify(comment)).then(success).catch(fail);
 }
 
-function deleteComment(commentNo, success) {
+function getModifyComment(commentNo, success, fail) {
+  local.get(`/comment/modify/${commentNo}`).then(success).catch(fail);
+}
+
+function modifyComment(comment, success, fail) {
+  local.put(`/comment/modify`, JSON.stringify(comment)).then(success).catch(fail);
+}
+
+function deleteComment(commentNo, success, fail) {
   local.delete(`/comment/delete?commentNo=${commentNo}`).then(success).catch(fail);
 }
 
@@ -50,5 +58,7 @@ export {
   deleteArticle,
   listComment,
   writeComment,
+  getModifyComment,
+  modifyComment,
   deleteComment
 };

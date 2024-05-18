@@ -41,6 +41,14 @@
 		from comment
 		where user_id = #{userId} and article_no = #{articleNo}
 	</select> -->
+	
+	<!-- 수정할 댓글 얻기 -->
+	<select id="getComment" parameterType="int" resultMap="comment">
+		select c.comment_no, c.user_id, c.article_no, c.content, c.register_time
+		from comment c, members m
+		where c.user_id = m.user_id
+		and c.comment_no = #{commentNo}
+	</select>
 
 	<!-- 댓글 수정 -->
 	<update id="modifyComment" parameterType="commentDto">
