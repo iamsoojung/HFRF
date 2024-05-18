@@ -233,13 +233,41 @@ CREATE OR REPLACE VIEW `hfrf`.`apt` AS
         `d`.`area` AS `area`,
         `a`.`dong` AS `dong`,
         `d`.`dealAmount` AS `dealAmount`,
-        `a`.`lng` AS `lng`,
-        `a`.`lat` AS `lat`
+        `a`.`lat` AS `lat`,
+        `a`.`lng` AS `lng`
     FROM
         `hfrf`.`apt_info_deal` `a`
         JOIN `hfrf`.`housedeal` `d`
     WHERE
         `a`.`aptCode` = `d`.`aptCode`;
+
+
+-- 시군구동 셀렉박스 처리 (데이터 삽입 후 처리)
+-- 시도 코드 테이블 생성
+CREATE TABLE hfrf.sidocode AS 
+SELECT LEFT(dongCode, 2) AS sidoCode, sidoName
+FROM hfrf.dongcode
+WHERE gugunName IS NULL;
+
+-- 구군 코드 테이블 생성
+CREATE TABLE hfrf.guguncode AS 
+SELECT LEFT(dongCode, 5) AS gugunCode, gugunName
+FROM hfrf.dongcode
+WHERE gugunName IS NOT NULL AND dongName IS NULL;
+
+-- 부산 기준으로 구군 코드 조회
+SELECT *
+FROM hfrf.guguncode
+WHERE guguncode LIKE '26%';
+
+-- 종로구 기준으로 동 코드 조회
+SELECT * 
+FROM hfrf.dongcode
+WHERE dongcode LIKE '11110%' AND dongName IS NOT NULL;
+
+select * from sidocode;
+select * from guguncode;
+select * from dongcode;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
