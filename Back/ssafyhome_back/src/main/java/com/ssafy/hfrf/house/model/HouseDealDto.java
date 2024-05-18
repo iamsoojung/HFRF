@@ -15,8 +15,6 @@ public class HouseDealDto {
 
 	@Schema(description = "매물 번호", example = "111101501000001")
 	private long no;
-	@Schema(description = "아파트 코드", requiredMode = Schema.RequiredMode.REQUIRED, example = "11110000000001")
-	private long aptCode;
 	@Schema(description = "가격", example = "100,000")
 	private String dealAmount;
 	@Schema(description = "거래 년", example = "2015")
@@ -29,6 +27,8 @@ public class HouseDealDto {
 	private String area;
 	@Schema(description = "층", example = "9")
 	private String floor;
-	@Schema(description = "cancelDealType", example = "")
-	private String cancelDealType;
+	@Schema(description = "해제여부", example = "")
+	private String type;
+	@Schema(description = "아파트 코드", requiredMode = Schema.RequiredMode.REQUIRED, example = "11110000000001")
+	private long aptCode;
 }
