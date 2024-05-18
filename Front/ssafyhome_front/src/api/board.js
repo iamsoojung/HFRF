@@ -2,6 +2,7 @@ import { localAxios } from "@/util/http-commons";
 
 const local = localAxios();
 
+// 게시글
 function listArticle(param, success, fail) {
   local.get(`/board`, { params: param }).then(success).catch(fail);
 }
@@ -27,6 +28,19 @@ function deleteArticle(articleno, success, fail) {
   local.delete(`/board/${articleno}`).then(success).catch(fail);
 }
 
+// 댓글
+function listComment(articleNo, success, fail) {
+  local.get(`/comment/list?articleNo=${articleNo}`).then(success).catch(fail);
+}
+
+function writeComment(comment, success, fail) {
+  local.post(`/comment/write`, JSON.stringify(comment)).then(success).catch(fail);
+}
+
+function deleteComment(commentNo, success) {
+  local.delete(`/comment/delete?commentNo=${commentNo}`).then(success).catch(fail);
+}
+
 export {
   listArticle,
   detailArticle,
@@ -34,4 +48,7 @@ export {
   getModifyArticle,
   modifyArticle,
   deleteArticle,
+  listComment,
+  writeComment,
+  deleteComment
 };
