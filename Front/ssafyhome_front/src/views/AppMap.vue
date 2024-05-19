@@ -1,10 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useMemberStore } from "@/stores/member";
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
-
+const memberStore = useMemberStore();
+const { isLogin } = storeToRefs(memberStore);
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
@@ -97,7 +100,7 @@ const toggleMenu = () => {
     <Header />
     <div v-if="isOpenMenu" class="fixed z-10 my-5">
         <div class="fixed"></div>
-        <div class="grid grid-cols-2">
+        <div class="flex grid-cols-2">
             <div class="col-span-1 grid grid-cols-3 justify-between">
                 <VSelect class="ms-0 text-sm" :selectOption="sidoList" @onKeySelect="onChangeSido" />
                 <VSelect class="text-sm" :selectOption="gugunList" @onKeySelect="onChangeGugun" />
