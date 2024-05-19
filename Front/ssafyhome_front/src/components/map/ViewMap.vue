@@ -47,12 +47,19 @@ const addMarkers = () => {
   console.log("apt 마커 찍는다?")
   props.aptList.forEach(apt => {
     const markerPosition = new kakao.maps.LatLng(apt.lat, apt.lng);
-    console.log(apt.lat, apt.lng);
-    new kakao.maps.Marker({
+    // console.log(apt.lat, apt.lng);
+    const marker = new kakao.maps.Marker({
       position: markerPosition,
       map: map.value,
       title: apt.text
     });
+
+    // 아파트 이름을 표시할 정보 창 생성
+    const infowindow = new kakao.maps.InfoWindow({
+      content: `<div style="padding:5px;">${apt.text}</div>`
+    });
+    infowindow.open(map.value, marker);
+
     // 마커 위치를 경계에 추가
     bounds.extend(markerPosition);
   });
