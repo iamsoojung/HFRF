@@ -10,6 +10,10 @@ const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
 
+const selectedSido = ref('');
+const selectedGugun = ref('');
+const selectedDong = ref('');
+
 onMounted(() => {
     getSidoList();
 })
@@ -34,6 +38,7 @@ const onChangeSido = (value) => {
     listGugun(
         { sido: value },
         ({ data }) => {
+            selectedSido.value = value;
             let options = [];
             options.push({ text: "구군선택", value: "" });
             data.forEach((gugun) => {
@@ -51,6 +56,7 @@ const onChangeGugun = (value) => {
     listDong(
         { gugun: value },
         ({ data }) => {
+            selectedGugun.value = value;
             let options = [];
             options.push({ text: "동선택", value: "" });
             data.forEach((dong) => {
@@ -69,9 +75,10 @@ const onChangeDong = (value) => {
     listAptByDong(
         { dongCode: value },
         ({ data }) => {
+            selectedDong.value = value;
             let options = [];
             data.forEach((apt) => {
-                options.push({ text: apt.apartmentName, value: apt.aptCode });
+                options.push({ text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng:apt.lng });
             });
             aptList.value = options;
             console.log('Received apartment data:', data);
@@ -82,8 +89,16 @@ const onChangeDong = (value) => {
     )
 }
 
-const getHouse = () => {
-    
+const getHouse = (value) => {
+    dealByDong(
+        { aptCode: value },
+        ({data}) => {
+            console.log('Received house data:', data);
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
 }
 
 const isOpenMenu = ref(true)
@@ -105,7 +120,7 @@ const toggleMenu = () => {
                     class="overflow-auto border-[1px] border-black mt-5 p-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
                     <div v-if="aptList.length === 0">아파트 매물이 없네요 ~~ ㅠ ㅋㅋ</div>
                     <div v-else>
-                        <div v-for="apt in aptList" :key="apt.value">
+                        <div v-for="apt in aptList" :key="apt.value" @click="getHouse(apt.value)">
                             {{ apt.text }}
                         </div>
                     </div>
@@ -121,7 +136,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" />
+            <ViewMap :aptList="aptList" class="w-full h-full" />
         </div>
     </div>
 </template>
