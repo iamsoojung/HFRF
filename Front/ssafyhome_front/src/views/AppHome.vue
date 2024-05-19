@@ -2,6 +2,7 @@
 import Header from "@/components/layout/Header.vue";
 import { listArticle } from "@/api/board.js";
 import { ref, onMounted } from 'vue'
+import { initializeChannelIO } from "@/util/initializeChannelIO";
 
 const isDropdownOpen = ref(false)
 
@@ -39,6 +40,7 @@ const param = {
 
 onMounted(() => {
   getArticleList();
+  initializeChannelIO();
 });
 
 const getArticleList = () => {
