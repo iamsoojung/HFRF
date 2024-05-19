@@ -103,8 +103,11 @@ const toggleMenu = () => {
                 <VSelect class="me-0 text-sm" :selectOption="dongList" @onKeySelect="onChangeDong"/>
                 <div
                     class="overflow-auto border-[1px] border-black mt-5 p-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
-                    <div v-for="apt in aptList" :key="apt.value">
-                        {{ apt.text }}
+                    <div v-if="aptList.length === 0">아파트 매물이 없네요 ~~ ㅠ ㅋㅋ</div>
+                    <div v-else>
+                        <div v-for="apt in aptList" :key="apt.value">
+                            {{ apt.text }}
+                        </div>
                     </div>
                 </div>
             </div>
