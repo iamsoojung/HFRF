@@ -10,6 +10,7 @@ const props = defineProps({
 });
 
 const map = ref(null);
+const nearList = ref([]);
 
 const loadMap = () => {
   window.kakao.maps.load(() => {
@@ -44,33 +45,59 @@ const addMarkers = () => {
 
   const bounds = new kakao.maps.LatLngBounds();
 
-  console.log("apt 마커 찍는다?")
   props.aptList.forEach(apt => {
     const markerPosition = new kakao.maps.LatLng(apt.lat, apt.lng);
-    // console.log(apt.lat, apt.lng);
     const marker = new kakao.maps.Marker({
       position: markerPosition,
       map: map.value,
       title: apt.text
     });
 
-    // 아파트 이름을 표시할 정보 창 생성
     const infowindow = new kakao.maps.InfoWindow({
       content: `<div style="padding:5px;">${apt.text}</div>`
     });
     infowindow.open(map.value, marker);
 
-    // 마커 위치를 경계에 추가
     bounds.extend(markerPosition);
+
+    // 각 아파트 위치에서 카페를 검색
+    searchNearbyCafes(markerPosition);
   });
-  // 모든 마커가 보이도록 지도 경계를 설정
+
   map.value.setBounds(bounds);
 };
 
+const searchNearbyCafes = (position) => {
+  const ps = new kakao.maps.services.Places();
+  ps.keywordSearch('카페', (data, status) => {
+    if (status === kakao.maps.services.Status.OK) {
+      data.forEach(place => {
+        const markerPosition = new kakao.maps.LatLng(place.y, place.x);
+        const marker = new kakao.maps.Marker({
+          position: markerPosition,
+          map: map.value,
+          title: place.place_name
+        });
+
+        const infowindow = new kakao.maps.InfoWindow({
+          content: `<div style="padding:5px;">⭐${place.place_name}</div>`
+        });
+        infowindow.open(map.value, marker);
+
+        nearList.value.push({
+          lat: place.y,
+          lng: place.x,
+          name: place.place_name,
+          marker: marker
+        });
+      });
+    }
+  }, { location: position, radius: 500 }); // 위치 기준으로 500m 반경 내에서 검색
+};
+
 watch(() => props.aptList, () => {
-  addMarkers()
-}, { immediate: true }  // aptList 변경될 때 or 컴포넌트 마운트될 때 실행되도록!!
-);
+  addMarkers();
+}, { immediate: true });
 
 onMounted(() => {
   loadMap();
@@ -82,5 +109,12 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div id="map"></div>
+  <div id="map" class="w-full h-screen"></div>
 </template>
+
+<style scoped>
+#map {
+  width: 100%;
+  height: 100vh;
+}
+</style>
