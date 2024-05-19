@@ -86,8 +86,16 @@ const onChangeDong = (value) => {
     )
 }
 
-const getHouse = () => {
-    
+const getHouse = (value) => {
+    dealByDong(
+        { aptCode: value },
+        ({data}) => {
+            console.log('Received house data:', data);
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
 }
 
 const isOpenMenu = ref(true)
@@ -113,7 +121,7 @@ const toggleMenu = () => {
                             <div class="h-[100px] w-[125px] border-[1px] me-3">
                                 <img alt="이미지" class="w-20"/>
                             </div>
-                            <div>
+                            <div @click="getHouse(apt.value)">
                                 <div class="font-bold text-lg">{{ apt.text }}</div>
                                 <div class="text-md text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
                             </div>
