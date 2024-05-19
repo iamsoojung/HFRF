@@ -71,7 +71,8 @@ const onChangeDong = (value) => {
         ({ data }) => {
             let options = [];
             data.forEach((apt) => {
-                options.push({ text: apt.apartmentName, value: apt.aptCode });
+                console.log(apt)
+                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode });
             });
             aptList.value = options;
             console.log('Received apartment data:', data);
@@ -102,11 +103,17 @@ const toggleMenu = () => {
                 <VSelect class="text-sm" :selectOption="gugunList" @onKeySelect="onChangeGugun" />
                 <VSelect class="me-0 text-sm" :selectOption="dongList" @onKeySelect="onChangeDong"/>
                 <div
-                    class="overflow-auto border-[1px] border-black mt-5 p-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
+                    class="overflow-auto border-[1px] border-black mt-5 px-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
                     <div v-if="aptList.length === 0">아파트 매물이 없네요 ~~ ㅠ ㅋㅋ</div>
                     <div v-else>
-                        <div v-for="apt in aptList" :key="apt.value">
-                            {{ apt.text }}
+                        <div class="flex p-3 border-b-[1px] " v-for="apt in aptList" :key="apt.value">
+                            <div class="h-[100px] w-[125px] border-[1px] me-3">
+                                <img alt="이미지" class="w-20"/>
+                            </div>
+                            <div>
+                                <div class="font-bold text-lg">{{ apt.text }}</div>
+                                <div class="text-md text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
