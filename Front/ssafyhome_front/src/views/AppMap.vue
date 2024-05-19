@@ -9,9 +9,11 @@ const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
 
-const selectedSido = ref('');
-const selectedGugun = ref('');
-const selectedDong = ref('');
+const isDetail = ref(false)
+const toggleDetail = () => {
+    isDetail.value = false
+}
+const detailApt = ref([])
 
 onMounted(() => {
     getSidoList();
@@ -37,7 +39,6 @@ const onChangeSido = (value) => {
     listGugun(
         { sido: value },
         ({ data }) => {
-            selectedSido.value = value;
             let options = [];
             options.push({ text: "구군선택", value: "" });
             data.forEach((gugun) => {
@@ -55,7 +56,6 @@ const onChangeGugun = (value) => {
     listDong(
         { gugun: value },
         ({ data }) => {
-            selectedGugun.value = value;
             let options = [];
             options.push({ text: "동선택", value: "" });
             data.forEach((dong) => {
@@ -74,7 +74,6 @@ const onChangeDong = (value) => {
     listAptByDong(
         { dongCode: value },
         ({ data }) => {
-            selectedDong.value = value;
             let options = [];
             data.forEach((apt) => {
                 console.log(apt)
@@ -157,7 +156,7 @@ const toggleMenu = () => {
                                     </div>
                                     <div class="ms-auto">
                                         <div class="text-end">
-                                            매매가임? {{ detail.dealAmount }}
+                                            매매가 {{ detail.dealAmount }}
                                         </div>
                                         <div class="text-gray-500 text-sm text-end">
                                             {{ detail.area }}㎡ | {{ detail.floor }}층
@@ -191,7 +190,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap :aptList="aptList" class="w-full h-full" />
+            <ViewMap class="w-full h-full" />
         </div>
     </div>
 </template>
