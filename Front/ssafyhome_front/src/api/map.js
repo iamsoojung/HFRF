@@ -25,11 +25,11 @@ function listSido(success, fail) {
 }
 
 function listGugun(param, success, fail) {
-    local.get(`/house/gugun`).then(success).catch(fail);
+    local.get(`/house/gugun`, { params: param }).then(success).catch(fail);
 }
 
 function listDong(param, success, fail) {
-    local.get(`/house/dong`).then(success).catch(fail);
+    local.get(`/house/dong`, { params: param }).then(success).catch(fail);
 }
 
 function listAptByDong(param, success, fail) {

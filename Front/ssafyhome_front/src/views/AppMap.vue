@@ -20,7 +20,7 @@ const getSidoList = () => {
             let options = [];
             options.push({ text: "시도선택", value: "" });
             data.forEach((sido) => {
-                options.push({ text: sido.sidoName, value: sido.dongCode.slice(0, 2) });
+                options.push({ text: sido.sidoName, value: sido.sidoCode });
             });
             sidoList.value = options;
         },
@@ -37,7 +37,7 @@ const onChangeSido = (value) => {
             let options = [];
             options.push({ text: "구군선택", value: "" });
             data.forEach((gugun) => {
-                options.push({ text: gugun.gugunName, value: gugun.dongCode.slice(0, 5) });
+                options.push({ text: gugun.gugunName, value: gugun.gugunCode });
             });
             gugunList.value = options;
         },

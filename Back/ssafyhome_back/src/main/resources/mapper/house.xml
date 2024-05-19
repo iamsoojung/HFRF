@@ -22,7 +22,7 @@
 		select distinct dongName, dongCode
 		from dongcode
 		where
-		left(dongCode, 5) = #{gugun}
+		left(dongCode, 5) = #{gugun} and dongName is not null
 		order by dongName
 	</select>
 
