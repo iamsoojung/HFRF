@@ -22,21 +22,23 @@ const getNewsList = () => {
 
 <template>
     <div class="container">
-        <h2 class="my-3 py-3 shadow-sm bg-light text-center">
-            <mark class="sky">뉴스 게시판</mark>
-        </h2>
-        <div class="row">
-            <div class="col-md-8 offset-md-2">
-                <ul class="list-group">
-                    <li v-for="news in newsList" :key="news.originallink" class="list-group-item">
-                        <a :href="news.originallink" target="_blank">{{ news.title }}</a>
-                        <span class="badge bg-primary">{{ news.pubDate }}</span>
-                    </li>
+        <div class="border-y w-full h-1 mb-10"></div>
+        <div class="container">
+            <div>
+                <ul class="grid grid-cols-2">
+                    <a :href="news.originallink" target="_blank"
+                        class="hover:bg-gray-100 shadow-lg rounded-xl border-2 col-span-1 my-5 py-10 mx-5 px-5"
+                        v-for="news in newsList" :key="news.originallink">
+                        <a class="font-bold text-2xl">{{ news.title }}</a>
+                        <div class="text-xs mb-5">{{ news.pubDate }}</div>
+                        <div>
+                            {{ news.description }}
+                        </div>
+                    </a>
                 </ul>
             </div>
         </div>
     </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

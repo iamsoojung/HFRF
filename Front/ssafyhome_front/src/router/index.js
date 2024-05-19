@@ -126,8 +126,15 @@ const router = createRouter({
     },
     {
       path: "/news",
-      name: "newsList",
-      component: () => import("@/components/news/NewsList.vue"),
+      name: "news",
+      component: () => import("@/views/AppNews.vue"),
+      children: [
+        {
+          path: "/news",
+          name: "newsList",
+          component: () => import("@/components/news/NewsList.vue"),
+        }
+      ]
     }
   ],
 });
