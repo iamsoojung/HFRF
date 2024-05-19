@@ -6,12 +6,15 @@ import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
-const memberStore = useMemberStore();
-const { isLogin } = storeToRefs(memberStore);
+
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
+
+const selectedSido = ref('');
+const selectedGugun = ref('');
+const selectedDong = ref('');
 
 onMounted(() => {
     getSidoList();
@@ -37,6 +40,7 @@ const onChangeSido = (value) => {
     listGugun(
         { sido: value },
         ({ data }) => {
+            selectedSido.value = value;
             let options = [];
             options.push({ text: "구군선택", value: "" });
             data.forEach((gugun) => {
@@ -54,6 +58,7 @@ const onChangeGugun = (value) => {
     listDong(
         { gugun: value },
         ({ data }) => {
+            selectedGugun.value = value;
             let options = [];
             options.push({ text: "동선택", value: "" });
             data.forEach((dong) => {
@@ -72,6 +77,7 @@ const onChangeDong = (value) => {
     listAptByDong(
         { dongCode: value },
         ({ data }) => {
+            selectedDong.value = value;
             let options = [];
             data.forEach((apt) => {
                 console.log(apt)
@@ -139,7 +145,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" />
+            <ViewMap :aptList="aptList" class="w-full h-full" />
         </div>
     </div>
 </template>
