@@ -33,7 +33,7 @@ function listDong(param, success, fail) {
 }
 
 function listAptByDong(param, success, fail) {
-    local.get(`/house/apt?dong=${param.dongCode}`).then(success).catch(fail);
+    local.get(`/house/apt?dongCode=${param.dongCode}`).then(success).catch(fail);
 }
 
 function dealByDong(param, success, fail) {

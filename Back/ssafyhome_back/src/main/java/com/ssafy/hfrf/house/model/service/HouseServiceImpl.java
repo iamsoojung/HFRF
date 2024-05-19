@@ -36,8 +36,8 @@ public class HouseServiceImpl implements HouseService{
 	}
 
 	@Override
-	public List<HouseInfoDto> getAptInDong(String dong) throws SQLException {
-		return houseMapper.getDongInGugun(dong);
+	public List<HouseInfoDto> getAptInDong(String dongCode) throws SQLException {
+		return houseMapper.getAptInDong(dongCode);
 	}
 
 	@Override

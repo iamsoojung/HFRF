@@ -57,11 +57,14 @@
 		FROM
 		houseinfo h
 		LEFT JOIN
-		sidocode si ON LEFT(h.dongcode, 2) = LEFT(si.sidocode, 2)
+		sidocode si ON
+		LEFT(h.dongcode, 2) = LEFT(si.sidocode, 2)
 		LEFT JOIN
-		guguncode gu ON LEFT(h.dongcode, 5) = LEFT(gu.guguncode, 5)
+		guguncode gu ON
+		LEFT(h.dongcode, 5) = LEFT(gu.guguncode, 5)
 		WHERE
-		h.apartmentName LIKE CONCAT('%', #{aptName}, '%')
+		h.apartmentName LIKE
+		CONCAT('%', #{aptName}, '%')
 		ORDER BY
 		h.apartmentName;
 

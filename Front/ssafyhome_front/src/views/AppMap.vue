@@ -5,7 +5,7 @@ import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
 
-const sidoList = ref([]);
+const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
@@ -65,20 +65,25 @@ const onChangeGugun = (value) => {
 }
 
 const onChangeDong = (value) => {
+    console.log('Selected dong:', value);
     listAptByDong(
-        { dong: value },
+        { dongCode: value },
         ({ data }) => {
             let options = [];
-            options.push({});
             data.forEach((apt) => {
-                options.push({});
+                options.push({ text: apt.apartmentName, value: apt.aptCode });
             });
             aptList.value = options;
+            console.log('Received apartment data:', data);
         },
         (error) => {
             console.log(error)
         }
     )
+}
+
+const getHouse = () => {
+    
 }
 
 const isOpenMenu = ref(true)
@@ -98,41 +103,9 @@ const toggleMenu = () => {
                 <VSelect class="me-0 text-sm" :selectOption="dongList" @onKeySelect="onChangeDong"/>
                 <div
                     class="overflow-auto border-[1px] border-black mt-5 p-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
-                    <div>반갑다</div>
+                    <div v-for="apt in aptList" :key="apt.value">
+                        {{ apt.text }}
+                    </div>
                 </div>
             </div>
             <button @click="toggleMenu" class="my-auto w-5 h-48 bg-pink-300 border-[1px] border-l-0 border-black">
