@@ -15,7 +15,7 @@ defineProps({ article: Object });
     <td>{{ article.userName }}</td>
     <td>{{ article.hit }}</td>
     <td class="hidden xl:block">{{ article.registerTime }}</td>
-    <td class="block :hidden">{{ article.registerTime.slice(-0, -8) }}</td>
+    <td class="block xl:hidden">{{ article.registerTime.slice(-0, -8) }}</td>
   </tr>
 </template>
 
