@@ -7,6 +7,7 @@ export const useMenuStore = defineStore("menuStore", () => {
         // { name: "관심 목록", show: false, routeName: "favorite" },
         { name: "공지사항", show: true, routeName: "noticeList" },
         { name: "QnA 게시판", show: true, routeName: "boardList" },
+        { name: "News", show: true, routeName: "newsList" },
     ]);
 
     const loginMenu = ref([
