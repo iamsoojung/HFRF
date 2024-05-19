@@ -1,9 +1,10 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, reactive, onMounted, watch } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
+
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
@@ -13,7 +14,7 @@ const isDetail = ref(false)
 const toggleDetail = () => {
     isDetail.value = false
 }
-const detailApt = ref([])
+const detailApt = ref(reactive([]));
 
 onMounted(() => {
     getSidoList();
@@ -92,16 +93,24 @@ const getHouse = (value, text) => {
     dealByDong(
         { aptCode: value },
         ({ data }) => {
-            console.log(data)
-            detailApt.value = data
-            detailApt.value.text = text
-            isDetail.value = true
+            detailApt.value = data;
+            detailApt.value.text = text;
+            isDetail.value = true;
         },
         (error) => {
-            console.log(error)
+            console.log(error);
         }
-    )
-}
+    );
+};
+
+const getAverageDealAmount = () => {
+    let totalDealAmount = 0;
+    detailApt.value.forEach((apt) => {
+        totalDealAmount += parseFloat(apt.dealAmount);
+    });
+    const average = totalDealAmount / detailApt.value.length;
+    return Math.round(average);
+};
 
 const isOpenMenu = ref(true)
 const toggleMenu = () => {
@@ -121,8 +130,8 @@ const toggleMenu = () => {
                     @onKeySelect="onChangeGugun" />
                 <VSelect class="text-sm" style="margin-left: 5px" :selectOption="dongList"
                     @onKeySelect="onChangeDong" />
-                <div
-                    class="overflow-auto border-[1px] border-black mt-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
+                <div class="overflow-auto
+                    border-[1px] border-black mt-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
                     <div v-if="isDetail">
                         <div class="w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
@@ -139,6 +148,11 @@ const toggleMenu = () => {
                             </div>
                         </div>
                         <div class="p-5">
+                            <div class="mt-3">
+                                <span class="text-red-600 font-bold">평균 매매가: </span>
+                                {{ getAverageDealAmount() }}
+                            </div>
+
                             <div class="text-lg mb-2">실거래가</div>
                             <div class="flex border-b-[1px] pt-2">
                                 <div>
@@ -190,7 +204,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :aptList="aptList"/>
+            <ViewMap class="w-full h-full" :aptList="aptList" />
         </div>
     </div>
 </template>
