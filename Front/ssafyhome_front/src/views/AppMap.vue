@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import { listSido, listGugun, listDong, listApt } from '@/api/map';
+import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
@@ -65,7 +65,7 @@ const onChangeGugun = (value) => {
 }
 
 const onChangeDong = (value) => {
-    listApt(
+    listAptByDong(
         { dong: value },
         ({ data }) => {
             let options = [];

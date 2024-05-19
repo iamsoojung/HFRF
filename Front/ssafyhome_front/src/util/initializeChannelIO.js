@@ -36,6 +36,6 @@ export function initializeChannelIO() {
     }
   })();
   ChannelIO("boot", {
-    pluginKey: "YOUR_PLUGIN_KEY",
+    pluginKey: "84895382-fb41-404c-84d0-7d43d378af47",
   });
 }
