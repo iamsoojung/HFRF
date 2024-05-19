@@ -77,7 +77,7 @@ const onChangeDong = (value) => {
             let options = [];
             data.forEach((apt) => {
                 console.log(apt)
-                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode });
+                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng });
             });
             aptList.value = options;
             console.log('Received apartment data:', data);
@@ -190,7 +190,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" />
+            <ViewMap class="w-full h-full" :aptList="aptList"/>
         </div>
     </div>
 </template>
