@@ -7,13 +7,13 @@ import { initializeChannelIO } from "@/util/initializeChannelIO";
 const isDropdownOpen = ref(false)
 
 const categories = [
-  { id: 1, name: "Mockups" },
-  { id: 2, name: "Templates" },
-  { id: 3, name: "Design" },
-  { id: 4, name: "Logos" }
+  { id: 1, name: "아파트" },
+  { id: 2, name: "빌라, 투룸+" },
+  { id: 3, name: "원룸" },
+  { id: 4, name: "오피스텔" }
 ]
 
-const selectedCategory = ref({ id: 1, name: "All categories" })
+const selectedCategory = ref({ id: 1, name: "아파트" })
 
 const searchText = ref("")
 
@@ -58,7 +58,7 @@ const getArticleList = () => {
 
 <template>
   <Header />
-  <div class="relative isolate px-6 lg:px-8 min-h-[805px]">
+  <div class="relative isolate min-h-[805px]">
     <div class="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80" aria-hidden="true">
       <div
         class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#fc9c9c] to-[#fff9a0] opacity-30 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
@@ -83,7 +83,7 @@ const getArticleList = () => {
           );
         "></div>
     </div>
-    <div class="mx-auto py-16 sm:py-24 lg:py-28">
+    <div class="bg-[url('@/assets/home.jpg')] bg-cover mx-auto py-16 sm:py-24 lg:py-28">
       <div class="mb-20 flex justify-center">
         <form class="max-w-lg mx-auto" @submit.prevent="search">
           <div class="flex items-center">
@@ -113,7 +113,7 @@ const getArticleList = () => {
             <div class="relative flex w-96">
               <input v-model="searchText" type="search" id="search-dropdown"
                 class="block w-full pl-5 pr-10 py-2.5 text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-s-2 border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:border-blue-500"
-                placeholder="Search Mockups, Logos, Design Templates..." required />
+                placeholder="원하시는 지역명, 아파트명을 입력해주세요." required />
               <button type="submit"
                 class="absolute inset-y-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border border-pink-400 hover:bg-pink-500 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
@@ -128,10 +128,10 @@ const getArticleList = () => {
         </form>
       </div>
       <div class="text-center">
-        <h1 class="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+        <h1 class="text-4xl font-bold tracking-tight text-gray-800 sm:text-6xl">
           안녕하세요
         </h1>
-        <p class="mt-6 text-2xl leading-8 text-gray-600">반갑습니다</p>
+        <p class="mt-6 text-2xl leading-8 text-white">반갑습니다</p>
       </div>
     </div>
     <div class="grid grid-cols-2 xl:grid-cols-6 pt-5 pb-20">
