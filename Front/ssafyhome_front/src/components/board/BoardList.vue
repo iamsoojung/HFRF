@@ -65,6 +65,9 @@ const moveWrite = () => {
 <template>
   <div>
     <div>
+      <div class="flex justify-end mb-3">
+        <button type="button" class="border-solid border-2 p-1 rounded-md me-10" @click="moveWrite">글쓰기</button>
+      </div>
       <div>
         <table class="container">
           <thead>
