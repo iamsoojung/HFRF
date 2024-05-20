@@ -43,7 +43,7 @@ export default {
             // 차트 옵션 설정
             const options = {
                 title: '실거래가',
-                width: 700,
+                width: 600,
                 height: 300,
                 hAxis: {
                     title: '날짜',
@@ -58,9 +58,9 @@ export default {
                 },
                 legend: 'none',
                 series: {
-                    0: { color: '#e2431e' }
+                    0: { color: 'DD5566' }
                 },
-                pointSize: 10
+                pointSize: 3,
             };
 
             // 차트를 그릴 div 요소를 참조

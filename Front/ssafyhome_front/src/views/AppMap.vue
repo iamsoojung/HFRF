@@ -127,7 +127,7 @@ const toggleMenu = () => {
     <div v-show="isOpenMenu" class="fixed z-10 my-5">
         <div class="fixed"></div>
         <div class="flex grid-cols-2">
-            <div class="col-span-1 grid grid-cols-3 justify-between">
+            <div class="col-span-1 flex-cols-3 justify-between">
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="sidoList"
                     @onKeySelect="onChangeSido" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
@@ -151,14 +151,14 @@ const toggleMenu = () => {
                                 </div>
                             </div>
                         </div>
+                        <Chart class="ms-10":detailApt="detailApt" />
                         <div class="p-5">
-                            <Chart :detailApt="detailApt" />
-                            <div class="mt-3">
-                                <span class="text-red-600 font-bold">평균 매매가</span>
+                            <div class="mt-3 text-xl font-bold mb-4">
+                                <span class="text-red-600">평균 매매가</span>
                                 <span class="ms-2">{{ Math.round(avarageDealAmount/10000) }}억 {{ avarageDealAmount%10000 }}만</span>
                             </div>
 
-                            <div class="text-sm mb-2">실거래가</div>
+                            <div class="text-sm font-bold">실거래가</div>
                             <div class="flex border-b-[1px] pt-2">
                                 <div>
                                     계약일
