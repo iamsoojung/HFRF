@@ -134,28 +134,37 @@ const toggleMenu = () => {
                     @onKeySelect="onChangeGugun" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                     @onKeySelect="onChangeDong" />
-                <div class="overflow-auto
+                <div
+                    class="overflow-auto
                     border-[1px] border-black mt-5 ms-1 rounded-lg min-h-[670px] max-h-[670px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
-                        <div class="w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
+                        <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="currentColor" class="text-white w-7 h-7">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                                 </svg>
+                                
                             </div>
+                            
                             <div class="mt-24 ms-3">
                                 <div class="font-bold text-2xl text-white">
                                     {{ detailApt.text }}
                                 </div>
                             </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
+                                <path
+                                    d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                        </svg>
                         </div>
-                        <Chart class="ms-10":detailApt="detailApt" />
+                        <Chart class="ms-10" :detailApt="detailApt" />
                         <div class="p-5">
                             <div class="mt-3 text-xl font-bold mb-4">
                                 <span class="text-red-600">평균 매매가</span>
-                                <span class="ms-2">{{ Math.round(avarageDealAmount/10000) }}억 {{ avarageDealAmount%10000 }}만</span>
+                                <span class="ms-2">{{ Math.round(avarageDealAmount / 10000) }}억 {{ avarageDealAmount % 10000
+                                    }}만</span>
                             </div>
 
                             <div class="text-sm font-bold">실거래가</div>
@@ -187,24 +196,34 @@ const toggleMenu = () => {
                     </div>
                     <div class="text-center mt-[80%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
                     <div v-else>
-                        <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px] " v-for="apt in aptList" :key="apt.value">
-                            <div class="h-[100px] w-[125px] border-[1px] me-3">
+                        <div class="relative" v-for="apt in aptList" :key="apt.value">
+                        <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
+                            @click="getHouse(apt.value, apt.text)">
+                            <div class="h-[100px] border-[1px] me-3">
                                 <img alt="이미지" class="w-20" />
                             </div>
-                            <div @click="getHouse(apt.value, apt.text)">
+                            <div class="relative w-full">
                                 <div class="font-bold">{{ apt.text }}</div>
                                 <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
                             </div>
                         </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                fill="currentColor" class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
+                                <path
+                                    d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                        </svg>
+                        </div>
                     </div>
                 </div>
             </div>
-            <button @click="toggleMenu" class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
+            <button @click="toggleMenu"
+                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
             </button>
         </div>
     </div>
     <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
-        <button @click="toggleMenu" class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
+        <button @click="toggleMenu"
+            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
         </button>
     </div>
     <div class="border-y-2 grid">
