@@ -11,6 +11,7 @@ onMounted(() => {
 const getNewsList = () => {
     listNews(
         ({ data }) => {
+            console.log(data)
             newsList.value = data.items;
         },
         (error) => {
@@ -22,17 +23,19 @@ const getNewsList = () => {
 
 <template>
     <div class="container">
-        <div class="border-y w-full h-1 mb-10"></div>
-        <div class="container">
+        <div class="border-b-4 w-[60%] mx-auto h-1 mb-10 border-black"></div>
+        <div class="xl:px-32">
             <div>
                 <ul class="grid grid-cols-2">
                     <a :href="news.originallink" target="_blank"
                         class="hover:bg-gray-100 shadow-lg rounded-xl border-2 col-span-1 my-5 py-10 mx-5 px-5"
                         v-for="news in newsList" :key="news.originallink">
-                        <a class="font-bold text-2xl">{{ news.title }}</a>
+                        <a class="font-bold text-2xl">
+                            <p v-html="news.title"></p>
+                        </a>
                         <div class="text-xs mb-5">{{ news.pubDate }}</div>
                         <div>
-                            {{ news.description }}
+                            <p v-html="news.description"></p>
                         </div>
                     </a>
                 </ul>
