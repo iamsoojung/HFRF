@@ -44,7 +44,7 @@ public class NewsServiceImpl implements NewsService {
 			br.close();
 			
             String plainText = removeHtmlTags(response.toString());
-            plainText = convertHtmlEntities(plainText);
+//            plainText = convertHtmlEntities(plainText);
 			
             System.out.println(plainText.toString());
 			return plainText.toString();
