@@ -70,6 +70,7 @@ const onChangeGugun = (value) => {
     )
 }
 
+const noAptMsg = ref("지역을 선택해주세요.")
 const onChangeDong = (value) => {
     console.log('Selected dong:', value);
     listAptByDong(
@@ -81,7 +82,7 @@ const onChangeDong = (value) => {
                 options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng });
             });
             aptList.value = options;
-            console.log('Received apartment data:', data);
+            noAptMsg.value = "매물이 없습니다."
         },
         (error) => {
             console.log(error)
@@ -116,6 +117,7 @@ const isOpenMenu = ref(true)
 const toggleMenu = () => {
     isOpenMenu.value = !isOpenMenu.value
 }
+
 </script>
 
 <template>
@@ -180,7 +182,7 @@ const toggleMenu = () => {
                             </div>
                         </div>
                     </div>
-                    <div v-else-if="aptList.length === 0">아파트 매물이 없네요 ~~ ㅠ ㅋㅋ</div>
+                    <div class="text-center mt-[65%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
                     <div v-else>
                         <div class="flex p-3 border-b-[1px] " v-for="apt in aptList" :key="apt.value">
                             <div class="h-[100px] w-[125px] border-[1px] me-3">
