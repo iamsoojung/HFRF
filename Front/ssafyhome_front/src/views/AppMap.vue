@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
@@ -78,7 +78,6 @@ const onChangeDong = (value) => {
         ({ data }) => {
             let options = [];
             data.forEach((apt) => {
-                console.log(apt)
                 options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng });
             });
             aptList.value = options;
@@ -122,15 +121,15 @@ const toggleMenu = () => {
 
 <template>
     <Header />
-    <div v-if="isOpenMenu" class="fixed z-10 my-5">
+    <div v-show="isOpenMenu" class="fixed z-10 my-5">
         <div class="fixed"></div>
         <div class="flex grid-cols-2">
             <div class="col-span-1 grid grid-cols-3 justify-between">
-                <VSelect class="text-sm" style="margin-left: 5px" :selectOption="sidoList"
+                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="sidoList"
                     @onKeySelect="onChangeSido" />
-                <VSelect class="text-sm" style="margin-left: 5px" :selectOption="gugunList"
+                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
                     @onKeySelect="onChangeGugun" />
-                <VSelect class="text-sm" style="margin-left: 5px" :selectOption="dongList"
+                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                     @onKeySelect="onChangeDong" />
                 <div class="overflow-auto
                     border-[1px] border-black mt-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
@@ -155,7 +154,7 @@ const toggleMenu = () => {
                                 {{ getAverageDealAmount() }}
                             </div>
 
-                            <div class="text-lg mb-2">실거래가</div>
+                            <div class="text-sm mb-2">실거래가</div>
                             <div class="flex border-b-[1px] pt-2">
                                 <div>
                                     계약일
@@ -165,7 +164,7 @@ const toggleMenu = () => {
                                 </div>
                             </div>
                             <div>
-                                <div class="flex border-b-[1px] py-2" v-for="detail in detailApt"
+                                <div class="text-sm flex border-b-[1px] py-2" v-for="detail in detailApt"
                                     :key="detailApt.aptCode">
                                     <div class="my-auto">
                                         {{ detail.dealYear % 100 }}. {{ detail.dealMonth }}. {{ detail.dealDay }}
@@ -189,8 +188,8 @@ const toggleMenu = () => {
                                 <img alt="이미지" class="w-20" />
                             </div>
                             <div @click="getHouse(apt.value, apt.text)">
-                                <div class="font-bold text-lg">{{ apt.text }}</div>
-                                <div class="text-md text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
+                                <div class="font-bold">{{ apt.text }}</div>
+                                <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
                             </div>
                         </div>
                     </div>
