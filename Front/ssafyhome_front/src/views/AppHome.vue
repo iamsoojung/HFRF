@@ -1,5 +1,6 @@
 <script setup>
 import Header from "@/components/layout/Header.vue";
+import { listAptByName } from '@/api/map';
 import { listArticle } from "@/api/board.js";
 import { ref, onMounted } from 'vue'
 import { initializeChannelIO } from "@/util/initializeChannelIO";
@@ -16,6 +17,7 @@ const categories = [
 const selectedCategory = ref({ id: 1, name: "아파트" })
 
 const searchText = ref("")
+const aptList = ref([])
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
@@ -27,7 +29,20 @@ const selectCategory = (category) => {
 }
 
 const search = () => {
-  // search logic here
+  listAptByName(
+    { aptName: searchText.value },
+    ({ data }) => {
+      let options = [];
+      data.forEach((apt) => {
+        options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.let, lng: apt.lng});
+      });
+      aptList.value = options;
+      console.log(aptList.value)
+    },
+    (error) => {
+      console.log(error)
+    }
+  )
 }
 
 const articles = ref([]);
@@ -36,7 +51,7 @@ const param = {
   spp: 5,
   key: "",
   word: "",
-}; 
+};
 
 onMounted(() => {
   getArticleList();
@@ -83,8 +98,10 @@ const getArticleList = () => {
           );
         "></div>
     </div>
-    <div class="bg-[url('@/assets/home.jpg')] bg-cover mx-auto py-16 sm:py-24 lg:py-28">
-      <div class="mb-20 flex justify-center">
+    <div class="grid grid-cols-2 mx-auto">
+      
+      <div class="col-span-1  py-16 sm:py-24 lg:py-28">
+      <div class="mb-20 flex justify-center ">
         <form class="max-w-lg mx-auto" @submit.prevent="search">
           <div class="flex items-center">
             <div class="relative">
@@ -134,14 +151,18 @@ const getArticleList = () => {
         <p class="mt-6 text-2xl leading-8 text-white">반갑습니다</p>
       </div>
     </div>
+    <div class="col-span-1 bg-[url('@/assets/home.jpg')] bg-cover bg-center"></div>
+    </div>
     <div class="grid grid-cols-2 xl:grid-cols-6 pt-5 pb-20">
       <div class="col-span-1 xl:col-span-2 xl:col-start-2 p-5 ms-5">
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           공지사항
         </div>
         <div class="grid grid-cols-4 ps-4 pb-1" v-for="article in articles" :key="article.articleNo">
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1 truncate">{{ article.userName }}</router-link>
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3 truncate">{{ article.subject }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
+            class="col-span-1 truncate">{{ article.userName }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
+            class="col-span-3 truncate">{{ article.subject }}</router-link>
         </div>
       </div>
       <div class="col-span-1 xl:col-span-2 p-5 ms-5">
@@ -149,14 +170,15 @@ const getArticleList = () => {
           QnA 게시판
         </div>
         <div class="grid grid-cols-4 ps-4 pb-1" v-for="article in articles" :key="article.articleNo">
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-1 truncate">{{ article.userName }}</router-link>
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo }}" class="col-span-3 truncate">{{ article.subject }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
+            class="col-span-1 truncate">{{ article.userName }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
+            class="col-span-3 truncate">{{ article.subject }}</router-link>
         </div>
       </div>
       <div class="col-span-1"></div>
     </div>
-    <div
-      class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[20%]"
+    <div class="absolute inset-x-0 top-[calc(100%-13rem)] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[20%]"
       aria-hidden="true">
       <div
         class="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-[#fc9c9c] to-[#fff9a0] opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"

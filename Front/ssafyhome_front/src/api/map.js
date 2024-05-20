@@ -40,4 +40,7 @@ function dealByDong(param, success, fail) {
     local.get(`/house/aptDeal?aptCode=${param.aptCode}`).then(success).catch(fail);
 }
 
-export { listSido, listGugun, listDong, listAptByDong, dealByDong }
+function listAptByName(param, success, fail) {
+    local.get(`/house/aptName`, { params: param }).then(success).catch(fail);
+}
+export { listSido, listGugun, listDong, listAptByDong, dealByDong, listAptByName }
