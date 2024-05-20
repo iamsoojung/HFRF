@@ -133,7 +133,7 @@ const toggleMenu = () => {
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                     @onKeySelect="onChangeDong" />
                 <div class="overflow-auto
-                    border-[1px] border-black mt-5 min-h-[700px] max-h-[700px] col-span-3 bg-white">
+                    border-[1px] border-black mt-5 ms-1 rounded-lg min-h-[670px] max-h-[670px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
                         <div class="w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
@@ -183,9 +183,9 @@ const toggleMenu = () => {
                             </div>
                         </div>
                     </div>
-                    <div class="text-center mt-[65%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
+                    <div class="text-center mt-[80%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
                     <div v-else>
-                        <div class="flex p-3 border-b-[1px] " v-for="apt in aptList" :key="apt.value">
+                        <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px] " v-for="apt in aptList" :key="apt.value">
                             <div class="h-[100px] w-[125px] border-[1px] me-3">
                                 <img alt="이미지" class="w-20" />
                             </div>
@@ -197,12 +197,12 @@ const toggleMenu = () => {
                     </div>
                 </div>
             </div>
-            <button @click="toggleMenu" class="my-auto w-5 h-48 bg-pink-300 border-[1px] border-l-0 border-black">
+            <button @click="toggleMenu" class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
             </button>
         </div>
     </div>
     <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
-        <button @click="toggleMenu" class="my-auto w-5 h-48 bg-pink-300 border-[1px] border-l-0 border-black">
+        <button @click="toggleMenu" class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
         </button>
     </div>
     <div class="border-y-2 grid">

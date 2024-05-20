@@ -1,7 +1,6 @@
 <script setup>
 import { toRefs, ref, onMounted, defineProps, watch } from 'vue'
 import { KakaoMap, KakaoMapMarker, KakaoMapCustomOverlay } from 'vue3-kakao-maps'
-
 const props = defineProps({
   aptList: {
     type: Array,
@@ -29,7 +28,6 @@ const loadCurrentPosition = () => {
     })
   }
 }
-
 const map = ref();
 const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
@@ -43,6 +41,7 @@ const onClickKakaoMapMarker = (key) => {
     }
   })
 };
+
 let bounds;
 watch(aptList, (newValue) => {
   let options = [];
@@ -74,7 +73,10 @@ watch(aptList, (newValue) => {
           </div>
         </div>
       </div>
-      </div>`, yAnchor: "1.4", visible: false
+      </div>`,
+      yAnchor: "1.4",
+      visible: false,
+      aptCode: apt.value
     })
   });
   markerInfoList.value = options;
