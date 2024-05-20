@@ -4,6 +4,7 @@ import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/
 import ViewMap from '@/components/map/ViewMap.vue'
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
+import Chart from '@/components/map/Chart.vue';
 
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
@@ -149,6 +150,7 @@ const toggleMenu = () => {
                             </div>
                         </div>
                         <div class="p-5">
+                            <Chart :detailApt="detailApt" />
                             <div class="mt-3">
                                 <span class="text-red-600 font-bold">평균 매매가: </span>
                                 {{ getAverageDealAmount() }}

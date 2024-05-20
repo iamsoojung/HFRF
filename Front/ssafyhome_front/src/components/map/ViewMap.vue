@@ -38,7 +38,7 @@ const markerInfoList = ref([]);
 const customOverlays = ref([]);
 const onClickKakaoMapMarker = (key) => {
   customOverlays.value.forEach((overlay) => {
-    if(key == overlay.key) {
+    if (key == overlay.key) {
       overlay.visible = !overlay.visible
     }
   })
@@ -50,7 +50,8 @@ watch(aptList, (newValue) => {
   let id = 1;
   newValue.forEach((apt) => {
     options.push({ key: id, lat: apt.lat, lng: apt.lng });
-    overlay.push({ key: id++, lat: apt.lat, lng: apt.lng, content: ` <div
+    overlay.push({
+      key: id++, lat: apt.lat, lng: apt.lng, content: ` <div
         style="
           padding: 10px;
           background-color: white;
@@ -73,7 +74,8 @@ watch(aptList, (newValue) => {
           </div>
         </div>
       </div>
-      </div>`, yAnchor:"1.4", visible: false})
+      </div>`, yAnchor: "1.4", visible: false
+    })
   });
   markerInfoList.value = options;
   customOverlays.value = overlay;
@@ -82,7 +84,7 @@ watch(aptList, (newValue) => {
   markerInfoList.value.forEach((markerInfo) => {
     point = new kakao.maps.LatLng(markerInfo.lat, markerInfo.lng);
   })
-  if(point != null){
+  if (point != null) {
     bounds.extend(point)
     setBounds()
   }
@@ -100,9 +102,11 @@ const setBounds = () => {
 <template>
   <KakaoMap width="100%" height="100%" :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true"
     @onLoadKakaoMap="onLoadKakaoMap">
-    <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker.key)" :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat" />
+    <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker.key)"
+      :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat" />
     <template v-for="overlay in customOverlays" :key="overlay.key">
-      <KakaoMapCustomOverlay v-if="overlay.visible"  :lng="overlay.lng" :lat="overlay.lat" :content="overlay.content" :yAnchor="overlay.yAnchor" />
+      <KakaoMapCustomOverlay v-if="overlay.visible" :lng="overlay.lng" :lat="overlay.lat" :content="overlay.content"
+        :yAnchor="overlay.yAnchor" />
     </template>
   </KakaoMap>
 </template>
