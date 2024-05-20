@@ -66,9 +66,9 @@ public class HouseController {
 
 	@Operation(summary = "아파트 찾기", description = "키워드로 아파트 찾기")
 	@GetMapping("/aptName")
-	public ResponseEntity<List<HouseInfoDto>> aptName(@RequestParam("aptCode") String aptCode) throws Exception {
-		log.debug("aptName : {}", aptCode);
-		return new ResponseEntity<List<HouseInfoDto>>(houseService.getAptName(aptCode), HttpStatus.OK);
+	public ResponseEntity<List<HouseInfoDto>> aptName(@RequestParam("aptName") String aptName) throws Exception {
+		log.debug("aptName : {}", aptName);
+		return new ResponseEntity<List<HouseInfoDto>>(houseService.getAptName(aptName), HttpStatus.OK);
 	}
 
 	@Operation(summary = "매매 정보 찾기", description = "아파트 코드로 매매 정보 찾기")
