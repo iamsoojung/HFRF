@@ -128,15 +128,17 @@ const toggleMenu = () => {
         <div class="fixed"></div>
         <div class="flex grid-cols-2">
             <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
+                <div class="pt-4" v-show="!isDetail">
                 <VSelect class="text-xs" :selectOption="sidoList"
                     @onKeySelect="onChangeSido" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
                     @onKeySelect="onChangeGugun" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                     @onKeySelect="onChangeDong" />
+                </div>
                 <div
                     class="overflow-auto
-                     mt-5 ms-1 min-h-[700px] max-h-[700px] col-span-3 bg-white z-10">
+                     mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
                         <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
