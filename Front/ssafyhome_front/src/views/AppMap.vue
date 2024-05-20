@@ -124,11 +124,11 @@ const toggleMenu = () => {
 
 <template>
     <Header />
-    <div v-show="isOpenMenu" class="fixed z-10 my-5">
+    <div v-show="isOpenMenu" class="fixed z-10 my-5 ">
         <div class="fixed"></div>
         <div class="flex grid-cols-2">
-            <div class="col-span-1 flex-cols-3 justify-between">
-                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="sidoList"
+            <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg ">
+                <VSelect class="text-xs" :selectOption="sidoList"
                     @onKeySelect="onChangeSido" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
                     @onKeySelect="onChangeGugun" />
@@ -136,7 +136,7 @@ const toggleMenu = () => {
                     @onKeySelect="onChangeDong" />
                 <div
                     class="overflow-auto
-                    border-[1px] border-black mt-5 ms-1 rounded-lg min-h-[670px] max-h-[670px] col-span-3 bg-white z-10">
+                     mt-5 ms-1 min-h-[670px] max-h-[670px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
                         <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
@@ -217,13 +217,13 @@ const toggleMenu = () => {
                 </div>
             </div>
             <button @click="toggleMenu"
-                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
+                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-200">
             </button>
         </div>
     </div>
     <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
         <button @click="toggleMenu"
-            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-600">
+            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-200">
         </button>
     </div>
     <div class="border-y-2 grid">
