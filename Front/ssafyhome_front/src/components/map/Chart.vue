@@ -56,6 +56,11 @@ export default {
                     duration: 800,
                     easing: 'linear'
                 },
+                legend: 'none',
+                series: {
+                    0: { color: '#e2431e' }
+                },
+                pointSize: 10
             };
 
             // 차트를 그릴 div 요소를 참조
