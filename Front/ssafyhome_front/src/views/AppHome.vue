@@ -1,9 +1,12 @@
 <script setup>
 import Header from "@/components/layout/Header.vue";
 import { listAptByName } from '@/api/map';
+import { listNews } from '@/api/news';
 import { listArticle } from "@/api/board.js";
 import { ref, onMounted } from 'vue'
 import { initializeChannelIO } from "@/util/initializeChannelIO";
+
+const newsList = ref([]);
 
 const isDropdownOpen = ref(false)
 
@@ -56,7 +59,20 @@ const param = {
 onMounted(() => {
   getArticleList();
   initializeChannelIO();
+  getNewsList();
 });
+
+const getNewsList = () => {
+    listNews(
+        ({ data }) => {
+            console.log(data)
+            newsList.value = data.items.slice(5);
+        },
+        (error) => {
+            console.log(error);
+        }
+    )
+};
 
 const getArticleList = () => {
   listArticle(
@@ -147,12 +163,13 @@ const getArticleList = () => {
         <h1 class="text-4xl font-bold tracking-tight text-gray-800 sm:text-6xl">
           안녕하세요
         </h1>
-        <p class="mt-6 text-2xl leading-8 text-white">반갑습니다</p>
+        <p class="mt-6 text-2xl leading-8 text-gray-500">반갑습니다</p>
       </div>
     </div>
-    <div class="col-span-1 bg-[url('@/assets/home.jpg')] bg-cover bg-center"></div>
+    <div class="col-span-1 bg-[url('@/assets/home.jpg')] bg-cover bg-center">
     </div>
-    <div class="grid grid-cols-2 xl:grid-cols-6 pt-5 pb-20">
+    </div>
+    <div class="grid grid-cols-3 xl:grid-cols-8 pt-5 pb-20">
       <div class="col-span-1 xl:col-span-2 xl:col-start-2 p-5 ms-5">
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           공지사항
@@ -164,6 +181,16 @@ const getArticleList = () => {
             class="col-span-3 truncate">{{ article.subject }}</router-link>
         </div>
       </div>
+      <div class="col-span-1 xl:col-span-2 p-5 ms-5">
+        <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
+          뉴스
+        </div>
+        <div class="ps-4" >
+          <a :href="news.originallink" v-for="news in newsList" :key="news.orininallink">
+            <div class="truncate pb-1" v-html="news.title"></div>
+          </a>
+        </div>
+      </div> 
       <div class="col-span-1 xl:col-span-2 p-5 ms-5">
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           QnA 게시판

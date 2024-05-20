@@ -127,7 +127,7 @@ const toggleMenu = () => {
     <div v-show="isOpenMenu" class="fixed z-10 my-5 ">
         <div class="fixed"></div>
         <div class="flex grid-cols-2">
-            <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg ">
+            <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
                 <VSelect class="text-xs" :selectOption="sidoList"
                     @onKeySelect="onChangeSido" />
                 <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
@@ -136,12 +136,12 @@ const toggleMenu = () => {
                     @onKeySelect="onChangeDong" />
                 <div
                     class="overflow-auto
-                     mt-5 ms-1 min-h-[670px] max-h-[670px] col-span-3 bg-white z-10">
+                     mt-5 ms-1 min-h-[700px] max-h-[700px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
                         <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="text-white w-7 h-7">
+                                    stroke-width="1.5" stroke="currentColor" class="hover:cursor-pointer text-white w-7 h-7">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                                 </svg>
@@ -199,8 +199,8 @@ const toggleMenu = () => {
                         <div class="relative" v-for="apt in aptList" :key="apt.value">
                         <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
                             @click="getHouse(apt.value, apt.text)">
-                            <div class="h-[100px] border-[1px] me-3">
-                                <img alt="이미지" class="w-20" />
+                            <div class="w-32 bg-gradient-to-r from-cyan-400 to-blue-300 h-[100px] border-[1px] me-3 rounded-md">
+                                <img class="bg-cover" />
                             </div>
                             <div class="relative w-full">
                                 <div class="font-bold">{{ apt.text }}</div>
@@ -217,13 +217,13 @@ const toggleMenu = () => {
                 </div>
             </div>
             <button @click="toggleMenu"
-                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-200">
+                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
             </button>
         </div>
     </div>
     <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
         <button @click="toggleMenu"
-            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-pink-200 border-[1px] border-l-0 border-gray-200">
+            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
         </button>
     </div>
     <div class="border-y-2 grid">
