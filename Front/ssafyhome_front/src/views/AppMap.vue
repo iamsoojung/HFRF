@@ -89,21 +89,6 @@ const onChangeDong = (value) => {
         }
     )
 }
-
-const getHouse = (value, text) => {
-    dealByDong(
-        { aptCode: value },
-        ({ data }) => {
-            detailApt.value = data;
-            detailApt.value.text = text;
-            isDetail.value = true;
-        },
-        (error) => {
-            console.log(error);
-        }
-    );
-};
-
 const getAverageDealAmount = () => {
     let totalDealAmount = 0;
     detailApt.value.forEach((apt) => {
@@ -112,6 +97,23 @@ const getAverageDealAmount = () => {
     const average = totalDealAmount / detailApt.value.length;
     return Math.round(average);
 };
+const avarageDealAmount = ref()
+const getHouse = (value, text) => {
+    dealByDong(
+        { aptCode: value },
+        ({ data }) => {
+            detailApt.value = data;
+            detailApt.value.text = text;
+            isDetail.value = true;
+            avarageDealAmount.value = getAverageDealAmount()
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+};
+
+
 
 const isOpenMenu = ref(true)
 const toggleMenu = () => {
@@ -152,8 +154,8 @@ const toggleMenu = () => {
                         <div class="p-5">
                             <Chart :detailApt="detailApt" />
                             <div class="mt-3">
-                                <span class="text-red-600 font-bold">평균 매매가: </span>
-                                {{ getAverageDealAmount() }}
+                                <span class="text-red-600 font-bold">평균 매매가</span>
+                                <span class="ms-2">{{ Math.round(avarageDealAmount/10000) }}억 {{ avarageDealAmount%10000 }}만</span>
                             </div>
 
                             <div class="text-sm mb-2">실거래가</div>
