@@ -1,4 +1,4 @@
--- MySQL Workbench Forward Engineering
+-- MySQL Workbench Forward Engineeringhousedealhousedealhouseinfo
 
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
@@ -113,12 +113,9 @@ ENGINE = InnoDB;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hfrf`.`aptlike` (
   `user_id` VARCHAR(16) NOT NULL,
-  `like_no` INT NOT NULL,
-  `sidoName` VARCHAR(30) NOT NULL,
-  `gugunName` VARCHAR(30) NOT NULL,
-  `dongName` VARCHAR(30) NOT NULL,
-  `dongCode` VARCHAR(30) NOT NULL,
-  PRIMARY KEY (`user_id`, `like_no`),
+  `aptCode` BIGINT NOT NULL,
+  `dongCode` VARCHAR(10) NOT NULL,
+  PRIMARY KEY (`user_id`, `aptCode`),
   CONSTRAINT `aptlike_user_id_fk`
     FOREIGN KEY (`user_id`)
     REFERENCES `hfrf`.`members` (`user_id`)
@@ -268,6 +265,9 @@ WHERE dongcode LIKE '11110%' AND dongName IS NOT NULL;
 select * from sidocode;
 select * from guguncode;
 select * from dongcode;
+
+select * from aptlike;
+select * from houseinfo;
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
