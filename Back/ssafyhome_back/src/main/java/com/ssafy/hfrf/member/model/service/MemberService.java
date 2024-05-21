@@ -12,6 +12,8 @@ public interface MemberService {
 	
 	int idCheck(String userId) throws Exception;
 	
+	int emailCheck(String emailId, String emailDomain) throws Exception;
+	
 	void updateMember(MemberDto memberDto) throws Exception;
 	
 	void deleteMember(String userId) throws Exception;

@@ -15,10 +15,10 @@
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-20">
+      <div class="hidden lg:flex lg:gap-x-32">
         <template v-for="item in menuList" :key="item.routeName">
           <template v-if="item.show">
-            <RouterLink :to="{ name: item.routeName }" class="text-lg font-semibold leading-6 text-gray-900">{{
+            <RouterLink :to="{ name: item.routeName }" class="hover:font-bold text-lg font-semibold leading-6 text-gray-900">{{
               item.name }}</RouterLink>
           </template>
         </template>
@@ -45,9 +45,6 @@
                 <MenuItem v-slot="{ active }">
                 <RouterLink :to="{name: 'user-mypage'}"
                   :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">회원 정보</RouterLink>
-                </MenuItem>
-                <MenuItem v-slot="{ active }">
-                <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Settings</a>
                 </MenuItem>
                 <MenuItem v-slot="{ active }" @click="logout">
                 <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Logout</a>

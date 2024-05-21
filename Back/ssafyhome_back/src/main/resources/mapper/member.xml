@@ -37,6 +37,13 @@
 		where user_id = #{userId}
 	</select>
 	
+	<select id="emailCheck" parameterType="String">
+		select count(*)
+		from members
+		where email_id = #{emailId}
+		and email_domain = #{emailDomain}
+	</select>
+	
 	<update id="updateMember" parameterType="memberDto">
 		update members
 		set user_name = #{userName}, user_password = #{userPwd}, email_id = #{emailId}, email_domain = #{emailDomain}
