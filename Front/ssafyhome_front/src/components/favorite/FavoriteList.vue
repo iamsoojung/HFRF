@@ -1,5 +1,28 @@
 <script setup>
+import { ref } from 'vue'
 import FavoriteListItem from './item/FavoriteListItem.vue';
+import { listLike } from '@/api/aptLike';
+import { storeToRefs } from 'pinia'
+import { useMemberStore } from '@/stores/member'
+const memberStore = useMemberStore()
+const { userInfo, isLogin } = storeToRefs(memberStore)
+const likeAptList = ref([])
+const getLikeList = () => {
+    if (isLogin.value) {
+        listLike(
+            userInfo.value,
+            ({ data }) => {
+                likeAptList.value = data
+                console.log(likeAptList.value)
+            },
+            (error) => {
+                console.log(error)
+            }
+        );
+    }
+};
+
+getLikeList();
 </script>
 
 <template>
@@ -8,8 +31,7 @@ import FavoriteListItem from './item/FavoriteListItem.vue';
             관심 목록
         </div>
         <div class="flex flex-wrap">
-            <FavoriteListItem v-for="_ in 3" class="basis-1/3"/>
-            <FavoriteListItem v-for="_ in 3" class="basis-1/3"/>
+            <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt" class="basis-1/3"/>
         </div>
     </div>
 

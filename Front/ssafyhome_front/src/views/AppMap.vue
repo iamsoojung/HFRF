@@ -10,7 +10,7 @@ import Header from "@/components/layout/Header.vue";
 import Chart from '@/components/map/Chart.vue';
 
 const memberStore = useMemberStore()
-const { userInfo } = storeToRefs(memberStore)
+const { userInfo, isLogin } = storeToRefs(memberStore)
 
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
@@ -86,8 +86,34 @@ const onChangeDong = (value) => {
         { dongCode: value },
         ({ data }) => {
             let options = [];
+            let option = {};
             data.forEach((apt) => {
-                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng, visible: false });
+                option = {
+                            dong: apt.dong,
+                            gugunName: apt.gugunname,
+                            text: apt.apartmentName,
+                            value: apt.aptCode,
+                            lat: apt.lat,
+                            lng: apt.lng,
+                            visible: false,
+                            userLike: false
+                        };
+                likeAptList.value.forEach((like) => {
+                    if (like.aptCode == apt.aptCode) {
+                        option = {
+                            dong: apt.dong,
+                            gugunName: apt.gugunname,
+                            text: apt.apartmentName,
+                            value: apt.aptCode,
+                            lat: apt.lat,
+                            lng: apt.lng,
+                            visible: false,
+                            userLike: true
+                        }
+                    }
+                },
+                options.push(option)
+            )
             });
             aptList.value = options;
             noAptMsg.value = "매물이 없습니다."
@@ -128,32 +154,52 @@ const likeApt = ref({
     dongCode: "",
 })
 const likeAptList = ref([])
-
 const getLikeList = () => {
-    listLike(
-        userInfo.value,
-        ({ data }) => {
-            likeAptList.value = data
-            console.log(likeAptList.value)
-        },
-        (error) => {
-            console.log(error)
-        }
-    );
+    if (isLogin.value) {
+        listLike(
+            userInfo.value,
+            ({ data }) => {
+                likeAptList.value = data
+                console.log(likeAptList.value)
+            },
+            (error) => {
+                console.log(error)
+            }
+        );
+    }
 };
 
 
-const toggleLikeApt = () => {
-    likeApt.value.aptCode = detailApt.value[0].aptCode
-    like(
-        likeApt.value,
-        (response) => {
-            console.log(response)
-        },
-        (error) => {
-            console.log(error)
+const toggleLikeApt = (aptCode) => {
+    if (isLogin.value) {
+        let isAdd = true
+        likeAptList.value.forEach((like) => {
+            if (like.aptCode == aptCode) {
+                isAdd = false
+            }
+        })
+        likeApt.value.userId = userInfo.value.userId
+        likeApt.value.aptCode = aptCode
+        if (isAdd) {
+            like(
+                likeApt.value,
+                (response) => {
+                    console.log(response)
+                    likeAptList.value.push(likeApt.value)
+                },
+                (error) => {
+                    console.log(error)
+                }
+            )
         }
-    )
+        aptList.value.forEach((apt) => {
+            if (apt.value == aptCode) {
+                apt.userLike = isAdd
+            }
+        })
+    } else {
+        alert("로그인 해주세요")
+    }
 }
 
 const isOpenMenu = ref(true)
@@ -169,34 +215,34 @@ const toggleMenu = () => {
         <div class="flex grid-cols-2">
             <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
                 <div class="pt-4" v-show="!isDetail">
-                <VSelect class="text-xs" :selectOption="sidoList"
-                    @onKeySelect="onChangeSido" />
-                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
-                    @onKeySelect="onChangeGugun" />
-                <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
-                    @onKeySelect="onChangeDong" />
+                    <VSelect class="text-xs" :selectOption="sidoList" @onKeySelect="onChangeSido" />
+                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
+                        @onKeySelect="onChangeGugun" />
+                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
+                        @onKeySelect="onChangeDong" />
                 </div>
-                <div
-                    class="overflow-auto
+                <div class="overflow-auto
                      mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
                     <div v-if="isDetail">
                         <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
                             <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor" class="hover:cursor-pointer text-white w-7 h-7">
+                                    stroke-width="1.5" stroke="currentColor"
+                                    class="hover:cursor-pointer text-white w-7 h-7">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                                 </svg>
-                                
+
                             </div>
-                            
+
                             <div class="mt-24 ms-3">
                                 <div class="font-bold text-2xl text-white">
                                     {{ detailApt.text }}
                                 </div>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
-                                fill="currentColor" class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
+                                fill="currentColor"
+                                class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
                                 <path
                                     d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                             </svg>
@@ -205,7 +251,8 @@ const toggleMenu = () => {
                         <div class="p-5">
                             <div class="mt-3 text-xl font-bold mb-4">
                                 <span class="text-red-600">평균 매매가</span>
-                                <span class="ms-2">{{ Math.round(avarageDealAmount / 10000) }}억 {{ avarageDealAmount % 10000
+                                <span class="ms-2">{{ Math.round(avarageDealAmount / 10000) }}억 {{ avarageDealAmount %
+                                    10000
                                     }}만</span>
                             </div>
 
@@ -239,21 +286,22 @@ const toggleMenu = () => {
                     <div class="text-center mt-[80%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
                     <div v-else>
                         <div class="relative" v-for="apt in aptList" :key="apt.value">
-                        <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
-                            @click="getHouse(apt.value, apt.text)">
-                            <div class="w-32 bg-gradient-to-r from-cyan-400 to-blue-300 h-[100px] border-[1px] me-3 rounded-md">
-                                <img class="bg-cover" />
+                            <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
+                                @click="getHouse(apt.value, apt.text)">
+                                <div
+                                    class="w-32 bg-gradient-to-r from-cyan-400 to-blue-300 h-[100px] border-[1px] me-3 rounded-md">
+                                    <img class="bg-cover" />
+                                </div>
+                                <div class="relative w-full">
+                                    <div class="font-bold">{{ apt.text }}</div>
+                                    <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
+                                </div>
                             </div>
-                            <div class="relative w-full">
-                                <div class="font-bold">{{ apt.text }}</div>
-                                <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
-                            </div>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" @click="toggleLikeApt(apt.value)"
+                                :class="{'bg-red-500 text-white border-red-600': apt.userLike}" class=" border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
                                 <path
                                     d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
-                        </svg>
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -270,7 +318,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :aptList="aptList" :click-apt-code="clickAptCode"/>
+            <ViewMap class="w-full h-full" :aptList="aptList" :click-apt-code="clickAptCode" />
         </div>
     </div>
 </template>

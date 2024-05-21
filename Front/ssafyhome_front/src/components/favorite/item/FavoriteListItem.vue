@@ -1,5 +1,5 @@
 <script setup>
-
+defineProps({ likeApt: Object });
 </script>
 
 <template>
@@ -8,8 +8,8 @@
             <div class="w-full h-[350px] bg-pink-50 text-center">대충 집 사진</div>
             <div class="py-3 px-5 flex justify-between">
                 <div>
-                <div>아파트 이름</div>
-                <div>매매가</div>
+                <div>{{ likeApt.aptCode }}</div>
+                <div>{{ likeApt.dongCode }}</div>
                 </div>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                     class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 my-auto">
