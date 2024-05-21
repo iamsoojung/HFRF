@@ -6,10 +6,12 @@ const props = defineProps({
     type: Array,
     required: true,
     default: () => []
-  }
+  },
+  clickAptCode: Number
 });
 
 const aptList = toRefs(props).aptList
+const clickAptCode = toRefs(props).clickAptCode
 
 onMounted(() => {
   loadCurrentPosition();
@@ -43,6 +45,16 @@ const onClickKakaoMapMarker = (key) => {
 };
 
 let bounds;
+watch(clickAptCode, (newValue) => {
+  customOverlays.value.forEach((overlay) => {
+    if (overlay.aptCode == newValue) {
+      overlay.visible = true
+      map.value.panTo(new kakao.maps.LatLng(overlay.lat, overlay.lng))
+    } else {
+      overlay.visible = false
+    }
+  })
+})
 watch(aptList, (newValue) => {
   let options = [];
   let overlay = [];
@@ -75,7 +87,7 @@ watch(aptList, (newValue) => {
       </div>
       </div>`,
       yAnchor: "1.4",
-      visible: false,
+      visible: apt.visible,
       aptCode: apt.value
     })
   });

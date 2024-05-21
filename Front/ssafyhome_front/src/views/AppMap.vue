@@ -10,6 +10,7 @@ const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
+const clickAptCode = ref();
 
 const isDetail = ref(false)
 const toggleDetail = () => {
@@ -79,7 +80,7 @@ const onChangeDong = (value) => {
         ({ data }) => {
             let options = [];
             data.forEach((apt) => {
-                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng });
+                options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.lat, lng: apt.lng, visible: false });
             });
             aptList.value = options;
             noAptMsg.value = "매물이 없습니다."
@@ -102,6 +103,7 @@ const getHouse = (value, text) => {
     dealByDong(
         { aptCode: value },
         ({ data }) => {
+            clickAptCode.value = data[0].aptCode
             detailApt.value = data;
             detailApt.value.text = text;
             isDetail.value = true;
@@ -230,7 +232,7 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :aptList="aptList" />
+            <ViewMap class="w-full h-full" :aptList="aptList" :click-apt-code="clickAptCode"/>
         </div>
     </div>
 </template>
