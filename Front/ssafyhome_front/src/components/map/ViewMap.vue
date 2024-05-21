@@ -37,10 +37,10 @@ const loadCurrentPosition = () => {
 const map = ref();
 const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
-  searchPlaces(); // 페이지 로드 시 장소 초기 검색
+  // searchPlaces(); // 페이지 로드 시 장소 초기 검색
 
-  // 지도에 idle 이벤트를 등록합니다
-  kakao.maps.event.addListener(map.value, 'idle', searchPlaces);
+  // // 지도에 idle 이벤트를 등록합니다
+  // kakao.maps.event.addListener(map.value, 'idle', searchPlaces);
 }
 const markerInfoList = ref([]);
 const customOverlays = ref([]);
@@ -159,6 +159,7 @@ const addCategoryClickEvent = () => {
         markerInfoList.value = [];
         customOverlays.value = [];
         changeCategoryClass();
+        removeMarker();
       } else {
         currCategory = id;
         changeCategoryClass(el);
@@ -177,21 +178,17 @@ const searchPlaces = () => {
 
   // 지도에 표시되고 있는 마커를 제거합니다
   removeMarker();
-
-  console.log(currCategory)
   ps.categorySearch(currCategory, placeSearchCB, { useMapBounds: true });
 }
 
 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
 const placeSearchCB = (data, status) => {
-  console.log(data, status)
   if (status === kakao.maps.services.Status.OK) {
     // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
     displayPlaces(data);
   } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
     // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
   } else if (status === kakao.maps.services.Status.ERROR) {
-    // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
   }
 }
 
@@ -203,13 +200,14 @@ const displayPlaces = (places) => {
 
   places.forEach((place) => {
     // 마커를 생성하고 지도에 표시합니다
+    console.log(place)
     const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order);
 
     // 마커와 검색결과 항목을 클릭 했을 때
     // 장소정보를 표출하도록 클릭 이벤트를 등록합니다
-    kakao.maps.event.addListener(marker, 'click', () => {
-      displayPlaceInfo(place);
-    });
+    // kakao.maps.event.addListener(marker, 'click', () => {
+    //   displayPlaceInfo(place);
+    // });
   });
 }
 
