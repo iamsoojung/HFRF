@@ -13,9 +13,9 @@ const dateFormat = (date) => {
 </script>
 
 <template>
-  <tr class="flex text-center shadow-sm p-1">
+  <tr class="flex text-center p-1 border-b-[1px]">
     <th class="basis-1/12">{{ article.articleNo }}</th>
-    <td class="basis-7/12">
+    <td class="basis-7/12 text-start px-10">
       <router-link
         :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
       >
