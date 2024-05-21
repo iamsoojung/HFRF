@@ -1,10 +1,16 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
-import ViewMap from '@/components/map/ViewMap.vue'
+import { listLike, like } from '@/api/aptLike';
+import { storeToRefs } from 'pinia'
+import { useMemberStore } from '@/stores/member'
+import ViewMap from '@/components/map/ViewMap.vue';
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
 import Chart from '@/components/map/Chart.vue';
+
+const memberStore = useMemberStore()
+const { userInfo } = storeToRefs(memberStore)
 
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
@@ -20,6 +26,7 @@ const detailApt = ref(reactive([]));
 
 onMounted(() => {
     getSidoList();
+    getLikeList();
 })
 
 const getSidoList = () => {
@@ -120,7 +127,6 @@ const isOpenMenu = ref(true)
 const toggleMenu = () => {
     isOpenMenu.value = !isOpenMenu.value
 }
-
 </script>
 
 <template>
