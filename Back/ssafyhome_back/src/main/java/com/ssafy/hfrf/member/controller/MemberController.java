@@ -4,11 +4,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,7 +41,6 @@ import lombok.extern.slf4j.Slf4j;
 @Tag(name = "회원 인증 컨트롤러", description = "로그인 로그아웃, 토큰처리등 회원의 인증관련 처리하는 클래스.")
 @Slf4j
 public class MemberController {
-
 	// 컨트롤러와 서비스 연결
 	private final MemberService memberService;
 	private final JWTUtil jwtUtil;
@@ -47,7 +51,7 @@ public class MemberController {
 		this.memberService = memberService;
 		this.jwtUtil = jwtUtil;
 	}
-
+	
 	@Operation(summary = "회원가입", description = "회원 가입 처리.")
 	@PostMapping("/join")
 	public ResponseEntity<?> join(
@@ -175,6 +179,49 @@ public class MemberController {
 	public ResponseEntity<?> idCheck(@PathVariable("userId") String userId) throws Exception {
 		int cnt = memberService.idCheck(userId);
 		return new ResponseEntity<Integer>(cnt, HttpStatus.OK);
+	}
+	
+	@Autowired
+	private JavaMailSenderImpl mailSenderImpl;
+	
+	@Operation(summary = "email 중복 체크, 이메일 인증", description = "요청한 email이 중복되었는지 체크하고 이메일 인증번호 전송")
+	@GetMapping("/email/{emailId}@{emailDomain}")
+	public ResponseEntity<?> emailCheck(@PathVariable("emailId") String emailId, @PathVariable("emailDomain") String emailDomain) throws Exception {
+		Map map = new HashMap<>();
+		int isDup = memberService.emailCheck(emailId, emailDomain);
+		String key = "";
+		if(isDup == 0) {
+			mailSenderImpl = new JavaMailSenderImpl();
+			Properties prop = new Properties();
+			mailSenderImpl.setHost("smtp.gmail.com");
+			mailSenderImpl.setPort(587);
+			mailSenderImpl.setUsername("hohosamdy@gmail.com");
+			mailSenderImpl.setPassword("ecvmfgvfpfsfnbqe");
+			prop.put("mail.smtp.auth", true);
+			prop.put("mail.smtp.starttls.enable", true);
+			mailSenderImpl.setJavaMailProperties(prop);
+			Random random = new Random();
+			SimpleMailMessage message = new SimpleMailMessage();
+			message.setTo(emailId + '@' + emailDomain);
+			for(int i=0; i<3; i++) {
+				int index = random.nextInt(26) + 65;
+				key += (char) index;
+			}
+			for(int i=0; i<6; i++) {
+				int numIndex = random.nextInt(10);
+				key += numIndex;
+			}
+			String mail = "\n 홈파룸파 회원가입 이메일 인증";
+			message.setSubject("회원가입을 위한 이메일 인증번호 메일입니다.");
+			message.setText("인증번호는 " + key + " 입니다." + mail);
+			
+			mailSenderImpl.send(message);
+			
+			System.out.println("이메일 인증번호 전송");
+			map.put("key", key);
+		}
+		map.put("isDup", isDup);
+		return new ResponseEntity<Map>(map, HttpStatus.OK);
 	}
 	
 	@Operation(summary = "회원정보 수정", description = "회원정보 수정 처리.")

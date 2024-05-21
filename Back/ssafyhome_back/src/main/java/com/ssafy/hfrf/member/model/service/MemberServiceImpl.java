@@ -37,7 +37,10 @@ public class MemberServiceImpl implements MemberService {
 	public int idCheck(String userId) throws Exception {
 		return memberMapper.idCheck(userId);
 	}
-	
+	@Override
+	public int emailCheck(String emailId, String emailDomain) throws Exception {
+		return memberMapper.emailCheck(emailId, emailDomain);
+	}
 	@Override
 	public void updateMember(MemberDto memberDto) throws Exception {
 		memberMapper.updateMember(memberDto);

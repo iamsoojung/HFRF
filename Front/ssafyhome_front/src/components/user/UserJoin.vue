@@ -8,7 +8,7 @@ import {
 } from "@headlessui/vue";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { httpStatusCode } from "@/util/http-status";
-import { checkId } from "@/api/user";
+import { checkId, checkEmail } from "@/api/user";
 import { useMemberStore } from '@/stores/member'
 
 const memberStore = useMemberStore()
@@ -33,31 +33,72 @@ const isPwdError = ref(false)
 const isDupId = ref(false)
 
 const join = async () => {
-  if(isDupId.value) {
-    alert("이미 잇는 ID잔아 ㅡㅡ")
-  } else if(isPwdError.value) {
-    alert("비밀번호가 다름;")
+  if (isDupId.value) {
+    alert("이미 존재하는 ID입니다.")
+  } else if (isPwdError.value) {
+    alert("비밀번호가 다릅니다.")
+  } else if (isDupEmail.value || emailInputNone.value) {
+    alert("이메일을 확인해주세요.")
+  } else if (!codeCorrect.value) {
+    alert("인증번호를 확인해주세요.")
   } else {
-    await userJoin(joinUser) 
+    await userJoin(joinUser)
   }
 }
 
 const checkDup = async () => {
   await checkId(joinUser.userId,
-  (response) => {
-    if(response.data === 0) {
-      isDupId.value = false;
-    } else {
-      isDupId.value = true;
+    (response) => {
+      if (response.data === 0) {
+        isDupId.value = false;
+      } else {
+        isDupId.value = true;
+      }
+    },
+    (error) => {
+      console.log(error)
     }
-  },
-  (error) => {
-    console.log(error)
+  )
+}
+
+const isDupEmail = ref()
+const emailInputNone = ref()
+const emailCode = ref()
+const inputCode = ref()
+const codeCorrect = ref()
+const emailCheck = async () => {
+  if(joinUser.emailId.length == 0) {
+    emailInputNone.value = true
+  } else {
+    emailInputNone.value = false
+    await checkEmail(joinUser.emailId, joinUser.emailDomain,
+      (response) => {
+        console.log(response);
+        if(response.data.isDup === 1) {
+          isDupEmail.value = true;
+        } else {
+          isDupEmail.value = false;
+          emailCode.value = response.data.key
+        }
+      },
+      (error) => {
+        console.log(error)
+      }
+    )
   }
-)}
+}
+const checkCode = () => {
+  if(emailCode.value == inputCode.value) {
+    codeCorrect.value = true
+    alert("인증되었습니다.")
+  } else {
+    alert("인증번호가 다릅니다")
+    codeCorrect.value = false
+  }
+}
 
 watch(() => joinUser.userId, (newParam, oldParam) => {
-  if(newParam.length != 0) {
+  if (newParam.length != 0) {
     checkDup()
   }
 })
@@ -88,12 +129,13 @@ watch(() => checkPwd.value, (newParam, oldParam) => {
         <div class="relative flex flex-row">
           <div class="text-lg basis-2/6 my-auto">아이디</div>
           <input v-model="joinUser.userId" name="userId" type="text" required
-          :class="{ 'focus:ring-indigo-600': !isDupId, 'ring-red-600': isDupId }"
-          class="ps-3 basis-5/6 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
+            :class="{ 'focus:ring-indigo-600': !isDupId, 'ring-red-600': isDupId }"
+            class="ps-3 basis-5/6 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
           <div v-if="isDupId" class="absolute right-0 mt-2 text-red-600 text-sm me-3" role="alert">
             이미 존재하는 ID입니다.
           </div>
-          <div v-else-if="joinUser.userId.length != 0" class="absolute right-0 mt-2 text-green-600 text-sm me-3" role="alert">
+          <div v-else-if="joinUser.userId.length != 0" class="absolute right-0 mt-2 text-green-600 text-sm me-3"
+            role="alert">
             사용 가능한 ID입니다.
           </div>
         </div>
@@ -105,15 +147,19 @@ watch(() => checkPwd.value, (newParam, oldParam) => {
         <div class="relative flex flex-row">
           <div class="text-lg basis-2/6 my-auto">비밀번호 확인</div>
           <input v-model="checkPwd" name="checkPwd" type="password" required maxlength="16"
-          :class="{ 'focus:ring-indigo-600': !isPwdError, 'ring-red-600': isPwdError }"
-          class="ps-3 basis-5/6 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
+            :class="{ 'focus:ring-indigo-600': !isPwdError, 'ring-red-600': isPwdError }"
+            class="ps-3 basis-5/6 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
           <div v-if="isPwdError" class="absolute right-0 mt-2 text-red-600 text-sm me-3" role="alert">
             비밀번호가 일치하지 않습니다.
           </div>
         </div>
-        <div class="flex flex-row">
+        <div class="grid grid-rows-2">
+          <div class="flex">
           <div class="text-lg basis-2/6 my-auto">이메일</div>
-          <div class="flex items-center basis-5/6">
+          <div class="relative flex items-center basis-5/6">
+            <div class="absolute right-[-120px] z-10">
+              <div @click="emailCheck" class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">이메일 인증</div>
+            </div>
             <input v-model="joinUser.emailId" name="emailId" type="text" required
               class="ps-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
             <span class="mx-2">@</span>
@@ -135,19 +181,19 @@ watch(() => checkPwd.value, (newParam, oldParam) => {
                     <ListboxOption as="template" v-for="email in emails" :key="email.id" :value="email"
                       v-slot="{ active, selected }">
                       <li :class="[
-                          active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                          'relative cursor-default select-none py-2 pl-3 pr-9',
-                        ]">
+                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                        'relative cursor-default select-none py-2 pl-3 pr-9',
+                      ]">
                         <div class="flex items-center">
                           <span :class="[
-                              selected ? 'font-semibold' : 'font-normal',
-                              'ml-3 block truncate',
-                            ]">{{ email.name }}</span>
+                            selected ? 'font-semibold' : 'font-normal',
+                            'ml-3 block truncate',
+                          ]">{{ email.name }}</span>
                         </div>
                         <span v-if="selected" :class="[
-                            active ? 'text-white' : 'text-indigo-600',
-                            'absolute inset-y-0 right-0 flex items-center pr-4',
-                          ]">
+                          active ? 'text-white' : 'text-indigo-600',
+                          'absolute inset-y-0 right-0 flex items-center pr-4',
+                        ]">
                           <CheckIcon class="h-5 w-5" aria-hidden="true" />
                         </span>
                       </li>
@@ -157,6 +203,16 @@ watch(() => checkPwd.value, (newParam, oldParam) => {
               </div>
             </Listbox>
           </div>
+        </div>
+        <div class="relative flex">
+        <div class="text-lg basis-2/6 my-auto"></div>
+        <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="emailInputNone">이메일을 입력해주세요.</div>
+        <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="isDupEmail">다른 이메일을 입력해주세요.</div>
+        <input v-show="emailCode==null?false:true" v-model="inputCode" class="absolute mt-5 w-[160px] border-[1px] right-0 text-sm p-1.5 px-6 rounded-lg border-gray-300">
+        <div class="mt-5 absolute right-[-75px] z-10">
+              <div v-show="emailCode==null?false:true" @click="checkCode" class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">확인</div>
+        </div>
+      </div>
         </div>
         <div class="text-center p-5">
           <button type="submit"

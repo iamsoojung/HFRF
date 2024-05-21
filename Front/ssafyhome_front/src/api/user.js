@@ -33,6 +33,10 @@ async function checkId(userId, success, fail) {
   await local.get(`/user/${userId}`).then(success).catch(fail);
 }
 
+async function checkEmail(emailId, emailDomain, success, fail) {
+  await local.get(`/user/email/${emailId}@${emailDomain}`).then(success).catch(fail);
+}
+
 async function modify(modifyUser, success, fail) {
   await local
     .post(`/user/${modifyUser.userId}`, modifyUser)
@@ -43,6 +47,8 @@ async function modify(modifyUser, success, fail) {
 async function deleteUser(userId, success, fail) {
   await local.delete(`/user/${userId}`).then(success).catch(fail);
 }
+
+
 export {
   userConfirm,
   findById,
@@ -52,4 +58,5 @@ export {
   checkId,
   modify,
   deleteUser,
+  checkEmail
 };

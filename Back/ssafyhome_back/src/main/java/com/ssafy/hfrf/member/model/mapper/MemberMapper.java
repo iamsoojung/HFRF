@@ -17,6 +17,8 @@ public interface MemberMapper {
 	void insertMember(MemberDto memberDto) throws SQLException;
 
     int idCheck(String userId) throws SQLException;
+    
+    int emailCheck(String emailId, String emailDomain) throws SQLException;
 	
 	void updateMember(MemberDto memberDto) throws SQLException;
 	
