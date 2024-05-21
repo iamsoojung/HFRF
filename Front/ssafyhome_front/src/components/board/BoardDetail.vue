@@ -207,7 +207,7 @@ function submitComment() {
                 {{ userInfo.userId }}
               </div>
               <div class="col-span-4" id="with-login2" v-if="userInfo">
-                <textarea rows="2" class="border p-2 rounded w-full" id="comment-content"
+                <textarea rows="2" class="border p-2 rounded w-full resize-none" id="comment-content"
                   placeholder="Write something..."></textarea>
               </div>
               <div class="flex my-2 justify-end" id="with-login3" v-if="userInfo">

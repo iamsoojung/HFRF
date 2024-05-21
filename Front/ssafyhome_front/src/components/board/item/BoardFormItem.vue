@@ -121,7 +121,7 @@ function moveList() {
       <label class="absolute ms-2" for="content">내용
         <span class="ms-4">:</span>
       </label>
-      <textarea class="mx-[80px] size-11/12" v-model="article.content" rows="10"></textarea>
+      <textarea class="mx-[80px] size-11/12 resize-none " v-model="article.content" rows="10"></textarea>
     </div>
     <div class="text-center">
       <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'">
