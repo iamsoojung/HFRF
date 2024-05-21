@@ -1,6 +1,6 @@
 <template>
   <div class="mb-[100px]"></div>
-  <header class="absolute inset-x-0 top-0 z-50    ">
+  <header class="absolute inset-x-0 top-0 z-50">
     <nav class="flex items-center justify-between lg:px-8" aria-label="Global">
       <div class="flex lg:flex-1">
         <RouterLink :to="{ name: 'home' }" class="p-1.5">
@@ -80,11 +80,52 @@
             <span class="sr-only">Go Home</span>
             <img class="h-8 w-auto" src="@/assets/logo.png" alt="" />
           </a>
+          <div class="flex">
+          <div v-show="isLogin" class="flex me-5">
+          <Menu as="div" class="relative ml-3">
+            <div>
+              <MenuButton
+                class="border-2 border-black me-3 relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                <span class="absolute -inset-1.5" />
+                <span class="sr-only">Open user menu</span>
+                <img class="h-8 w-8 rounded-full"
+                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                  alt="" />
+              </MenuButton>
+            </div>
+            <transition enter-active-class="transition ease-out duration-100"
+              enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100"
+              leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100"
+              leave-to-class="transform opacity-0 scale-95">
+              <MenuItems
+                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                <MenuItem v-slot="{ active }">
+                <RouterLink :to="{name: 'user-mypage'}"
+                  :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">회원 정보</RouterLink>
+                </MenuItem>
+                <MenuItem v-slot="{ active }" @click="logout">
+                <a href="#" :class="[active ? 'bg-gray-100' : '', 'block px-4 py-2 text-sm text-gray-700']">Logout</a>
+                </MenuItem>
+              </MenuItems>
+            </transition>
+          </Menu>
+          <span class="my-auto" v-if="userInfo && userInfo.userId">
+            <span class="font-bold">
+              {{ userInfo.userName }}
+            </span>
+            님, 안녕하세요
+          </span>
+          <div>
+            
+          </div>
+        </div>
           <button type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700" @click="mobileMenuOpen = false">
             <span class="sr-only">Close menu</span>
             <XMarkIcon class="h-6 w-6" aria-hidden="true" />
           </button>
         </div>
+        </div>
+        
         <div class="mt-6 flow-root">
           <div class="my-6 divide-y divide-gray-500/10">
             <template v-for="item in menuList" :key="item.routeName">
@@ -95,7 +136,7 @@
                 </div>
               </template>
             </template>
-            <div class="py-6 flex justify-end me-3">
+            <div v-show="!isLogin" class="py-6 flex justify-end me-3">
               <RouterLink :to="{ name: 'login' }"
                 class="my-auto me-2 text-xl font-semibold leading-6 text-gray-900 hover:text-gray-700">
                 Log in
