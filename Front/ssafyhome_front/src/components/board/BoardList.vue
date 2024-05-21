@@ -65,19 +65,21 @@ const moveWrite = () => {
 <template>
   <div>
     <div>
-      <div class="flex justify-end mb-3">
-        <button type="button" class="border-solid border-2 p-1 rounded-md me-10" @click="moveWrite">글쓰기</button>
+      <div class="flex justify-end mb-2">
+        <button type="button" class="border-solid border-2 py-0.5 px-2 rounded-md me-2" @click="moveWrite">글쓰기</button>
       </div>
       <div>
         <table class="container">
           <thead>
             <tr
-              class="grid grid-cols-8 shadow-sm p-1 text-white bg-gradient-to-r from-red-500 via-green-300 to-purple-500">
-              <th class="col-span-1">글번호</th>
-              <th class="col-span-4">제목</th>
-              <th>작성자</th>
-              <th>조회수</th>
-              <th>작성일</th>
+              class="flex shadow-sm p-1 border-t-2">
+              <th class="basis-1/12">글번호</th>
+              <th class="basis-7/12">제목</th>
+              <div class="flex basis-4/12">
+              <th class="basis-6/12">작성자</th>
+              <th class="basis-2/12">조회수</th>
+              <th class="basis-4/12">작성일</th>
+            </div>
             </tr>
           </thead>
           <tbody>
@@ -87,11 +89,11 @@ const moveWrite = () => {
       </div>
       <div class="mt-8">
         <PageNavigation :current-page="currentPage" :total-page="totalPage" @pageChange="onPageChange"></PageNavigation>
-        <form class="mt-3 d-flex">
+        <form class="mt-3">
           <div>
             <VSelect class="border-solid border-2 ps-2 p-0.5 rounded-md shadow-sm" :selectOption="selectOption"
               @onKeySelect="changeKey" />
-            <input type="text" class="border-solid border-2 relative px-3 m-3 p-0.5 rounded-md shadow-sm"
+            <input type="text" class="border-solid border-2 px-3 m-3 p-0.5 rounded-md shadow-sm"
               v-model="param.word" placeholder="검색어..." />
             <button class="border-solid border-2 px-2 p-1 rounded-md shadow-sm bg-black text-white" type="button"
               @click="getArticleList">

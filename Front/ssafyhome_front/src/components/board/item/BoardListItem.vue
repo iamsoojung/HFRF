@@ -1,21 +1,37 @@
 <script setup>
 defineProps({ article: Object });
+const today = new Date();
+const dateFormat = (date) => {
+  let month = date.getMonth() + 1;
+        let day = date.getDate();
+
+        month = month >= 10 ? month : '0' + month;
+        day = day >= 10 ? day : '0' + day;
+
+        return date.getFullYear() + '-' + month + '-' + day
+}
 </script>
 
 <template>
-  <tr class="grid grid-cols-8 text-center shadow-sm p-1">
-    <th scope="col-span-1">{{ article.articleNo }}</th>
-    <td class="col-span-4">
+  <tr class="flex text-center shadow-sm p-1">
+    <th class="basis-1/12">{{ article.articleNo }}</th>
+    <td class="basis-7/12">
       <router-link
         :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
       >
         {{ article.subject }}
       </router-link>
     </td>
-    <td>{{ article.userName }}</td>
-    <td>{{ article.hit }}</td>
-    <td class="hidden xl:block">{{ article.registerTime }}</td>
-    <td class="block xl:hidden">{{ article.registerTime.slice(-0, -8) }}</td>
+    <div class="basis-4/12 flex">
+    <td class="basis-6/12">{{ article.userName }}</td>
+    <td class="basis-2/12">{{ article.hit }}</td>
+    <div class="basis-4/12">
+    <div>
+      {{ article.registerTime.slice(0, 10) == dateFormat(today) ?
+         article.registerTime.slice(10, 19) : article.registerTime.slice(0, 10) }}
+           </div>
+    </div>
+  </div>
   </tr>
 </template>
 

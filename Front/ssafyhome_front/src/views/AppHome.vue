@@ -114,14 +114,14 @@ const getArticleList = () => {
           );
         "></div>
     </div>
-    <div class="grid grid-cols-2 mx-auto">
+    <div class="min-w-[900px] grid grid-cols-2 mx-auto">
       <div class="col-span-1 py-16 sm:py-24 lg:py-28">
       <div class="mb-20 flex justify-center ">
         <form class="max-w-lg mx-auto" @submit.prevent="search">
           <div class="flex items-center">
             <div class="relative">
               <button id="dropdown-button" @click="toggleDropdown"
-                class="w-36 z-10 flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-pink-50 border border-red-200 rounded-s-lg hover:bg-pink-100 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                class="w-32 z-10 flex-shrink-0 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-gray-900 bg-pink-50 border border-red-200 rounded-s-lg hover:bg-pink-100 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                 type="button">
                 {{ selectedCategory.name }}
                 <svg :class="{ 'transform rotate-180': isDropdownOpen }" class="w-2.5 h-2.5 ms-auto" aria-hidden="true"
@@ -142,10 +142,10 @@ const getArticleList = () => {
                 </ul>
               </div>
             </div>
-            <div class="relative flex w-96">
+            <div class="relative flex w-72">
               <input v-model="searchText" type="search" id="search-dropdown"
                 class="block w-full pl-5 pr-10 py-2.5 text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-[1px] border-pink-300 focus:border-none dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
-                placeholder="원하시는 지역명, 아파트명을 입력해주세요." required />
+                placeholder="지역명, 아파트명을 입력해주세요." required />
               <button type="submit"
                 class="absolute inset-y-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border border-pink-400 hover:bg-pink-500 focus:outline-none">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
