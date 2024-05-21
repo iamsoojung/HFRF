@@ -33,33 +33,9 @@ const router = createRouter({
       component: () => import("../views/AppMap.vue"),
     },
     {
-      path: "/notice",
-      name: "notice",
-      component: () => import("../views/AppNotice.vue"),
-      redirect: { name: "notice-list" },
-      children: [
-        {
-          path: "/notice",
-          name: "noticeList",
-          component: () => import("@/components/board/BoardList.vue"),
-        },
-        {
-          path: "/notice/view/:articleno",
-          name: "noticeView",
-          component: () => import("@/components/board/BoardDetail.vue"),
-        },
-        {
-          path: "/notice/write",
-          name: "noticeWrite",
-          beforeEnter: onlyAuthUser,
-          component: () => import("@/components/board/BoardWrite.vue"),
-        },
-        {
-          path: "/notice/modify/:articleno",
-          name: "noticeModify",
-          component: () => import("@/components/board/BoardModify.vue"),
-        },
-      ],
+      path: "/favorite",
+      name: "favorite",
+      component: () => import("../views/AppFavorite.vue"),
     },
     {
       path: "/user",
