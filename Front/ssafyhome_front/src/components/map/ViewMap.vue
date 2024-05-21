@@ -86,7 +86,6 @@ const placesSearchCB = (data, status) => {
       markerList.value.push(markerItem);
       bounds.extend(new kakao.maps.LatLng(Number(marker.y), Number(marker.x)));
     }
-    map.value?.setBounds(bounds);
   }
 };
 
