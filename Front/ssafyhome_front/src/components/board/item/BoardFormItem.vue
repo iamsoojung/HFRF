@@ -72,7 +72,6 @@ function onSubmit() {
 }
 
 function writeArticle() {
-  console.log("글등록하자!!", article.value);
   registArticle(
     article.value,
     (response) => {

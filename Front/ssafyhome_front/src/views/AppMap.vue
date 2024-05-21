@@ -1,10 +1,16 @@
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
-import ViewMap from '@/components/map/ViewMap.vue'
+import { listLike, like } from '@/api/aptLike';
+import { storeToRefs } from 'pinia'
+import { useMemberStore } from '@/stores/member'
+import ViewMap from '@/components/map/ViewMap.vue';
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
 import Chart from '@/components/map/Chart.vue';
+
+const memberStore = useMemberStore()
+const { userInfo } = storeToRefs(memberStore)
 
 const sidoList = ref([{ text: "시도선택", value: "" }]);
 const gugunList = ref([{ text: "구군선택", value: "" }]);
@@ -20,6 +26,7 @@ const detailApt = ref(reactive([]));
 
 onMounted(() => {
     getSidoList();
+    getLikeList();
 })
 
 const getSidoList = () => {
@@ -115,13 +122,44 @@ const getHouse = (value, text) => {
     );
 };
 
+const likeApt = ref({
+    userId: "",
+    aptCode: "",
+    dongCode: "",
+})
+const likeAptList = ref([])
 
+const getLikeList = () => {
+    listLike(
+        userInfo.value,
+        ({ data }) => {
+            likeAptList.value = data
+            console.log(likeAptList.value)
+        },
+        (error) => {
+            console.log(error)
+        }
+    );
+};
+
+
+const toggleLikeApt = () => {
+    likeApt.value.aptCode = detailApt.value[0].aptCode
+    like(
+        likeApt.value,
+        (response) => {
+            console.log(response)
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+}
 
 const isOpenMenu = ref(true)
 const toggleMenu = () => {
     isOpenMenu.value = !isOpenMenu.value
 }
-
 </script>
 
 <template>
@@ -157,11 +195,11 @@ const toggleMenu = () => {
                                     {{ detailApt.text }}
                                 </div>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
                                 fill="currentColor" class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
                                 <path
                                     d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
-                        </svg>
+                            </svg>
                         </div>
                         <Chart class="ms-10" :detailApt="detailApt" />
                         <div class="p-5">
