@@ -2,7 +2,6 @@
 import { toRefs, ref, onMounted, defineProps, watch } from 'vue'
 import { KakaoMap, KakaoMapMarker, KakaoMapCustomOverlay } from 'vue3-kakao-maps'
 
-// aptList props 받기
 const props = defineProps({
   aptList: {
     type: Array,
@@ -11,19 +10,39 @@ const props = defineProps({
   },
   clickAptCode: Number
 });
+
 const aptList = toRefs(props).aptList
 const clickAptCode = toRefs(props).clickAptCode
+const markerList = ref([]);
+const activeCategory = ref('');
+const iconList = {
+  BK9: 'icon-bank.png',
+  MT1: 'icon-mart.png',
+  PM9: 'icon-pharmacy.png',
+  SC4: 'icon-school.png',
+  CE7: 'icon-cafe.png',
+  SW8: 'icon-subway.png'
+}
+
+let point; // point 변수를 밖에서 선언
 
 onMounted(() => {
   loadCurrentPosition();
-  addCategoryClickEvent();
-})
+  const categoryDiv = document.getElementById('category');
+  const categoryButtons = categoryDiv.querySelectorAll('div');
+  categoryButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const category = button.getAttribute('id');
+      toggleCategorySearch(category);
+    });
+  });
+});
 
-// 현재 위치 찾기
 const coordinate = ref({
   lat: 33.450701,
   lng: 126.570667
 })
+
 const loadCurrentPosition = () => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
@@ -32,19 +51,14 @@ const loadCurrentPosition = () => {
     })
   }
 }
-
-// 지도 생성하기
 const map = ref();
 const onLoadKakaoMap = (mapRef) => {
   map.value = mapRef;
-  // searchPlaces(); // 페이지 로드 시 장소 초기 검색
-
-  // // 지도에 idle 이벤트를 등록합니다
-  // kakao.maps.event.addListener(map.value, 'idle', searchPlaces);
 }
+
 const markerInfoList = ref([]);
 const customOverlays = ref([]);
-const onClickKakaoMapMarker = (key) => {  // 마커 클릭 시 커스텀 오버레이 보이기
+const onClickKakaoMapMarker = (key) => {
   customOverlays.value.forEach((overlay) => {
     if (key == overlay.key) {
       overlay.visible = !overlay.visible
@@ -52,7 +66,37 @@ const onClickKakaoMapMarker = (key) => {  // 마커 클릭 시 커스텀 오버�
   })
 };
 
-// 아파트 오버레이 띄우기
+// 키워드 검색 완료 시 호출되는 콜백함수 입니다
+const placesSearchCB = (data, status) => {
+  if (status === kakao.maps.services.Status.OK) {
+    const bounds = new kakao.maps.LatLngBounds();
+    markerList.value = [];
+    for (let marker of data) {
+      const markerItem = {
+        lat: marker.y,
+        lng: marker.x,
+        infoWindow: {
+          content: marker.place_name,
+          visible: false
+        },
+        icon: iconList[activeCategory.value] // 아이콘 설정
+      };
+      markerList.value.push(markerItem);
+      bounds.extend(new kakao.maps.LatLng(Number(marker.y), Number(marker.x)));
+    }
+    map.value?.setBounds(bounds);
+  }
+};
+
+//마커 클릭 시 인포윈도우의 visible 값을 반전시킵니다
+const onClickMapMarker = (markerItem) => {
+  if (markerItem.infoWindow?.visible !== null && markerItem.infoWindow?.visible !== undefined) {
+    markerItem.infoWindow.visible = !markerItem.infoWindow.visible;
+  } else {
+    markerItem.infoWindow.visible = true;
+  }
+};
+
 let bounds;
 watch(clickAptCode, (newValue) => {
   customOverlays.value.forEach((overlay) => {
@@ -103,7 +147,7 @@ watch(aptList, (newValue) => {
   markerInfoList.value = options;
   customOverlays.value = overlay;
   bounds = new kakao.maps.LatLngBounds();
-  let point;
+  point = null; // point 변수 초기화
   markerInfoList.value.forEach((markerInfo) => {
     point = new kakao.maps.LatLng(markerInfo.lat, markerInfo.lng);
   })
@@ -113,7 +157,6 @@ watch(aptList, (newValue) => {
   }
 }, { deep: true })
 
-// 바운드 지정
 const setBounds = () => {
   if (map.value !== undefined) {
     map.value.setBounds(bounds);
@@ -122,151 +165,42 @@ const setBounds = () => {
   }
 }
 
-// ---------------------------------------------------
-let placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 });
-let contentNode = document.createElement('div');  // 커스텀 오버레이의 컨텐츠 엘리먼트
-let markers = []; // 마커를 담을 배열입니다
-let currCategory = ''; // 현재 선택된 카테고리를 가지고 있을 변수입니다
-
-// 장소 검색 객체를 생성합니다.
 const ps = new kakao.maps.services.Places();
 
-// 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
-contentNode.className = 'placeinfo_wrap';
-
-// 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
-// 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다
-const addEventHandle = (target, type, callback) => {
-  if (target.addEventListener) {
-    target.addEventListener(type, callback);
+const toggleCategorySearch = (category) => {
+  if (activeCategory.value === category) {
+    activeCategory.value = '';
+    markerList.value = [];
   } else {
-    target.attachEvent("on" + type, callback);
-  }
-}
-addEventHandle(contentNode, "mousedown", kakao.maps.event.preventMap);
-addEventHandle(contentNode, "touchstart", kakao.maps.event.preventMap);
-
-// 커스텀 오버레이 컨텐츠를 설정합니다
-placeOverlay.setContent(contentNode);
-
-// 각 카테고리에 클릭 이벤트를 등록합니다
-const addCategoryClickEvent = () => {
-  document.querySelectorAll('#category div').forEach((el) => {
-    el.addEventListener('click', () => {
-      const id = el.getAttribute('id');
-      if (currCategory === id) {
-        currCategory = '';
-        markerInfoList.value = [];
-        customOverlays.value = [];
-        changeCategoryClass();
-        removeMarker();
-      } else {
-        currCategory = id;
-        changeCategoryClass(el);
-        searchPlaces();
-      }
-    });
-  });
-}
-
-// 카테고리 검색을 요청하는 함수입니다
-const searchPlaces = () => {
-  if (!currCategory) return;
-
-  // 커스텀 오버레이를 숨깁니다.
-  placeOverlay.setMap(null);
-
-  // 지도에 표시되고 있는 마커를 제거합니다
-  removeMarker();
-  ps.categorySearch(currCategory, placeSearchCB, { useMapBounds: true });
-}
-
-// 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
-const placeSearchCB = (data, status) => {
-  if (status === kakao.maps.services.Status.OK) {
-    // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
-    displayPlaces(data);
-  } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
-    // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
-  } else if (status === kakao.maps.services.Status.ERROR) {
-  }
-}
-
-// 지도에 마커를 표출하는 함수입니다
-const displayPlaces = (places) => {
-  // 몇번째 카테고리가 선택되어 있는지 얻어옵니다
-  // 이 순서는 스프라이트 이미지에서의 위치를 계산하는데 사용됩니다
-  const order = document.getElementById(currCategory).getAttribute('data-order');
-
-  places.forEach((place) => {
-    // 마커를 생성하고 지도에 표시합니다
-    console.log(place)
-    const marker = addMarker(new kakao.maps.LatLng(place.y, place.x), order);
-
-    // 마커와 검색결과 항목을 클릭 했을 때
-    // 장소정보를 표출하도록 클릭 이벤트를 등록합니다
-    // kakao.maps.event.addListener(marker, 'click', () => {
-    //   displayPlaceInfo(place);
-    // });
-  });
-}
-
-// 마커를 추가하는 함수입니다
-const addMarker = (position, order) => {
-  const imageSrc = 'https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png';
-  const imageSize = new kakao.maps.Size(36, 37);
-  const imgOptions = {
-    spriteSize: new kakao.maps.Size(36, 691),
-    spriteOrigin: new kakao.maps.Point(0, (order * 46) + 10),
-    offset: new kakao.maps.Point(13, 37)
-  };
-  const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions);
-  const marker = new kakao.maps.Marker({
-    position,
-    image: markerImage
-  });
-  marker.setMap(map.value);
-  markers.push(marker);
-  return marker;
-}
-
-// 지도에 표시되고 있는 마커를 제거하는 함수입니다
-const removeMarker = () => {
-  markers.forEach((marker) => {
-    marker.setMap(null);
-  });
-  markers = [];
-}
-
-// 장소의 정보를 커스텀 오버레이로 표시하는 함수입니다
-const displayPlaceInfo = (place) => {
-  const content = `
-    <div class="placeinfo">
-      <a class="title" href="${place.place_url}" target="_blank" title="${place.place_name}">
-        ${place.place_name}
-      </a>  
-      <span title="${place.road_address_name}">${place.road_address_name}</span>
-      <span class="jibun" title="${place.address_name}">(지번) ${place.address_name}</span>
-      <span class="tel">${place.phone}</span>
-    </div>
-    <div class="after"></div>
-  `;
-
-  contentNode.innerHTML = content;
-  placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
-  placeOverlay.setMap(map.value);
-}
-
-// 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
-const changeCategoryClass = (el) => {
-  const category = document.getElementById('category');
-  const children = category.children;
-  for (let i = 0; i < children.length; i++) {
-    children[i].className = '';
-  }
-
-  if (el) {
-    el.className = 'on';
+    activeCategory.value = category;
+    let keyword = '';
+    switch (category) {
+      case 'BK9':
+        keyword = '은행';
+        break;
+      case 'MT1':
+        keyword = '마트';
+        break;
+      case 'PM9':
+        keyword = '약국';
+        break;
+      case 'SC4':
+        keyword = '학교';
+        break;
+      case 'CE7':
+        keyword = '카페';
+        break;
+      case 'SW8':
+        keyword = '교통';
+        break;
+      default:
+        keyword = '맛집';
+        break;
+    }
+    if (point != null) { // point 변수 사용
+      console.log(point)
+      ps.keywordSearch(keyword, placesSearchCB, { location: point, radius: 20000, useMapBounds: true });
+    }
   }
 }
 </script>
@@ -275,11 +209,16 @@ const changeCategoryClass = (el) => {
   <KakaoMap width="100%" height="100%" :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true"
     @onLoadKakaoMap="onLoadKakaoMap">
     <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker.key)"
-      :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat" />
+      :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat"
+      :image="{ imageSrc: `src/assets/ping/icon-house.png`, imageWidth: 64, imageHeight: 64, imageOption: {} }" />
     <template v-for="overlay in customOverlays" :key="overlay.key">
       <KakaoMapCustomOverlay v-if="overlay.visible" :lng="overlay.lng" :lat="overlay.lat" :content="overlay.content"
         :yAnchor="overlay.yAnchor" />
     </template>
+    <KakaoMapMarker v-for="(marker, index) in markerList" :key="marker.key === undefined ? index : marker.key"
+      :lat="marker.lat" :lng="marker.lng" :infoWindow="marker.infoWindow" :clickable="true"
+      :image="{ imageSrc: `src/assets/ping/${marker.icon}`, imageWidth: 64, imageHeight: 64, imageOption: {} }"
+      @onClickKakaoMapMarker="onClickMapMarker(marker)" />
   </KakaoMap>
   <div id="category">
     <div id="BK9" data-order="0">
