@@ -16,12 +16,14 @@ const clickAptCode = toRefs(props).clickAptCode
 const markerList = ref([]);
 const activeCategory = ref('');
 const iconList = {
-  BK9: 'icon-bank.png',
   MT1: 'icon-mart.png',
-  PM9: 'icon-pharmacy.png',
+  CS2: 'icon-gs25.png',
   SC4: 'icon-school.png',
-  CE7: 'icon-cafe.png',
-  SW8: 'icon-subway.png'
+  BK9: 'icon-bank.png',
+  FD6: 'icon-cafe.png',
+  CE7: 'icon-subway.png',
+  HP8: 'icon-pharmacy.png',
+  PM9: 'icon-pharmacy.png',
 }
 
 let point; // point 변수를 밖에서 선언
@@ -175,26 +177,29 @@ const toggleCategorySearch = (category) => {
     activeCategory.value = category;
     let keyword = '';
     switch (category) {
-      case 'BK9':
-        keyword = '은행';
-        break;
       case 'MT1':
         keyword = '마트';
         break;
-      case 'PM9':
-        keyword = '약국';
+      case 'CS2':
+        keyword = '편의점';
         break;
       case 'SC4':
         keyword = '학교';
         break;
+      case 'BK9':
+        keyword = '은행';
+        break;
+      case 'FD6':
+        keyword = '음식점';
+        break;
       case 'CE7':
         keyword = '카페';
         break;
-      case 'SW8':
-        keyword = '교통';
+      case 'HP8':
+        keyword = '병원';
         break;
-      default:
-        keyword = '맛집';
+      case 'PM9':
+        keyword = '약국';
         break;
     }
     if (point != null) { // point 변수 사용
@@ -221,30 +226,14 @@ const toggleCategorySearch = (category) => {
       @onClickKakaoMapMarker="onClickMapMarker(marker)" />
   </KakaoMap>
   <div id="category">
-    <div id="BK9" data-order="0">
-      <span class="category_bg bank"></span>
-      은행
-    </div>
-    <div id="MT1" data-order="1">
-      <span class="category_bg mart"></span>
-      마트
-    </div>
-    <div id="PM9" data-order="2">
-      <span class="category_bg pharmacy"></span>
-      약국
-    </div>
-    <div id="SC4" data-order="3">
-      <span class="category_bg school"></span>
-      학교
-    </div>
-    <div id="CE7" data-order="4">
-      <span class="category_bg cafe"></span>
-      카페
-    </div>
-    <div id="SW8" data-order="5">
-      <span class="category_bg subway"></span>
-      교통
-    </div>
+    <div id="MT1">마트</div>
+    <div id="CS2">편의점</div>
+    <div id="SC4">학교</div>
+    <div id="BK9">은행</div>
+    <div id="FD6">음식점</div>
+    <div id="CE7">카페</div>
+    <div id="HP8">병원</div>
+    <div id="PM9">약국</div>
   </div>
 </template>
 
