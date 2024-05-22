@@ -2,17 +2,35 @@
 import { ref, onMounted } from 'vue'
 import FavoriteListItem from './item/FavoriteListItem.vue';
 import { listLike, deleteLike } from '@/api/aptLike';
+import { dealByDong } from '@/api/map';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
 const memberStore = useMemberStore()
 const { userInfo, isLogin } = storeToRefs(memberStore)
 const likeAptList = ref([])
+const getAverageDealAmount = (aparts) => {
+    let totalDealAmount = 0;
+    aparts.forEach((apt) => {
+        totalDealAmount += parseFloat(apt.dealAmount);
+    });
+    let average = totalDealAmount / aparts.length;
+    return Math.round(average);
+}   
 const getLikeList = () => {
     if (isLogin.value) {
         listLike(
             userInfo.value,
             ({ data }) => {
                 likeAptList.value = data
+                likeAptList.value.forEach((like) => {
+                    dealByDong(
+                        { aptCode: like.aptCode },
+                        ({ data }) => {
+                            like.average = getAverageDealAmount(data)
+                        }
+                    )
+                    like.imgNum = Math.floor(Math.random() * 21) + 1
+                })
                 console.log(likeAptList.value)
             },
             (error) => {
@@ -58,7 +76,7 @@ onMounted(
         </div>
         <div class="flex flex-wrap">
             <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt"
-                class="basis-1/3" @deleteLike="onDeleteLike" />
+                class="lg:basis-1/2 xl:basis-1/3" @deleteLike="onDeleteLike" />
         </div>
     </div>
 

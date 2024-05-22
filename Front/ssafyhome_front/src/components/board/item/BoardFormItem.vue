@@ -110,6 +110,9 @@ function moveList() {
 </script>
 
 <template>
+  <QuillEditor theme="snow" toolbar="full"/>
+
+  
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">
     <div class="mb-3 pb-3 shadow-sm">
       <label for="userid" class="ms-2 me-4">작성자 ID</label>

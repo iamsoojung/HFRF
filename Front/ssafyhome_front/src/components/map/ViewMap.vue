@@ -8,10 +8,12 @@ const props = defineProps({
     required: true,
     default: () => []
   },
+  searchBySelect: Boolean,
   clickAptCode: Number
 });
 
 const aptList = toRefs(props).aptList
+const searchBySelect = toRefs(props).searchBySelect
 const clickAptCode = toRefs(props).clickAptCode
 const markerList = ref([]);
 const activeCategory = ref('');
@@ -115,11 +117,11 @@ watch(clickAptCode, (newValue) => {
     }
   })
 })
-watch(aptList, (newValue) => {
+watch(searchBySelect, () => {
   let options = [];
   let overlay = [];
   let id = 1;
-  newValue.forEach((apt) => {
+  aptList.value.forEach((apt) => {
     options.push({ key: id, lat: apt.lat, lng: apt.lng });
     overlay.push({
       key: id++, lat: apt.lat, lng: apt.lng, content: ` <div
@@ -162,7 +164,7 @@ watch(aptList, (newValue) => {
     bounds.extend(point)
     setBounds()
   }
-}, { deep: true })
+})
 
 const setBounds = () => {
   if (map.value !== undefined) {
