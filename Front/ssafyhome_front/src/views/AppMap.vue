@@ -30,9 +30,9 @@
                         </div>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt(detailApt[0].aptCode, true)"
                             fill="currentColor"
-                            :class="{ 'hover:bg-white hover:text-red-600 bg-red-500 text-white border-red-600': detailApt.userLike }"
-                            class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 border-gray-600 text-red-600rounded-md shadow-md w-8 h-8 absolute top-4 right-4 rounded-lg">
-                            <path
+                            :class="{ 'bg-red-500 text-white': detailApt.userLike, 'bg-white': !detailApt.userLike }"
+                                class="hover:bg-red-500 hover:text-white border-[1px] border-gray-600 p-1 text-red-600 rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
+                                <path
                                 d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                         </svg>
                     </div>
@@ -89,7 +89,7 @@
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 @click="toggleLikeApt(apt.value, false)"
-                                :class="{ 'hover:bg-white hover:text-red-600 bg-red-500 text-white border-red-600': apt.userLike }"
+                                :class="{ 'bg-red-500 text-white': apt.userLike }"
                                 class="hover:bg-red-500 hover:text-white border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
                                 <path
                                     d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
