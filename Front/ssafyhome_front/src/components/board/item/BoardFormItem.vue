@@ -35,9 +35,6 @@ if (type === "modify") {
     ({ data }) => {
       console.log(data)
       article.value = data;
-      const playground = document.querySelector('#input-text');
-      console.log(JSON.parse(article.value.content))
-      quill.value.setContents(JSON.parse(article.value.content));
       isUseId.value = true;
     },
     (error) => {
@@ -137,10 +134,23 @@ setTimeout(() => {
       toolbar: toolbarOptions
     },
     theme: 'snow',
-  },
-  3000)
-}
+  },)
+  quill.value.setContents(JSON.parse(article.value.content));
+  quill.value.on(Quill.events.TEXT_CHANGE, update)
+}, 150
 )
+function formatDelta(delta) {
+  return JSON.stringify(delta.ops, null, 2)
+}
+function update(delta) {
+    const contents = quill.value.getContents();
+    console.log(contents)
+    let html = formatDelta(contents)
+    if(delta) {
+      html = html + formatDelta(delta);
+    }
+    article.value.content = html;
+  }
 </script>
 
 <!-- 

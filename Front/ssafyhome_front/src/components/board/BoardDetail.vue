@@ -5,6 +5,7 @@ import { detailArticle, deleteArticle } from "@/api/board";
 import { listComment, writeComment, getModifyComment, modifyComment, deleteComment, getCommentCnt } from "@/api/board";
 import { useMemberStore } from '@/stores/member';
 import { storeToRefs } from 'pinia';
+import { Quill } from "@vueup/vue-quill";
 
 const memberStore = useMemberStore();
 const { userInfo } = storeToRefs(memberStore);
@@ -124,6 +125,20 @@ function submitComment() {
     );
   }
 }
+const options = {
+  readOnly: true,
+  modules: {
+    toolbar: null
+  },
+  theme: 'snow'
+};
+const quill = ref()
+setTimeout(() => {
+  quill.value = new Quill("#editor", options)
+  quill.value.setContents(JSON.parse(article.value.content))
+}, 
+  75)
+
 </script>
 
 <template>
@@ -156,7 +171,7 @@ function submitComment() {
             </div>
           </div>
           <div class="ps-5 my-5 min-h-[300px]">
-            {{ article.content }}
+            <div class="border-0" id="editor"></div>
           </div>
           <div class="container">
             <div class="space-x-2 flex justify-end">
@@ -171,7 +186,6 @@ function submitComment() {
             </div>
           </div>
         </div>
-
         <div class="flex-col w-full mt-4 justify-center items-center" style="min-width: 500px">
           <div class="bg-white w-full dark:bg-gray-700">
             <div class="flex-col w-full" id="main-comments">
@@ -232,4 +246,5 @@ function submitComment() {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+</style>
