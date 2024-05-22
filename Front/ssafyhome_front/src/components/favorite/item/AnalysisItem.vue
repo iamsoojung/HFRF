@@ -71,7 +71,7 @@ const getGPTResponse = async () => {
             prompt += `면적: ${entry.area}㎡, `;
             prompt += `층수: ${entry.floor}층\n`;
         }
-        prompt += "최근 매물 분석을 간단한 레포트 형식으로 알려줘.";
+        prompt += "매물에 대한 분석과 최근 동향, 추천 코멘트 등 간략하게 이야기해주세요.";
 
         const response = await openai.chat.completions.create({
             messages: [
@@ -101,13 +101,13 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="modal-wrap" v-if="props.isModal" @click="closeModal">
-        <div class="modal" @click.stop>
-            <h5>ChatGPT가 해주는 매물 분석~~!</h5>
-            <button class="close-button" @click="getGPTResponse">해봐</button>
-            <div>{{ props.aptCode }}</div>
-            <p v-if="gptResult">{{ gptResult }}</p>
-            <p v-else-if="!loadingSpinner">
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75" v-if="props.isModal"
+        @click="closeModal">
+        <div class="modal bg-white rounded-lg shadow-md max-w-lg w-full mx-4 text-center" @click.stop>
+            <h3 class="text-lg font-semibold py-4 border-b border-gray-300">ChatGPT가 해주는 매물 분석~~!</h3>
+            <!-- <div>{{ props.aptCode }}</div> -->
+            <h5 v-if="gptResult" class="m-8">{{ gptResult }}</h5>
+            <p v-else-if="!loadingSpinner" class="flex items-center justify-center py-8">
             <div role="status">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -121,60 +121,12 @@ const closeModal = () => {
                 <span class="sr-only">Loading...</span>
             </div>
             </p>
-            <button class="close-button" @click="closeModal">닫기</button>
+            <button class="close-button bg-red-500 text-white rounded-md px-4 py-2 mt-4 m-8"
+                @click="getGPTResponse">시작</button>
+            <button class="close-button bg-red-500 text-white rounded-md px-4 py-2 mt-4 m-8"
+                @click="closeModal">닫기</button>
         </div>
     </div>
 </template>
 
-<style scoped>
-.modal-wrap {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(37, 37, 37, 0.4);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-}
-
-.modal {
-    background: #fff;
-    border-radius: 20px;
-    width: 300px;
-    max-width: 90%;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    position: relative;
-    padding: 20px;
-}
-
-.modal h5 {
-    margin: 0;
-    padding: 20px 0;
-    border-bottom: 1px solid #eee;
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.close-button {
-    background-color: #ff5c5c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-}
-
-.close-button:hover {
-    background-color: #ff3b3b;
-}
-
-.close-button:focus {
-    outline: none;
-}
-</style>
+<style scoped></style>
