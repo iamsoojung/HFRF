@@ -11,34 +11,33 @@
                     <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                         @onKeySelect="onChangeDong" />
                 </div>
-                <div class="overflow-auto
+                <div :class="{'min-h-[740px] max-h-[740px]': isDetail}" class="overflow-auto
                      mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
-                    <div v-show="isDetail">
+                    <div class="relative" v-show="isDetail">
                         <div id="roadview" style="width:100%;height:300px;"></div>
-                    </div>
-                    <div v-if="isDetail">
-                        <div class="relative w-full h-[200px] border-2 bg-[url('@/assets/home.jpg')] bg-cover">
-                            <div @click="toggleDetail" class="absolute m-2 text-2xl font-bold">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                    stroke-width="1.5" stroke="currentColor"
-                                    class="hover:cursor-pointer text-white w-7 h-7">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
-                                </svg>
-                            </div>
-                            <div class="mt-24 ms-3">
-                                <div class="font-bold text-2xl text-white">
-                                    {{ detailApt.text }}
-                                </div>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
-                                fill="currentColor"
-                                class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
-                                <path
-                                    d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                        <div @click="toggleDetail" class="top-0 absolute z-10 font-bold m-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor"
+                                class="hover:cursor-pointer hover:bg-gray-100 w-8 h-8 p-1 bg-white rounded-lg border-[1px] border-gray-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
                             </svg>
                         </div>
+                        <div class="absolute z-10 left-0 top-[150px] ms-4">
+                            <div class="font-bold text-4xl text-white">
+                                {{ detailApt.text }}
+                            </div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
+                            fill="currentColor"
+                            class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 border-gray-600 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
+                            <path
+                                d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                        </svg>
+                    </div>
+                    <div v-if="isDetail">
                         <Chart class="ms-10" :detailApt="detailApt" />
+                        <div class="h-[100px]"></div>
                         <div class="p-5">
                             <div class="mt-3 text-xl font-bold mb-4">
                                 <span class="text-red-600">평균 매매가</span>
@@ -77,10 +76,10 @@
                     <div v-else>
                         <div class="relative" v-for="apt in aptList" :key="apt.value">
                             <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
-                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng)">
-                                <div
-                                    class="w-32 bg-gradient-to-r from-cyan-400 to-blue-300 h-[100px] border-[1px] me-3 rounded-md">
-                                    <img class="bg-cover" />
+                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng, apt.imgNum)">
+                                <div class="w-[150px] h-[100px] me-3">
+                                    <img class="h-[100px] w-[150px] rounded-md border-[1px]"
+                                        :src="`src/assets/apartment/apartment` + apt.imgNum + `.jpg`" />
                                 </div>
                                 <div class="relative w-full">
                                     <div class="font-bold">{{ apt.text }}</div>
@@ -253,7 +252,8 @@ const onChangeDong = (value) => {
                     lat: apt.lat,
                     lng: apt.lng,
                     visible: false,
-                    userLike: false
+                    userLike: false,
+                    imgNum: 1 + Math.floor(Math.random() * 20),
                 };
                 likeAptList.value.forEach((like) => {
                     if (like.aptCode == apt.aptCode) {
@@ -282,13 +282,14 @@ const getAverageDealAmount = () => {
     return Math.round(average);
 };
 
-const getHouse = (value, text, lat, lng) => {
+const getHouse = (value, text, lat, lng, imgNum) => {
     dealByDong(
         { aptCode: value },
         ({ data }) => {
             clickAptCode.value = data[0].aptCode;
             detailApt.value = data;
             detailApt.value.text = text;
+            detailApt.value.imgNum = imgNum;
             isDetail.value = true;
             avarageDealAmount.value = getAverageDealAmount();
             updateRoadView(lat, lng);
