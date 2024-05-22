@@ -47,7 +47,7 @@ const openModal = () => {
                             d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                     </svg>
                     <button type="button"
-                        class="border-2 rounded-md p-1 text-center text-gray-900 bg-pink-50 border-red-200 rounded-s-lg hover:bg-pink-100 focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
+                        class="border-2 rounded-md p-1 text-center text-gray-900  border-blue-500 rounded-s-lg hover:bg-blue-500 hover:text-white focus:outline-none focus:ring-gray-100 dark:bg-gray-700 dark:hover:bg-gray-600 dark:focus:ring-gray-700 dark:text-white dark:border-gray-600"
                         @click="openModal">
                         ChatGPT 매물 분석
                     </button>

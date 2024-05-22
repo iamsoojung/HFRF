@@ -73,7 +73,7 @@ const moveWrite = () => {
       <div>
         <table class="container">
           <thead>
-            <tr class="flex shadow-sm py-1.5 px-1 border-y-2 border-gray-800">
+            <tr class="flex shadow-sm py-1.5 px-1 border-y-[1px] border-gray-800 bg-gradient-to-r from-red-400 from-10% via-green-400 via-60% to-purple-400 to-90% text-white">
               <th class="basis-1/12">글번호</th>
               <th class="basis-7/12">제목</th>
               <div class="flex basis-4/12">
