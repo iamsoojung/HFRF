@@ -1,9 +1,11 @@
 package com.ssafy.hfrf.board.model.service;
 
+import java.util.List;
 import java.util.Map;
 
 import com.ssafy.hfrf.board.model.BoardDto;
 import com.ssafy.hfrf.board.model.BoardListDto;
+import com.ssafy.hfrf.board.model.FileInfoDto;
 
 public interface BoardService {
 
@@ -21,4 +23,5 @@ public interface BoardService {
 
 	void deleteArticle(int articleNo) throws Exception;
 
+	List<FileInfoDto> fileInfoList(int articleNo) throws Exception;
 }

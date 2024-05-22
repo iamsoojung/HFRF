@@ -94,7 +94,12 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public BoardDto getArticle(int articleNo) throws Exception {
-		return boardMapper.getArticle(articleNo);
+		BoardDto ret = boardMapper.getArticle(articleNo);
+		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
+		if(fileList!=null) {
+			ret.setFileInfos(fileList);
+		}
+		return ret;
 	}
 
 	@Override
@@ -123,5 +128,11 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void deleteArticle(int articleNo) throws Exception {
 		boardMapper.deleteArticle(articleNo);
+	}
+
+	@Override
+	public List<FileInfoDto> fileInfoList(int articleNo) throws Exception {
+		List<FileInfoDto> fileList = boardMapper.fileInfoList(articleNo);
+		return fileList;
 	}
 }
