@@ -136,7 +136,7 @@ const quill = ref()
 setTimeout(() => {
   quill.value = new Quill("#editor", options)
   quill.value.setContents(JSON.parse(article.value.content))
-}, 
+},
   75)
 
 </script>
@@ -171,6 +171,9 @@ setTimeout(() => {
             </div>
           </div>
           <div class="ps-5 my-5 min-h-[300px]">
+            <a v-for="file in article.fileInfos" :key="file.originalFile"> <img
+                :src="`../../src/assets/file/${file.saveFolder}/${file.saveFile}`"
+                style="width: 100%; height: auto;" /></a>
             <div class="border-0" id="editor"></div>
           </div>
           <div class="container">
@@ -198,8 +201,7 @@ setTimeout(() => {
                 <div class="-space-x-2 dark:text-gray-400">댓글 없음</div>
               </div>
               <div v-else>
-                <div v-for="comment in comments" :key="comment.commentNo"
-                  class="grid grid-cols-6 border-t py-2">
+                <div v-for="comment in comments" :key="comment.commentNo" class="grid grid-cols-6 border-t py-2">
                   <div class="col-span-1 px-5 font-semibold">{{ comment.userId }}</div>
                   <div class="col-span-4">{{ comment.content }}</div>
                   <div class="my-auto text-end text-xs">
@@ -238,13 +240,12 @@ setTimeout(() => {
         </div>
       </div>
       <div class="my-3 text-end">
-      <button type="button" class="border-2 rounded-md p-1" @click="moveList">
-              글목록  
-      </button>
-    </div>
+        <button type="button" class="border-2 rounded-md p-1" @click="moveList">
+          글목록
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -39,6 +39,12 @@ const router = createRouter({
       beforeEnter: onlyAuthUser
     },
     {
+      path: "/property",
+      name: "property",
+      component: () => import("../views/AppProperty.vue"),
+      beforeEnter: onlyAuthUser
+    },
+    {
       path: "/user",
       name: "user",
       component: () => import("@/views/AppUser.vue"),

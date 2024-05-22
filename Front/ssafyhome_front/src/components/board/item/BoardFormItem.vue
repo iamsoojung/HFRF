@@ -2,22 +2,23 @@
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useMemberStore } from '@/stores/member';
-import { registArticle, getModifyArticle, modifyArticle } from "@/api/board";
+import { getModifyArticle } from "@/api/board";
 import { Quill } from "@vueup/vue-quill";
+import { storeToRefs } from "pinia"
+import axios from 'axios';
 
 const memberStore = useMemberStore()
-const { userInfo } = memberStore
+const { userInfo } = storeToRefs(memberStore)
 const router = useRouter();
 const route = useRoute();
-
 const { type } = defineProps({ type: String });
 
 const isUseId = ref(false);
 const subjectErrMsg = ref("");
 const contentErrMsg = ref("");
-const fileName = ref(null);
+const files = ref([]);
 
-let article = ref({
+const article = ref({
   articleNo: 0,
   subject: "",
   content: "",
@@ -26,6 +27,10 @@ let article = ref({
   hit: 0,
   registerTime: "",
 });
+
+const eventlogin = () => {
+  article.value.userId = userInfo.value.userId;
+}
 
 if (type === "modify") {
   const { articleno } = route.params;
@@ -49,11 +54,11 @@ function validateSubject(value) {
   subjectErrMsg.value = len === 0 || len > 30 ? "제목을 확인해 주세요!!!" : "";
 }
 
-async function getFileName(files) {
-  const file = files[0];
-  fileName.value = file;
-  await base64(file);
-}
+// async function getFileName(files) {
+//   const file = files[0];
+//   fileName.value = file;
+//   await base64(file);
+// }
 
 function base64(file) {
   return new Promise((resolve, reject) => {
@@ -81,29 +86,91 @@ function onSubmit() {
   }
 }
 
-function writeArticle() {
-  registArticle(
-    article.value,
-    (response) => {
-      const msg = response.status === 201 ? "글 등록이 완료되었습니다." : "글 등록 처리 중 문제가 발생했습니다.";
-      alert(msg);
-      moveList();
-    },
-    (error) => console.log(error)
-  );
+const handleFileUpload = (event) => {
+  files.value = event.target.files;
+  // console.log(event.target)
+};
+
+async function writeArticle() {
+  // registArticle(
+  //   article.value,
+  //   (response) => {
+  //     const msg = response.status === 201 ? "글 등록이 완료되었습니다." : "글 등록 처리 중 문제가 발생했습니다.";
+  //     alert(msg);
+  //     moveList();
+  //   },
+  //   (error) => console.log(error)
+  // );
+  const formData = new FormData();
+  formData.append("userId", article.value.userId);
+  formData.append("userName", article.value.userName);
+  formData.append("subject", article.value.subject);
+  formData.append("content", article.value.content);
+  formData.append("hit", article.value.hit);
+  for (let i = 0; i < files.value.length; i++) {
+    formData.append("fileInfos", files.value[i]);
+  }
+
+  try {
+    await axios({
+      method: "POST",
+      url: 'http://localhost/board',
+      mode: "cors",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    });
+    // 성공 시에 필요한 작업 수행
+    alert("글 등록이 완료되었습니다.");
+    moveList();
+  } catch (error) {
+    // 실패 시에 필요한 작업 수행
+    console.error(error);
+    alert("글 등록 중 오류가 발생했습니다.");
+  }
 }
 
-function updateArticle() {
-  console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
-  modifyArticle(
-    article.value,
-    (response) => {
-      const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
-      alert(msg);
-      moveList();
-    },
-    (error) => console.log(error)
-  );
+async function updateArticle() {
+  // console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
+  // modifyArticle(
+  //   article.value,
+  //   (response) => {
+  //     const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
+  //     alert(msg);
+  //     moveList();
+  //   },
+  //   (error) => console.log(error)
+  // );
+  const formData = new FormData();
+  formData.append("articleno", route.params.articleno)
+  formData.append("userId", article.value.userId);
+  formData.append("userName", article.value.userName);
+  formData.append("subject", article.value.subject);
+  formData.append("content", article.value.content);
+  formData.append("hit", article.value.hit);
+  for (let i = 0; i < files.value.length; i++) {
+    formData.append("fileInfos", files.value[i]);
+  }
+
+  try {
+    await axios({
+      method: "PUT",
+      url: 'http://localhost/board',
+      mode: "cors",
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+      data: formData,
+    });
+    // 성공 시에 필요한 작업 수행
+    alert("글 수정이 완료되었습니다.");
+    moveList();
+  } catch (error) {
+    // 실패 시에 필요한 작업 수행
+    console.error(error);
+    alert("글 수정 중 오류가 발생했습니다.");
+  }
 }
 
 function moveList() {
@@ -111,11 +178,10 @@ function moveList() {
 }
 
 const toolbarOptions = [
-  [{ 'font': [] }],
   [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
   ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
   ['blockquote', 'code-block'],
-  ['link', 'image', 'video', 'formula'],
+  ['link', 'image', 'formula'],
 
   [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
   [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
@@ -190,13 +256,13 @@ function update(delta) {
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <label for="upload-image" class="mb-2 block">이미지 업로드</label>
-      <input type="file" id="upload-image" hidden @change="getFileName($event.target.files)"/>
+      <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
       <label for="upload-image">
         <img src="@/assets/logo.png" id="preview" width="300px" />
       </label>
     </div>
     <div class="text-center">
-      <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'">
+      <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'" @click="eventlogin">
         글 작성
       </button>
       <button type="submit" class="border-solid border-2 rounded-md p-1 m-2" v-else>

@@ -11,17 +11,17 @@ function detailArticle(articleno, success, fail) {
   local.get(`/board/${articleno}`).then(success).catch(fail);
 }
 
-function registArticle(article, success, fail) {
-  local.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
-}
+// function registArticle(article, success, fail) {
+//   local.post(`/board`, JSON.stringify(article)).then(success).catch(fail);
+// }
 
 function getModifyArticle(articleno, success, fail) {
   local.get(`/board/modify/${articleno}`).then(success).catch(fail);
 }
 
-function modifyArticle(article, success, fail) {
-  local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
-}
+// function modifyArticle(article, success, fail) {
+//   local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
+// }
 
 function deleteArticle(articleno, success, fail) {
   local.delete(`/board/${articleno}`).then(success).catch(fail);
@@ -68,9 +68,9 @@ function sendFileInfo(fileData, success, fail) {
 export {
   listArticle,
   detailArticle,
-  registArticle,
+  // registArticle,
   getModifyArticle,
-  modifyArticle,
+  // modifyArticle,
   deleteArticle,
   listComment,
   writeComment,

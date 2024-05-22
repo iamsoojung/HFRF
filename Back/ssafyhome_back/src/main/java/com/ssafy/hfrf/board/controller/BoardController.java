@@ -1,8 +1,15 @@
 package com.ssafy.hfrf.board.controller;
 
+import java.io.File;
 import java.nio.charset.Charset;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.ssafy.hfrf.board.model.BoardDto;
 import com.ssafy.hfrf.board.model.BoardListDto;
+import com.ssafy.hfrf.board.model.FileInfoDto;
 import com.ssafy.hfrf.board.model.service.BoardService;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,20 +52,65 @@ public class BoardController {
 		super();
 		this.boardService = boardService;
 	}
+	
+    @Value("${file.path}")
+    private String uploadPath;
+    
+    @Value("${file.path.upload-images}")
+    private String uploadImagePath;
+    
+    @Value("${file.path.upload-files}")
+    private String uploadFilePath;
 
 	@Operation(summary = "게시판 글작성", description = "새로운 게시글 정보를 입력한다.")
 	@PostMapping()
 	public ResponseEntity<?> writeArticle(
-			@RequestBody @Parameter(description = "작성글 정보.", required = true) BoardDto boardDto) {
-		log.info("writeArticle boardDto - {}", boardDto);
-		try {
-			boardService.writeArticle(boardDto);
-//			return ResponseEntity.ok().build();
-			return new ResponseEntity<Void>(HttpStatus.CREATED);
-		} catch (Exception e) {
-			return exceptionHandling(e);
-		}
-	}
+            @RequestParam(value = "subject") String subject,
+            @RequestParam(value = "content") String content,
+            @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "userName", required = false) String userName,
+            @RequestParam(value = "hit", required = false) Integer hit,
+            @RequestParam(value = "registerTime", required = false) String registerTime,
+            @RequestParam(value = "fileInfos", required = false) MultipartFile[] files) {
+
+        try {
+            BoardDto boardDto = new BoardDto();
+            boardDto.setSubject(subject);
+            boardDto.setContent(content);
+            boardDto.setUserId(userId);
+            boardDto.setHit(hit); // 이 부분 변경
+            
+            // FileUpload 관련 설정.
+            if (files != null && files.length > 0) {
+                List<FileInfoDto> fileInfoList = new ArrayList<>();
+                for (MultipartFile file : files) {
+                    FileInfoDto fileInfoDto = new FileInfoDto();
+                    String originalFileName = file.getOriginalFilename();
+                    if (originalFileName != null && !originalFileName.isEmpty()) {
+                        String today = new SimpleDateFormat("yyMMdd").format(new Date());
+                        String saveFolder = uploadPath + File.separator + today;
+                        File folder = new File(saveFolder);
+                        if (!folder.exists()) {
+                            folder.mkdirs();
+                        }
+                        String saveFileName = UUID.randomUUID().toString()
+                                + originalFileName.substring(originalFileName.lastIndexOf('.'));
+                        file.transferTo(new File(folder, saveFileName));
+
+                        fileInfoDto.setOriginalFile(originalFileName);
+                        fileInfoDto.setSaveFolder(today);
+                        fileInfoDto.setSaveFile(saveFileName);
+                    }
+                    fileInfoList.add(fileInfoDto);
+                }
+                boardDto.setFileInfos(fileInfoList);
+            }
+            boardService.writeArticle(boardDto);
+            return new ResponseEntity<Void>(HttpStatus.CREATED);
+        } catch (Exception e) {
+            return exceptionHandling(e);
+        }
+    }
 
 	@Operation(summary = "게시판 글목록", description = "모든 게시글의 정보를 반환한다.")
 	@ApiResponses(value = { @ApiResponse(responseCode = "200", description = "게시글목록 OK!!"),
