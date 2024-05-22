@@ -127,7 +127,6 @@ const getAverageDealAmount = () => {
     let totalDealAmount = 0;
     detailApt.value.forEach((apt) => {
         totalDealAmount += parseFloat(apt.dealAmount);
-        // console.log("매매가 갯수 ", detailApt.value.length)
     });
     const average = totalDealAmount / detailApt.value.length;
     return Math.round(average);
@@ -149,7 +148,6 @@ const getHouse = (value, text) => {
     );
 };
 
-<<<<<<< HEAD
 const likeApt = ref({
     userId: "",
     aptCode: "",
@@ -204,8 +202,6 @@ const toggleLikeApt = (aptCode) => {
     }
 }
 
-=======
->>>>>>> f0b43449f548e31e6f2f66a69eddfddc8d029c76
 const isOpenMenu = ref(true)
 const toggleMenu = () => {
     isOpenMenu.value = !isOpenMenu.value
@@ -244,10 +240,7 @@ const toggleMenu = () => {
                                     {{ detailApt.text }}
                                 </div>
                             </div>
-<<<<<<< HEAD
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
-                                fill="currentColor"
-=======
+<<<<<<< HEA
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
 >>>>>>> f0b43449f548e31e6f2f66a69eddfddc8d029c76
                                 class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute bottom-4 right-4">
