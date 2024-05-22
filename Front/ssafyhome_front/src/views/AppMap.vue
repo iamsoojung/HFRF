@@ -28,9 +28,10 @@
                                 {{ detailApt.text }}
                             </div>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt"
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt(detailApt[0].aptCode, true)"
                             fill="currentColor"
-                            class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 border-gray-600 text-red-600 bg-white rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
+                            :class="{ 'hover:bg-white hover:text-red-600 bg-red-500 text-white border-red-600': detailApt.userLike }"
+                            class="hover:bg-red-500 hover:text-white hover:border-red-600 border-[1px] p-1 border-gray-600 text-red-600rounded-md shadow-md w-8 h-8 absolute top-4 right-4 rounded-lg">
                             <path
                                 d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                         </svg>
@@ -76,7 +77,7 @@
                     <div v-else>
                         <div class="relative" v-for="apt in aptList" :key="apt.value">
                             <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
-                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng, apt.imgNum)">
+                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng, apt.imgNum, apt.userLike)">
                                 <div class="w-[150px] h-[100px] me-3">
                                     <img class="h-[100px] w-[150px] rounded-md border-[1px]"
                                         :src="`src/assets/apartment/apartment` + apt.imgNum + `.jpg`" />
@@ -87,7 +88,7 @@
                                 </div>
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                @click="toggleLikeApt(apt.value)"
+                                @click="toggleLikeApt(apt.value, false)"
                                 :class="{ 'hover:bg-white hover:text-red-600 bg-red-500 text-white border-red-600': apt.userLike }"
                                 class="hover:bg-red-500 hover:text-white border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
                                 <path
@@ -115,7 +116,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, reactive, onMounted } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import { listLike, like, deleteLike } from '@/api/aptLike';
 import { storeToRefs } from 'pinia'
@@ -143,7 +144,7 @@ const isDetail = ref(false)
 const toggleDetail = () => {
     isDetail.value = false
 }
-const detailApt = ref(reactive([]));
+const detailApt = ref([])
 
 const avarageDealAmount = ref()
 
@@ -258,7 +259,6 @@ const onChangeDong = (value) => {
                 likeAptList.value.forEach((like) => {
                     if (like.aptCode == apt.aptCode) {
                         option.userLike = true
-                        console.log("내가 좋아하는 아파트")
                     }
                 },
                     options.push(option)
@@ -282,7 +282,7 @@ const getAverageDealAmount = () => {
     return Math.round(average);
 };
 
-const getHouse = (value, text, lat, lng, imgNum) => {
+const getHouse = (value, text, lat, lng, imgNum, userLike) => {
     dealByDong(
         { aptCode: value },
         ({ data }) => {
@@ -290,6 +290,7 @@ const getHouse = (value, text, lat, lng, imgNum) => {
             detailApt.value = data;
             detailApt.value.text = text;
             detailApt.value.imgNum = imgNum;
+            detailApt.value.userLike = userLike;
             isDetail.value = true;
             avarageDealAmount.value = getAverageDealAmount();
             updateRoadView(lat, lng);
@@ -320,7 +321,7 @@ const getLikeList = () => {
     }
 };
 
-const toggleLikeApt = (aptCode) => {
+const toggleLikeApt = (aptCode, isDetail) => {
     if (isLogin.value) {
         let isAdd = true
         likeAptList.value.forEach((like) => {
@@ -336,6 +337,9 @@ const toggleLikeApt = (aptCode) => {
                 (response) => {
                     console.log(response)
                     likeAptList.value.push(likeApt.value)
+                    if(isDetail) {
+                        detailApt.value.userLike = true
+                    }
                 },
                 (error) => {
                     console.log(error)
@@ -347,6 +351,15 @@ const toggleLikeApt = (aptCode) => {
                 likeApt.value,
                 (response) => {
                     console.log(response)
+                    if(isDetail) {
+                        detailApt.value.userLike = false
+                    }
+                    for(let i=0; i<likeAptList.value.length; i++){
+                        if(likeAptList.value[i].aptCode == aptCode) {
+                            likeAptList.value.splice(i, 1);
+                            i--;
+                        }
+                    }
                 },
                 (error) => {
                     console.log(error)
