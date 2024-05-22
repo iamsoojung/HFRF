@@ -7,7 +7,6 @@ import { OpenAI } from 'openai'
 onMounted(() => {
     if (props.isModal) {
         getHouse(props.aptCode);
-        getGPTResponse();
     }
 });
 
@@ -44,10 +43,14 @@ const getHouse = (value) => {
 
 // ChatGPT의 결과를 담을 상태 변수
 const gptResult = ref('');
-
+// 로딩 스피너 제어할 변수
+const loadingSpinner = ref(true);
 // chatgpt api
 const getGPTResponse = async () => {
     try {
+        gptResult.value = '';
+        loadingSpinner.value = false;
+
         let data = houseData.value
         if (!data) {
             console.log("매물 정보가 로드되지 않았습니다.");
@@ -83,12 +86,12 @@ const getGPTResponse = async () => {
         // console.log('chatGPT 결과: ', response.choices[0].message.content)
 
         gptResult.value = response.choices[0].message.content;
+        loadingSpinner.value = false;
     } catch (error) {
         console.log('chatGPT: 🚨 에러가 발생했습니다.')
         console.log(error)
     }
 }
-
 
 // 모달 닫기
 const emit = defineEmits(['close-modal']);
@@ -101,10 +104,10 @@ const closeModal = () => {
     <div class="modal-wrap" v-if="props.isModal" @click="closeModal">
         <div class="modal" @click.stop>
             <h5>ChatGPT가 해주는 매물 분석~~!</h5>
-            <!-- <button class="close-button" @click="getGPTResponse">해봐</button> -->
-            <!-- <div>{{ props.aptCode }}</div> -->
+            <button class="close-button" @click="getGPTResponse">해봐</button>
+            <div>{{ props.aptCode }}</div>
             <p v-if="gptResult">{{ gptResult }}</p>
-            <p v-else>
+            <p v-else-if="!loadingSpinner">
             <div role="status">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
                     viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
