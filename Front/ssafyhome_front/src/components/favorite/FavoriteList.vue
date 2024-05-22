@@ -76,7 +76,7 @@ onMounted(
         </div>
         <div class="flex flex-wrap">
             <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt"
-                class="lg:basis-1/2 xl:basis-1/3" @deleteLike="onDeleteLike" />
+                class="sm:basis-1/2 xl:basis-1/3" @deleteLike="onDeleteLike" />
         </div>
     </div>
 
