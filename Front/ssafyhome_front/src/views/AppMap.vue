@@ -254,7 +254,7 @@ const onChangeDong = (value) => {
                     lng: apt.lng,
                     visible: false,
                     userLike: false,
-                    imgNum: 1 + Math.floor(Math.random() * 20),
+                    imgNum: 1 + Math.floor(Math.random() * 21),
                 };
                 likeAptList.value.forEach((like) => {
                     if (like.aptCode == apt.aptCode) {
