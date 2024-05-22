@@ -1,11 +1,13 @@
 <script setup>
 import Header from "@/components/layout/Header.vue";
+import { useRouter } from 'vue-router'
 import { listAptByName } from '@/api/map';
 import { listNews } from '@/api/news';
 import { listArticle } from "@/api/board.js";
 import { ref, onMounted } from 'vue'
 import { initializeChannelIO } from "@/util/initializeChannelIO";
 
+const router = useRouter()
 const newsList = ref([]);
 
 const isDropdownOpen = ref(false)
@@ -29,22 +31,6 @@ const toggleDropdown = () => {
 const selectCategory = (category) => {
   selectedCategory.value = category;
   isDropdownOpen.value = false;
-}
-
-const search = () => {
-  listAptByName(
-    { aptName: searchText.value },
-    ({ data }) => {
-      let options = [];
-      data.forEach((apt) => {
-        options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.let, lng: apt.lng});
-      });
-      aptList.value = options;
-    },
-    (error) => {
-      console.log(error)
-    }
-  )
 }
 
 const articles = ref([]);
@@ -115,7 +101,7 @@ const getArticleList = () => {
     <div class="min-w-[900px] grid grid-cols-2 mx-auto">
       <div class="col-span-1 py-16 sm:py-24 lg:py-28">
       <div class="mb-20 flex justify-center ">
-        <form class="max-w-lg mx-auto" @submit.prevent="search">
+        <form class="max-w-lg mx-auto">
           <div class="flex items-center">
             <div class="relative">
               <button id="dropdown-button" @click="toggleDropdown"
@@ -144,7 +130,7 @@ const getArticleList = () => {
               <input v-model="searchText" type="search" id="search-dropdown"
                 class="block w-full pl-5 pr-10 py-2.5 text-sm text-gray-900 rounded-e-lg border-s-gray-50 border-[1px] border-pink-300 focus:border-none dark:bg-gray-700 dark:border-s-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white "
                 placeholder="지역명, 아파트명을 입력해주세요." required />
-              <button type="submit"
+              <RouterLink :to="{name: 'map', query: { key: searchText}}"
                 class="absolute inset-y-0 right-0 p-2.5 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border border-pink-400 hover:bg-pink-500 focus:outline-none">
                 <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
                   viewBox="0 0 20 20">
@@ -152,7 +138,7 @@ const getArticleList = () => {
                     d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                 </svg>
                 <span class="sr-only">Search</span>
-              </button>
+              </RouterLink>
             </div>
           </div>
         </form>

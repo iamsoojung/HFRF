@@ -1,123 +1,6 @@
-<template>
-    <Header />
-    <div v-show="isOpenMenu" class="fixed z-10 my-5 ">
-        <div class="fixed"></div>
-        <div class="flex grid-cols-2">
-            <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
-                <div class="pt-4" v-show="!isDetail">
-                    <VSelect class="text-xs" :selectOption="sidoList" @onKeySelect="onChangeSido" />
-                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
-                        @onKeySelect="onChangeGugun" />
-                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
-                        @onKeySelect="onChangeDong" />
-                </div>
-                <div :class="{'min-h-[740px] max-h-[740px]': isDetail}" class="overflow-auto
-                     mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
-                    <div class="relative" v-show="isDetail">
-                        <div id="roadview" style="width:100%;height:300px;"></div>
-                        <div @click="toggleDetail" class="top-0 absolute z-10 font-bold m-3">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                stroke="currentColor"
-                                class="hover:cursor-pointer hover:bg-gray-100 w-8 h-8 p-1 bg-white rounded-lg border-[1px] border-gray-600">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
-                            </svg>
-                        </div>
-                        <div class="absolute z-10 left-0 top-[150px] ms-4">
-                            <div class="font-bold text-4xl text-white">
-                                {{ detailApt.text }}
-                            </div>
-                        </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt(detailApt[0].aptCode, true)"
-                            fill="currentColor"
-                            :class="{ 'bg-red-500 text-white': detailApt.userLike, 'bg-white': !detailApt.userLike }"
-                                class="hover:bg-red-500 hover:text-white border-[1px] border-gray-600 p-1 text-red-600 rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
-                                <path
-                                d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
-                        </svg>
-                    </div>
-                    <div v-if="isDetail">
-                        <Chart class="ms-10" :detailApt="detailApt" />
-                        <div class="h-[100px]"></div>
-                        <div class="p-5">
-                            <div class="mt-3 text-xl font-bold mb-4">
-                                <span class="text-red-600">평균 매매가</span>
-                                <span class="ms-2">{{ Math.round(avarageDealAmount / 10000) }}억 {{ avarageDealAmount %
-                                    10000
-                                    }}만</span>
-                            </div>
-                            <div class="text-sm font-bold">실거래가</div>
-                            <div class="flex border-b-[1px] pt-2">
-                                <div>
-                                    계약일
-                                </div>
-                                <div class="ms-auto">
-                                    실거래정보
-                                </div>
-                            </div>
-                            <div>
-                                <div class="text-sm flex border-b-[1px] py-2" v-for="detail in detailApt"
-                                    :key="detailApt.aptCode">
-                                    <div class="my-auto">
-                                        {{ detail.dealYear % 100 }}. {{ detail.dealMonth }}. {{ detail.dealDay }}
-                                    </div>
-                                    <div class="ms-auto">
-                                        <div class="text-end">
-                                            매매가 {{ detail.dealAmount }}
-                                        </div>
-                                        <div class="text-gray-500 text-sm text-end">
-                                            {{ detail.area }}㎡ | {{ detail.floor }}층
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="text-center mt-[80%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
-                    <div v-else>
-                        <div class="relative" v-for="apt in aptList" :key="apt.value">
-                            <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
-                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng, apt.imgNum, apt.userLike)">
-                                <div class="w-[150px] h-[100px] me-3">
-                                    <img class="h-[100px] w-[150px] rounded-md border-[1px]"
-                                        :src="`src/assets/apartment/apartment` + apt.imgNum + `.jpg`" />
-                                </div>
-                                <div class="relative w-full">
-                                    <div class="font-bold">{{ apt.text }}</div>
-                                    <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
-                                </div>
-                            </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                                @click="toggleLikeApt(apt.value, false)"
-                                :class="{ 'bg-red-500 text-white': apt.userLike }"
-                                class="hover:bg-red-500 hover:text-white border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
-                                <path
-                                    d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <button @click="toggleMenu"
-                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
-            </button>
-        </div>
-    </div>
-    <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
-        <button @click="toggleMenu"
-            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
-        </button>
-    </div>
-    <div class="border-y-2 grid">
-        <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :search-by-select="searchBySelect" :aptList="aptList" :click-apt-code="clickAptCode" />
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref, onMounted } from 'vue';
-import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
+import { listSido, listGugun, listDong, listAptByDong, dealByDong, listAptByName } from '@/api/map';
 import { listLike, like, deleteLike } from '@/api/aptLike';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
@@ -125,6 +8,10 @@ import ViewMap from '@/components/map/ViewMap.vue';
 import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
 import Chart from '@/components/map/Chart.vue';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
+
 
 // Kakao 지도 API 스크립트 동적추가해봄..
 const script = document.createElement('script');
@@ -153,7 +40,46 @@ onMounted(() => {
     getSidoList();
     getLikeList();
     initializeRoadView();
+    if(route.query.key.length != 0) {
+        getListByName()
+    }
 })
+function getListByName() {
+    listAptByName(
+        { aptName: route.query.key } ,
+        ({ data }) => {
+            let options = [];
+            let option = {};
+            data.forEach((apt) => {
+                option = {
+                    dong: apt.dong,
+                    gugunName: apt.gugunname,
+                    text: apt.apartmentName,
+                    value: apt.aptCode,
+                    lat: apt.lat,
+                    lng: apt.lng,
+                    visible: false,
+                    userLike: false,
+                    imgNum: 1 + Math.floor(Math.random() * 21),
+                };
+                likeAptList.value.forEach((like) => {
+                    if (like.aptCode == apt.aptCode) {
+                        option.userLike = true
+                    }
+                },
+                options.push(option)
+            )
+        });
+            aptList.value = options;
+            noAptMsg.value = "매물이 없습니다."
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+    setTimeout(function(){searchBySelect.value = !searchBySelect.value}, 150)
+    
+}
 
 const initializeRoadView = (lat = 37.5665, lng = 126.9780) => {
     const roadviewContainer = document.getElementById('roadview');
@@ -384,3 +310,121 @@ const toggleMenu = () => {
 }
 </script>
 <style scoped></style>
+
+<template>
+    <Header />
+    <div v-show="isOpenMenu" class="fixed z-10 my-5 ">
+        <div class="fixed"></div>
+        <div class="flex grid-cols-2">
+            <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
+                <div class="pt-4" v-show="!isDetail">
+                    <VSelect class="text-xs" :selectOption="sidoList" @onKeySelect="onChangeSido" />
+                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
+                        @onKeySelect="onChangeGugun" />
+                    <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
+                        @onKeySelect="onChangeDong" />
+                </div>
+                <div :class="{'min-h-[740px] max-h-[740px]': isDetail}" class="overflow-auto
+                     mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
+                    <div class="relative" v-show="isDetail">
+                        <div id="roadview" style="width:100%;height:300px;"></div>
+                        <div @click="toggleDetail" class="top-0 absolute z-10 font-bold m-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor"
+                                class="hover:cursor-pointer hover:bg-gray-100 w-8 h-8 p-1 bg-white rounded-lg border-[1px] border-gray-600">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M6.75 15.75 3 12m0 0 3.75-3.75M3 12h18" />
+                            </svg>
+                        </div>
+                        <div class="absolute z-10 left-0 top-[150px] ms-4">
+                            <div class="font-bold text-4xl text-white">
+                                {{ detailApt.text }}
+                            </div>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt(detailApt[0].aptCode, true)"
+                            fill="currentColor"
+                            :class="{ 'bg-red-500 text-white': detailApt.userLike, 'bg-white': !detailApt.userLike }"
+                                class="hover:bg-red-500 hover:text-white border-[1px] border-gray-600 p-1 text-red-600 rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
+                                <path
+                                d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                        </svg>
+                    </div>
+                    <div v-if="isDetail">
+                        <Chart class="ms-10" :detailApt="detailApt" />
+                        <div class="h-[100px]"></div>
+                        <div class="p-5">
+                            <div class="mt-3 text-xl font-bold mb-4">
+                                <span class="text-red-600">평균 매매가</span>
+                                <span class="ms-2">{{ Math.round(avarageDealAmount / 10000) }}억 {{ avarageDealAmount %
+                                    10000
+                                    }}만</span>
+                            </div>
+                            <div class="text-sm font-bold">실거래가</div>
+                            <div class="flex border-b-[1px] pt-2">
+                                <div>
+                                    계약일
+                                </div>
+                                <div class="ms-auto">
+                                    실거래정보
+                                </div>
+                            </div>
+                            <div>
+                                <div class="text-sm flex border-b-[1px] py-2" v-for="detail in detailApt"
+                                    :key="detailApt.aptCode">
+                                    <div class="my-auto">
+                                        {{ detail.dealYear % 100 }}. {{ detail.dealMonth }}. {{ detail.dealDay }}
+                                    </div>
+                                    <div class="ms-auto">
+                                        <div class="text-end">
+                                            매매가 {{ detail.dealAmount }}
+                                        </div>
+                                        <div class="text-gray-500 text-sm text-end">
+                                            {{ detail.area }}㎡ | {{ detail.floor }}층
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-[80%]" v-else-if="aptList.length === 0">{{ noAptMsg }}</div>
+                    <div v-else>
+                        <div class="relative" v-for="apt in aptList" :key="apt.value">
+                            <div class="hover:cursor-pointer hover:bg-gray-100 flex p-3 border-b-[1px]"
+                                @click="getHouse(apt.value, apt.text, apt.lat, apt.lng, apt.imgNum, apt.userLike)">
+                                <div class="w-[150px] h-[100px] me-3">
+                                    <img class="h-[100px] w-[150px] rounded-md border-[1px]"
+                                        :src="`src/assets/apartment/apartment` + apt.imgNum + `.jpg`" />
+                                </div>
+                                <div class="relative w-full">
+                                    <div class="font-bold">{{ apt.text }}</div>
+                                    <div class="text-sm text-gray-600">{{ apt.gugunName }} {{ apt.dong }}</div>
+                                </div>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                                @click="toggleLikeApt(apt.value, false)"
+                                :class="{ 'bg-red-500 text-white': apt.userLike }"
+                                class="hover:bg-red-500 hover:text-white border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
+                                <path
+                                    d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button @click="toggleMenu"
+                class="rounded-md ms-[-5px] my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
+            </button>
+        </div>
+    </div>
+    <div v-if="!isOpenMenu" class="flex fixed z-10 my-5 min-h-[700px]">
+        <button @click="toggleMenu"
+            class="ms-[-5px] rounded-md my-auto w-5 h-48 bg-gray-700 hover:bg-gray-800 border-[1px] border-l-0 border-gray-400">
+        </button>
+    </div>
+    <div class="border-y-2 grid">
+        <div class="min-h-[805px]">
+            <ViewMap class="w-full h-full" :search-by-select="searchBySelect" :aptList="aptList" :click-apt-code="clickAptCode" />
+        </div>
+    </div>
+</template>
+

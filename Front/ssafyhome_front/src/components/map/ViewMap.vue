@@ -153,16 +153,19 @@ watch(searchBySelect, () => {
       aptCode: apt.value
     })
   });
+  console.log(options)
   markerInfoList.value = options;
   customOverlays.value = overlay;
   bounds = new kakao.maps.LatLngBounds();
   point = null; // point 변수 초기화
   markerInfoList.value.forEach((markerInfo) => {
     point = new kakao.maps.LatLng(markerInfo.lat, markerInfo.lng);
+    bounds.extend(point)
   })
   if (point != null) {
-    bounds.extend(point)
     setBounds()
+    let level = map.value.getLevel();
+    map.value.setLevel(level - 2)
   }
 })
 
