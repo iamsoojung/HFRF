@@ -110,13 +110,13 @@
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :aptList="aptList" :click-apt-code="clickAptCode" />
+            <ViewMap class="w-full h-full" :search-by-select="searchBySelect" :aptList="aptList" :click-apt-code="clickAptCode" />
         </div>
     </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
 import { listLike, like, deleteLike } from '@/api/aptLike';
 import { storeToRefs } from 'pinia'
@@ -139,6 +139,7 @@ const gugunList = ref([{ text: "구군선택", value: "" }]);
 const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
 const clickAptCode = ref();
+const searchBySelect = ref(false)
 
 const isDetail = ref(false)
 const toggleDetail = () => {
@@ -261,12 +262,13 @@ const onChangeDong = (value) => {
                         option.userLike = true
                     }
                 },
-                    options.push(option)
-                )
-            });
+                options.push(option)
+            )
+        });
             aptList.value = options;
             console.log(options)
             noAptMsg.value = "매물이 없습니다."
+            searchBySelect.value = !searchBySelect.value
         },
         (error) => {
             console.log(error)
