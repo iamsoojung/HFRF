@@ -1,7 +1,7 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import FavoriteListItem from './item/FavoriteListItem.vue';
-import { listLike } from '@/api/aptLike';
+import { listLike, deleteLike } from '@/api/aptLike';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
 const memberStore = useMemberStore()
@@ -22,7 +22,33 @@ const getLikeList = () => {
     }
 };
 
-getLikeList();
+const likeApt = ref({
+    userId: "",
+    aptCode: "",
+})
+const onDeleteLike = (aptCode) => {
+    likeApt.value.aptCode = aptCode;
+    likeApt.value.userId = userInfo.value.userId;
+    deleteLike(
+        likeApt.value,
+        (response) => {
+            console.log(response)
+        },
+        (error) => {
+            console.log(error)
+        }
+    )
+    for(let i=0; i<likeAptList.value.length; i++) {
+        if(likeAptList.value[i].aptCode == aptCode) {
+            likeAptList.value.splice(i, 1);
+            i--;
+        }
+    }
+}
+
+onMounted(
+    getLikeList
+)
 </script>
 
 <template>
@@ -31,7 +57,8 @@ getLikeList();
             관심 목록
         </div>
         <div class="flex flex-wrap">
-            <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt" class="basis-1/3"/>
+            <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt"
+                class="basis-1/3" @deleteLike="onDeleteLike" />
         </div>
     </div>
 

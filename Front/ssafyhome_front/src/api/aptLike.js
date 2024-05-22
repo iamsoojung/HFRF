@@ -10,4 +10,8 @@ function like(likeApt, success, fail) {
     local.post(`/aptLike/like`, JSON.stringify(likeApt)).then(success).catch(fail);
 }
 
-export { listLike, like }
+function deleteLike(likeApt, success, fail) {
+    local.delete(`/aptLike/dislike`, { data: likeApt }).then(success).catch(fail);
+}
+
+export { listLike, like, deleteLike }

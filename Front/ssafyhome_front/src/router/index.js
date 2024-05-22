@@ -36,6 +36,7 @@ const router = createRouter({
       path: "/favorite",
       name: "favorite",
       component: () => import("../views/AppFavorite.vue"),
+      beforeEnter: onlyAuthUser
     },
     {
       path: "/user",
@@ -92,6 +93,7 @@ const router = createRouter({
           path: "/board",
           name: "boardWrite",
           component: () => import("@/components/board/BoardWrite.vue"),
+          beforeEnter: onlyAuthUser
         },
         {
           path: "/modify/:articleno",

@@ -11,7 +11,6 @@ onMounted(() => {
 const getNewsList = () => {
     listNews(
         ({ data }) => {
-            console.log(data)
             newsList.value = data.items;
         },
         (error) => {

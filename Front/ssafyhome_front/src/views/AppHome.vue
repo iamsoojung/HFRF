@@ -40,7 +40,6 @@ const search = () => {
         options.push({ dong: apt.dong, gugunName: apt.gugunname, text: apt.apartmentName, value: apt.aptCode, lat: apt.let, lng: apt.lng});
       });
       aptList.value = options;
-      console.log(aptList.value)
     },
     (error) => {
       console.log(error)
@@ -65,7 +64,6 @@ onMounted(() => {
 const getNewsList = () => {
     listNews(
         ({ data }) => {
-            console.log(data)
             newsList.value = data.items.slice(5);
         },
         (error) => {

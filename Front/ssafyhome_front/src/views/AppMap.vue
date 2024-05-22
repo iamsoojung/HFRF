@@ -89,8 +89,8 @@
                             </div>
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                 @click="toggleLikeApt(apt.value)"
-                                :class="{ 'bg-red-500 text-white border-red-600': apt.userLike }"
-                                class=" border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
+                                :class="{ 'hover:bg-white hover:text-red-600 bg-red-500 text-white border-red-600': apt.userLike }"
+                                class="hover:bg-red-500 hover:text-white border-[1px] p-1 text-red-600 rounded-md shadow-md w-6 h-6 absolute bottom-3 right-3">
                                 <path
                                     d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                             </svg>
@@ -118,7 +118,7 @@
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
 import { listSido, listGugun, listDong, listAptByDong, dealByDong } from '@/api/map';
-import { listLike, like } from '@/api/aptLike';
+import { listLike, like, deleteLike } from '@/api/aptLike';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
 import ViewMap from '@/components/map/ViewMap.vue';
@@ -257,22 +257,15 @@ const onChangeDong = (value) => {
                 };
                 likeAptList.value.forEach((like) => {
                     if (like.aptCode == apt.aptCode) {
-                        option = {
-                            dong: apt.dong,
-                            gugunName: apt.gugunname,
-                            text: apt.apartmentName,
-                            value: apt.aptCode,
-                            lat: apt.lat,
-                            lng: apt.lng,
-                            visible: false,
-                            userLike: true
-                        }
+                        option.userLike = true
+                        console.log("내가 좋아하는 아파트")
                     }
                 },
                     options.push(option)
                 )
             });
             aptList.value = options;
+            console.log(options)
             noAptMsg.value = "매물이 없습니다."
         },
         (error) => {
@@ -318,7 +311,6 @@ const getLikeList = () => {
             userInfo.value,
             ({ data }) => {
                 likeAptList.value = data
-                console.log(likeAptList.value)
             },
             (error) => {
                 console.log(error)
@@ -343,6 +335,17 @@ const toggleLikeApt = (aptCode) => {
                 (response) => {
                     console.log(response)
                     likeAptList.value.push(likeApt.value)
+                },
+                (error) => {
+                    console.log(error)
+                }
+            )
+        } else {
+            likeApt.value.aptCode = aptCode
+            deleteLike(
+                likeApt.value,
+                (response) => {
+                    console.log(response)
                 },
                 (error) => {
                     console.log(error)
