@@ -5,6 +5,7 @@ export const useMenuStore = defineStore("menuStore", () => {
     const menuList = ref([
         { name: "집 찾기", show: true, routeName: "map" },
         { name: "관심 목록", show: true, routeName: "favorite" },
+        { name: "매물", show: true, routeName: "property" },
         { name: "QnA 게시판", show: true, routeName: "boardList" },
         { name: "News", show: true, routeName: "newsList" },
     ]);
