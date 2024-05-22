@@ -66,20 +66,21 @@ const moveWrite = () => {
   <div>
     <div>
       <div class="flex justify-end mb-2">
-        <button type="button" class="hover:cursor-pointer hover:bg-gray-100 border-solid border-2 py-0.5 px-2 rounded-md me-2" @click="moveWrite">글쓰기</button>
+        <button type="button"
+          class="hover:cursor-pointer hover:bg-gray-100 border-solid border-2 py-0.5 px-2 rounded-md me-2"
+          @click="moveWrite">글쓰기</button>
       </div>
       <div>
         <table class="container">
           <thead>
-            <tr
-              class="flex shadow-sm py-1.5 px-1 border-y-2 border-gray-800">
+            <tr class="flex shadow-sm py-1.5 px-1 border-y-2 border-gray-800">
               <th class="basis-1/12">글번호</th>
               <th class="basis-7/12">제목</th>
               <div class="flex basis-4/12">
-              <th class="basis-6/12">작성자</th>
-              <th class="basis-2/12">조회수</th>
-              <th class="basis-4/12">작성일</th>
-            </div>
+                <th class="basis-6/12">작성자</th>
+                <th class="basis-2/12">조회수</th>
+                <th class="basis-4/12">작성일</th>
+              </div>
             </tr>
           </thead>
           <tbody>
@@ -93,8 +94,8 @@ const moveWrite = () => {
           <div>
             <VSelect class="border-solid border-2 ps-2 p-0.5 rounded-md shadow-sm" :selectOption="selectOption"
               @onKeySelect="changeKey" />
-            <input type="text" class="border-solid border-2 px-3 m-3 p-0.5 rounded-md shadow-sm"
-              v-model="param.word" placeholder="검색어..." />
+            <input type="text" class="border-solid border-2 px-3 m-3 p-0.5 rounded-md shadow-sm" v-model="param.word"
+              placeholder="검색어..." />
             <button class="hover:bg-gray-100 border-solid border-2 px-2 py-[3px] rounded-md shadow-sm" type="button"
               @click="getArticleList">
               검색
