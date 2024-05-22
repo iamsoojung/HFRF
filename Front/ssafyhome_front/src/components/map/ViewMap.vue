@@ -60,12 +60,18 @@ const onLoadKakaoMap = (mapRef) => {
 
 const markerInfoList = ref([]);
 const customOverlays = ref([]);
-const onClickKakaoMapMarker = (key) => {
-  customOverlays.value.forEach((overlay) => {
-    if (key == overlay.key) {
-      overlay.visible = !overlay.visible
-    }
-  })
+const onClickKakaoMapMarker = (marker) => {
+  // 클릭된 마커에 해당하는 정보를 찾습니다.
+  const clickedMarker = markerInfoList.value.find(item => item.key === marker.key);
+  if (clickedMarker) {
+    // 클릭된 마커에 대한 로드맵을 표시합니다.
+    const infowindow = new kakao.maps.InfoWindow({
+      content: clickedMarker.content,
+      removable: true
+    });
+    const position = new kakao.maps.LatLng(clickedMarker.lat, clickedMarker.lng);
+    infowindow.open(map.value, new kakao.maps.Marker({ position }));
+  }
 };
 
 // 키워드 검색 완료 시 호출되는 콜백함수 입니다

@@ -52,6 +52,19 @@ function getCommentCnt(articleNo, success, fail) {
   local.get(`/comment/count?articleNo=${articleNo}`).then(success).catch(fail);
 }
 
+// 파일 업로드
+function sendFileInfo(fileData, success, fail) {
+
+  const formData = new FormData();
+  formData.append("fileData", fileData);
+
+  local.post(`/board/upload`, formData, {
+    headers: {
+      'Context-Type': 'multipart/form-data'
+    }
+  }).then(success).catch(fail)
+} 
+
 export {
   listArticle,
   detailArticle,
@@ -64,5 +77,6 @@ export {
   getModifyComment,
   modifyComment,
   deleteComment,
-  getCommentCnt
+  getCommentCnt,
+  sendFileInfo
 };
