@@ -40,7 +40,7 @@ onMounted(() => {
     getSidoList();
     getLikeList();
     initializeRoadView();
-    if(route.query.key.length != 0) {
+    if(route.query != null) {
         getListByName()
     }
 })
