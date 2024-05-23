@@ -48,6 +48,7 @@ const router = createRouter({
           path: "/house",
           name: "realtyList",
           component: () => import("@/components/realty/RealtyList.vue"),
+          beforeEnter: onlyAuthUser
         },
         {
           path: "/house",
