@@ -11,16 +11,16 @@
 		<result column="date" property="date"/>
 		<result column="type" property="type"/>
 		<result column="price" property="price"/>
-		<result column="adminPrice" property="admin_price"/>
-		<result column="adminDesc" property="admin_desc"/>
-		<result column="roomType" property="room_type"/>
-		<result column="floorNow" property="floor_now"/>
-		<result column="floorTot" property="floor_tot"/>
+		<result column="admin_price" property="adminPrice"/>
+		<result column="admin_desc" property="adminDesc"/>
+		<result column="room_type" property="roomType"/>
+		<result column="floor_now" property="floorNow"/>
+		<result column="floor_tot" property="floorTot"/>
 		<result column="size" property="size"/>
 		<result column="content" property="content"/>
 		<result column="keyword" property="keyword"/>  
 		<result column="address" property="address"/>
-		<result column="detailAddress" property="detail_address"/>
+		<result column="detail_address" property="detailAddress"/>
 		<result column="lat" property="lat"/>
 		<result column="lng" property="lng"/>
 	</resultMap>
@@ -73,12 +73,9 @@
 		</if>
 	</sql>
 
-	<select id="list" parameterType="PageBean" resultType="HouseSell">
+	<select id="list" parameterType="PageBean" resultMap="sell">
 		select * 
 		from housesell
-		<where>
-			<include refid="listCond"/>
-		</where>
 		<!-- limit #{start},#{interval} -->
 	</select>
 	

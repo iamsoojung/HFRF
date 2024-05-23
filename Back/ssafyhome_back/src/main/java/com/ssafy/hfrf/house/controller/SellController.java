@@ -134,7 +134,7 @@ public class SellController {
 	
 	@Operation(summary = "매물거래 글목록", description = "검색조건, 페이징에 맞게 리스트 가져오기")
 	@GetMapping
-	public ResponseEntity<List<HouseSell>> list(PageBean pagebean) {
+	public ResponseEntity<?> list(PageBean pagebean) {
 		log.info("매물거래 list - 호출", pagebean);
 		pagebean.setInterval(10);
 		return new ResponseEntity<List<HouseSell>>(sellService.list(pagebean), HttpStatus.OK);
