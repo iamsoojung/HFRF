@@ -127,28 +127,27 @@ watch(searchBySelect, () => {
   let overlay = [];
   let id = 1;
   aptList.value.forEach((apt) => {
+    console.log(apt)
     options.push({ key: id, lat: apt.lat, lng: apt.lng });
     overlay.push({
       key: id++, lat: apt.lat, lng: apt.lng, content: ` <div
+      class="rounded-xl border-blue-500 shadow-lg"
         style="
           padding: 10px;
           background-color: white;
-          border: 1px solid #ccc;
-          border-radius: 5px;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
         "
       >
-      <div class=w-52>
-        <div style="font-weight: bold; margin-bottom: 5px">${apt.text}</div>
-          <div style="display: flex">
-          <div style="margin-right: 10px">
-            <img class="border-[1px]" src="https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/thumnail.png" width="73" height="70" />
-          </div>
+      <div class="w-52 h-[70px] flex">
+        <div>
+          <img class="rounded-lg h-[70px] my-auto border-[1px]" src="src/assets/apartment/apartment${apt.imgNum}.jpg" width="73" height="60" />
+        </div>
+        <div class="ms-[10px]">
+          <div class="font-bold mb-[5px] text-lg">${apt.text}</div>
           <div style="display: flex; flex-direction: column; align-items: flex-start">
-            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">${apt.gugunName} ${apt.dong}</div>
-            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">매매가</div>
+            <div class="text-gray-600" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap">${apt.gugunName} ${apt.dong}</div>
           </div>
         </div>
       </div>
@@ -230,14 +229,14 @@ const toggleCategorySearch = (category) => {
     @onLoadKakaoMap="onLoadKakaoMap">
     <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker)"
       :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat"
-      :image="{ imageSrc: `src/assets/ping/icon-house.png`, imageWidth: 64, imageHeight: 64, imageOption: {} }" />
+      :image="{ imageSrc: `src/assets/ping/icon-house.png`, imageWidth: 48, imageHeight: 48, imageOption: {} }" />
     <template v-for="overlay in customOverlays" :key="overlay.key">
       <KakaoMapCustomOverlay v-if="overlay.visible" :lng="overlay.lng" :lat="overlay.lat" :content="overlay.content"
         :yAnchor="overlay.yAnchor" />
     </template>
     <KakaoMapMarker v-for="(marker, index) in markerList" :key="marker.key === undefined ? index : marker.key"
       :lat="marker.lat" :lng="marker.lng" :infoWindow="marker.infoWindow" :clickable="true"
-      :image="{ imageSrc: `src/assets/ping/${marker.icon}`, imageWidth: 64, imageHeight: 64, imageOption: {} }"
+      :image="{ imageSrc: `src/assets/ping/${marker.icon}`, imageWidth: 48, imageHeight: 48, imageOption: {} }"
       @onClickKakaoMapMarker="onClickMapMarker(marker)" />
   </KakaoMap>
   <div id="category">
