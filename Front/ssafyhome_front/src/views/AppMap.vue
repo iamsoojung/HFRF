@@ -27,6 +27,7 @@ const dongList = ref([{ text: "동선택", value: "" }]);
 const aptList = ref([]);
 const clickAptCode = ref();
 const searchBySelect = ref(false)
+const searchText = ref()
 
 const isDetail = ref(false)
 const toggleDetail = () => {
@@ -40,13 +41,13 @@ onMounted(() => {
     getSidoList();
     getLikeList();
     initializeRoadView();
-    if(route.query != null) {
-        getListByName()
+    if (route.query != null) {
+        getListByName(route.query.key)
     }
 })
-function getListByName() {
+function getListByName(text) {
     listAptByName(
-        { aptName: route.query.key } ,
+        { aptName: text },
         ({ data }) => {
             let options = [];
             let option = {};
@@ -60,16 +61,16 @@ function getListByName() {
                     lng: apt.lng,
                     visible: false,
                     userLike: false,
-                    imgNum: 1 + Math.floor(Math.random() * 21),
+                    imgNum: 1 + Math.floor(Math.random() * 20),
                 };
                 likeAptList.value.forEach((like) => {
                     if (like.aptCode == apt.aptCode) {
                         option.userLike = true
                     }
                 },
-                options.push(option)
-            )
-        });
+                    options.push(option)
+                )
+            });
             aptList.value = options;
             noAptMsg.value = "매물이 없습니다."
         },
@@ -77,8 +78,8 @@ function getListByName() {
             console.log(error)
         }
     )
-    setTimeout(function(){searchBySelect.value = !searchBySelect.value}, 150)
-    
+    setTimeout(function () { searchBySelect.value = !searchBySelect.value }, 150)
+
 }
 
 const initializeRoadView = (lat = 37.5665, lng = 126.9780) => {
@@ -188,9 +189,9 @@ const onChangeDong = (value) => {
                         option.userLike = true
                     }
                 },
-                options.push(option)
-            )
-        });
+                    options.push(option)
+                )
+            });
             aptList.value = options;
             console.log(options)
             noAptMsg.value = "매물이 없습니다."
@@ -265,7 +266,7 @@ const toggleLikeApt = (aptCode, isDetail) => {
                 (response) => {
                     console.log(response)
                     likeAptList.value.push(likeApt.value)
-                    if(isDetail) {
+                    if (isDetail) {
                         detailApt.value.userLike = true
                     }
                 },
@@ -279,11 +280,11 @@ const toggleLikeApt = (aptCode, isDetail) => {
                 likeApt.value,
                 (response) => {
                     console.log(response)
-                    if(isDetail) {
+                    if (isDetail) {
                         detailApt.value.userLike = false
                     }
-                    for(let i=0; i<likeAptList.value.length; i++){
-                        if(likeAptList.value[i].aptCode == aptCode) {
+                    for (let i = 0; i < likeAptList.value.length; i++) {
+                        if (likeAptList.value[i].aptCode == aptCode) {
                             likeAptList.value.splice(i, 1);
                             i--;
                         }
@@ -313,19 +314,36 @@ const toggleMenu = () => {
 
 <template>
     <Header />
-    <div v-show="isOpenMenu" class="fixed z-10 my-5 ">
-        <div class="fixed"></div>
+    <div v-show="isOpenMenu" class="fixed z-10">
         <div class="flex grid-cols-2">
             <div class="z-10 col-span-1 flex-cols-3 bg-white shadow-xl border-[1px] border-gray-200 rounded-lg">
-                <div class="pt-4" v-show="!isDetail">
+                <div v-show="!isDetail">
+                        <div class="flex">
+                            <div class="relative flex mt-2 px-2 w-[400px]">
+                                <input v-model="searchText"
+                                    class="w-full pl-5 pr-10 py-2 text-sm text-gray-900 rounded-lg focus:ring-0 focus:border-gray-900 focus:outline-none border-[1px]"
+                                    placeholder="지역명, 아파트명을 입력해주세요." required />
+                                <button @click="getListByName(searchText)"
+                                    class="absolute inset-y-0 right-2 p-3 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border hover:bg-pink-500 focus:outline-none">
+                                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                        fill="none" viewBox="0 0 20 20">
+                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                            stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                    </svg>
+                                    <span class="sr-only">Search</span>
+                                </button>
+                            </div>
+                        </div>
+                </div>
+                <div class="pt-2 px-2" v-show="!isDetail">
                     <VSelect class="text-xs" :selectOption="sidoList" @onKeySelect="onChangeSido" />
                     <VSelect class="text-xs" style="margin-left: 5px" :selectOption="gugunList"
                         @onKeySelect="onChangeGugun" />
                     <VSelect class="text-xs" style="margin-left: 5px" :selectOption="dongList"
                         @onKeySelect="onChangeDong" />
                 </div>
-                <div :class="{'min-h-[740px] max-h-[740px]': isDetail}" class="overflow-auto
-                     mt-5 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
+                <div :class="{ 'min-h-[780px] max-h-[780px]': isDetail }" class="overflow-auto
+                     mt-1 ms-1 min-h-[690px] max-h-[690px] col-span-3 bg-white z-10">
                     <div class="relative" v-show="isDetail">
                         <div id="roadview" style="width:100%;height:300px;"></div>
                         <div @click="toggleDetail" class="top-0 absolute z-10 font-bold m-3">
@@ -341,11 +359,11 @@ const toggleMenu = () => {
                                 {{ detailApt.text }}
                             </div>
                         </div>
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" @click="toggleLikeApt(detailApt[0].aptCode, true)"
-                            fill="currentColor"
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                            @click="toggleLikeApt(detailApt[0].aptCode, true)" fill="currentColor"
                             :class="{ 'bg-red-500 text-white': detailApt.userLike, 'bg-white': !detailApt.userLike }"
-                                class="hover:bg-red-500 hover:text-white border-[1px] border-gray-600 p-1 text-red-600 rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
-                                <path
+                            class="hover:bg-red-500 hover:text-white border-[1px] border-gray-600 p-1 text-red-600 rounded-md shadow-md w-8 h-8 absolute top-4 right-4">
+                            <path
                                 d="m9.653 16.915-.005-.003-.019-.01a20.759 20.759 0 0 1-1.162-.682 22.045 22.045 0 0 1-2.582-1.9C4.045 12.733 2 10.352 2 7.5a4.5 4.5 0 0 1 8-2.828A4.5 4.5 0 0 1 18 7.5c0 2.852-2.044 5.233-3.885 6.82a22.049 22.049 0 0 1-3.744 2.582l-.019.01-.005.003h-.002a.739.739 0 0 1-.69.001l-.002-.001Z" />
                         </svg>
                     </div>
@@ -423,8 +441,8 @@ const toggleMenu = () => {
     </div>
     <div class="border-y-2 grid">
         <div class="min-h-[805px]">
-            <ViewMap class="w-full h-full" :search-by-select="searchBySelect" :aptList="aptList" :click-apt-code="clickAptCode" />
+            <ViewMap class="w-full h-full" :search-by-select="searchBySelect" :aptList="aptList"
+                :click-apt-code="clickAptCode" />
         </div>
     </div>
 </template>
-
