@@ -2,7 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	
-	
 <mapper namespace="com.ssafy.hfrf.house.model.mapper.SellMapper">
 
 	<resultMap type="houseSell" id="sell">
@@ -19,7 +18,7 @@
 		<result column="floorTot" property="floor_tot"/>
 		<result column="size" property="size"/>
 		<result column="content" property="content"/>
-		<result column="keyword" property="keyword"/>
+		<result column="keyword" property="keyword"/>  
 		<result column="address" property="address"/>
 		<result column="detailAddress" property="detail_address"/>
 		<result column="lat" property="lat"/>
@@ -27,7 +26,7 @@
 	</resultMap>
 	
 	<resultMap type="houseSell" id="viewArticle" extends="sell">
-		<collection property="fileInfos" column="idx" javaType="list" ofType="fileInfoDto" select="fileInfoList"/>
+		<collection property="fileInfos" column="idx" javaType="list" ofType="fileInfoSellDto" select="fileInfoList"/>
 	</resultMap>
 
 	<resultMap type="fileInfoSellDto" id="file">
@@ -37,21 +36,26 @@
 	</resultMap>
 	
 	<insert id="add" parameterType="houseSell">
-    insert into housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
-    values (#{id}, #{title}, now(), #{type}, #{price}, #{adminPrice}, #{adminDesc}, #{roomType}, #{floorNow}, #{floorTot}, #{size}, #{content}, #{keyword}, #{address}, #{detailAddress}, #{lat}, #{lng})
+        insert into housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
+        values (#{id}, #{title}, now(), #{type}, #{price}, #{adminPrice}, #{adminDesc}, #{roomType}, #{floorNow}, #{floorTot}, #{size}, #{content}, #{keyword}, #{address}, #{detailAddress}, #{lat}, #{lng})
 	    <selectKey resultType="int" keyProperty="idx" order="AFTER">
 	        select last_insert_id()
 	    </selectKey>
 	</insert>
 
 	<insert id="registerFile" parameterType="houseSell">
-	    insert into file_info (idx, save_folder, original_file, save_file)
-	    values
-	    <foreach collection="fileInfos" item="fileinfo" separator=",">
-	        (#{idx}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
-	    </foreach>
+        insert into file_info_sell (idx, save_folder, original_file, save_file)
+        values
+        <foreach collection="fileInfos" item="fileinfo" separator=",">
+            (#{idx}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
+        </foreach>
 	</insert>
 
+	<select id="fileInfoList" resultMap="file">
+		select save_folder, original_file, save_file
+		from file_info
+		where idx = #{articleNo}
+	</select>
 	
 	<sql id="listCond">
 		<if test="word != null and word !=''">
