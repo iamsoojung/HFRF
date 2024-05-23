@@ -9,7 +9,6 @@ const memberStore = useMemberStore()
 const router = useRouter()
 const route = useRoute()
 const { userInfo } = storeToRefs(memberStore)
-const { type } = defineProps({ type: String });
 
 const checkedNames = ref([])
 
@@ -28,10 +27,9 @@ const realty = ref({
     floorTot: "",
     size: "",
     content: "",
-    image: "",
     keyword: "",
     address: "",
-    dong: "",
+    detail_address: "",
     lat: "",
     lng: ""
 })
@@ -53,9 +51,9 @@ async function writeRealty() {
     formData.append("floor_tot", realty.value.floorTot)
     formData.append("size", realty.value.size)
     formData.append("content", realty.value.content)
-    formData.append("image", realty.value.image)
     formData.append("keyword", realty.value.keyword)
     formData.append("address", realty.value.address)
+    formData.append("detail_address", realty.value.detail_address)
     formData.append("lat", realty.value.lat)
     formData.append("lng", realty.value.lng)
 
@@ -90,7 +88,16 @@ function onSubmit() {
         }
     }
     realty.value.keyword = keyword;
-    type === "regist" ? writeRealty() : writeRealty();
+    writeRealty();
+}
+
+function openPostcode() {
+    new window.daum.Postcode({
+        oncomplete: (data) => {
+            console.log(data);
+            realty.value.address = data.roadAddress;
+        },
+    }).open();
 }
 </script>
 
@@ -204,15 +211,23 @@ function onSubmit() {
                 <label for="infra" class="ms-2 text-sm font-medium text-gray-900">인프라</label>
             </div>
         </div>
+        <div class="flex border-b-[1px] pb-4 mb-4">
+            <div class="my-auto w-[80px] text-center font-bold me-4">주소</div>
+            <div class="w-[300px] flex border-[1px] me-4 rounded-lg border-gray-400 overflow-hidden">
+            <input class="hover:cursor-default rounded-lg border-none focus:border-none focus:ring-0" type="text" v-model="realty.address" placeholder="주소" readonly />
+            <button class="ms-auto hover:bg-gray-300 rounded-r-lg bg-slate-200 px-2 h-full" type="button" id="postcode" @click="openPostcode">검색</button>
+            </div>
+            <input class="w-[300px] border-[1px] me-4 rounded-lg border-gray-400 focus:ring-0 focus:border-gray-500" type="text" v-model="realty.detailAddress" placeholder="상세주소" />
+        </div>
         <div class="flex">
             <div class="my-auto w-[80px] text-center font-bold me-4">이미지</div>
             <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
         </div>
-
         <div class="text-end">
             <button class="me-2 bg-blue-500 text-white hover:bg-blue-600 rounded-lg py-1 px-2 border-[1px]"
                 type="submit">등록</button>
-            <RouterLink :to="{ name: 'realtyList'}" class="hover:bg-red-600 hover:text-white rounded-lg py-[6px] px-2 border-[1px]">취소</RouterLink>
+            <RouterLink :to="{ name: 'realtyList' }"
+                class="hover:bg-red-600 hover:text-white rounded-lg py-[6px] px-2 border-[1px]">취소</RouterLink>
         </div>
     </form>
 </template>
