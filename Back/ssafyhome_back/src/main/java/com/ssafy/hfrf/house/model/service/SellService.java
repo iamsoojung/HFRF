@@ -10,7 +10,7 @@ public interface SellService {
 
 	public HouseSell detail(String idx);
 
-	public void add(HouseSell houseSell);
+	public void add(HouseSell houseSell) throws Exception;
 
 	public void update(HouseSell houseSell);
 

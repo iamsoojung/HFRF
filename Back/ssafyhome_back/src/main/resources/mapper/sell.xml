@@ -44,7 +44,7 @@
 	</insert>
 
 	<insert id="registerFile" parameterType="houseSell">
-        insert into file_info_sell (idx, save_folder, original_file, save_file)
+        insert into file_info_sell (sell_no, save_folder, original_file, save_file)
         values
         <foreach collection="fileInfos" item="fileinfo" separator=",">
             (#{idx}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})

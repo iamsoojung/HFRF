@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import com.ssafy.hfrf.board.model.BoardDto;
 import com.ssafy.hfrf.house.model.HouseSell;
 import com.ssafy.hfrf.house.model.PageBean;
 
@@ -14,6 +15,8 @@ public interface SellMapper {
 	public HouseSell detail(String idx);
 
 	public void add(HouseSell houseSell);
+
+	void registerFile(HouseSell houseSell) throws Exception;
 
 	public void update(HouseSell houseSell);
 
