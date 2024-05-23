@@ -137,6 +137,33 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 -- -----------------------------------------------------
+-- Table `hfrf`.`housesell`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hfrf`.`housesell` ;
+
+CREATE TABLE IF NOT EXISTS `hfrf`.`housesell` (
+    idx INT PRIMARY KEY AUTO_INCREMENT,
+    id VARCHAR(50) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    date DATE NOT NULL,
+    type VARCHAR(50) NOT NULL,
+    price VARCHAR(50) NOT NULL,
+    admin_price VARCHAR(50),
+    admin_desc TEXT,
+    room_type VARCHAR(50) NOT NULL,
+    floor_now INT NOT NULL,
+    floor_tot INT NOT NULL,
+    size DOUBLE NOT NULL,
+    content TEXT,
+    image VARCHAR(255),
+    keyword VARCHAR(255),
+    address VARCHAR(255) NOT NULL,
+    dong VARCHAR(255) NOT NULL,
+    lat VARCHAR(50),
+    lng VARCHAR(50)
+);
+
+-- -----------------------------------------------------
 -- Table `hfrf`.`houseinfo`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `hfrf`.`houseinfo` (

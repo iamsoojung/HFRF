@@ -1,13 +1,666 @@
 <script setup>
+import { ref, onMounted } from "vue";
+import { useRoute, useRouter } from "vue-router";
+import { detailArticle, deleteArticle } from "@/api/board";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
+
+const route = useRoute();
+const router = useRouter();
+const memberStore = useMemberStore();
+const { userInfo } = storeToRefs(memberStore);
+const { idx } = route.params;
+
+const article = ref({});
+const isMe = ref(true);
+let map, geocoder, marker;
+
+onMounted(async () => {
+    await getArticle();
+    getMap();
+    sample5_execDaumPostcode();
+    setCategoryMarker();
+});
+
+const getArticle = async () => {
+    console.log(idx + "번글 얻으러 감");
+
+    await detailArticle(
+        idx,
+        ({ data }) => {
+            article.value = data;
+        },
+        (error) => {
+            console.log(error);
+        }
+    );
+    console.log(article.value);
+
+    // 작성자가 로그인한 본인인지 확인
+    if (userInfo.value.userId === article.value.id) isMe.value = true;
+    else isMe.value = false;
+};
+
+const getMap = () => {
+    // Ensure the Kakao Maps API is loaded
+    if (typeof daum === "undefined" || !daum.maps) {
+        console.error("Kakao Maps API is not loaded.");
+        return;
+    }
+
+    const mapContainer = document.getElementById("map"); // 지도를 표시할 div
+    const mapOption = {
+        center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+        level: 3, // 지도의 확대 레벨
+    };
+
+    // 지도를 미리 생성
+    map = new daum.maps.Map(mapContainer, mapOption);
+    // 주소-좌표 변환 객체를 생성
+    geocoder = new daum.maps.services.Geocoder();
+    // 마커를 미리 생성
+    marker = new daum.maps.Marker({
+        position: new daum.maps.LatLng(37.537187, 127.005476),
+        map: map,
+    });
+};
+
+const sample5_execDaumPostcode = () => {
+    console.log(article.value);
+    console.log("위도" + article.value.lat);
+    console.log("경도" + article.value.lng);
+
+    // 정상적으로 검색이 완료됐으면
+    // 해당 주소에 대한 좌표를 받아서
+    const coords = new daum.maps.LatLng(article.value.lat, article.value.lng);
+    console.log(coords);
+    // 지도를 보여준다.
+    const mapContainer = document.getElementById("map");
+    mapContainer.style.display = "block";
+    map.relayout();
+    // 지도 중심을 변경한다.
+    map.setCenter(coords);
+    // 마커를 결과값으로 받은 위치로 옮긴다.
+    marker.setPosition(coords);
+};
+
+function moveList() {
+    router.go(-1);
+}
+
+const moveModify = () => {
+    console.log(idx + "번글 수정하러 감");
+    router.push({ name: "sell-modify", params: { idx } });
+};
+
+const onDeleteArticle = async () => {
+    console.log(idx + "번글 삭제할지 묻기");
+
+    Swal.fire({
+        title: "정말 삭제하시겠습니까?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "rgb(34 197 94)",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "삭제",
+        cancelButtonText: "취소",
+    }).then(async (result) => {
+        if (result.isConfirmed) {
+            console.log("삭제 완료");
+            await deleteArticle(
+                idx,
+                (response) => {
+                    if (response.status == 200) moveList();
+                },
+                (error) => {
+                    console.log(error);
+                }
+            );
+        }
+    });
+};
+
+// 카테고리 마커 표시하기
+const setCategoryMarker = () => {
+    console.log("setCategory")
+    var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
+        contentNode = document.createElement("div"), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다
+        markers = [], // 마커를 담을 배열입니다
+        currCategory = ""; // 현재 선택된 카테고리를 가지고 있을 변수입니다
+
+    // 장소 검색 객체를 생성합니다
+    var ps = new kakao.maps.services.Places(map);
+
+    // 지도에 idle 이벤트를 등록합니다
+    kakao.maps.event.addListener(map, "idle", searchPlaces);
+
+    // 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다
+    contentNode.className = "placeinfo_wrap";
+
+    // 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
+    // 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다
+    addEventHandle(contentNode, "mousedown", kakao.maps.event.preventMap);
+    addEventHandle(contentNode, "touchstart", kakao.maps.event.preventMap);
+
+    // 커스텀 오버레이 컨텐츠를 설정합니다
+    placeOverlay.setContent(contentNode);
+
+    // 각 카테고리에 클릭 이벤트를 등록합니다
+    addCategoryClickEvent();
+
+    // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
+    function addEventHandle(target, type, callback) {
+        if (target.addEventListener) {
+            target.addEventListener(type, callback);
+        } else {
+            target.attachEvent("on" + type, callback);
+        }
+    }
+
+    // 카테고리 검색을 요청하는 함수입니다
+    function searchPlaces() {
+        if (!currCategory) {
+            return;
+        }
+
+        // 커스텀 오버레이를 숨깁니다
+        placeOverlay.setMap(null);
+
+        // 지도에 표시되고 있는 마커를 제거합니다
+        // removeMarker();
+
+        ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
+    }
+
+    // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
+    function placesSearchCB(data, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            // 정상적으로 검색이 완료됐으면 지도에 마커를 표출합니다
+            displayPlaces(data);
+        } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+            // 검색결과가 없는경우 해야할 처리가 있다면 이곳에 작성해 주세요
+        } else if (status === kakao.maps.services.Status.ERROR) {
+            // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
+        }
+    }
+
+    // 지도에 마커를 표출하는 함수입니다
+    function displayPlaces(places) {
+        // 몇번째 카테고리가 선택되어 있는지 얻어옵니다
+        // 이 순서는 스프라이트 이미지에서의 위치를 계산하는데 사용됩니다
+        var order = document
+            .getElementById(currCategory)
+            .getAttribute("data-order");
+
+        for (var i = 0; i < places.length; i++) {
+            // 마커를 생성하고 지도에 표시합니다
+            var marker = addMarker(
+                new kakao.maps.LatLng(places[i].y, places[i].x),
+                order
+            );
+
+            // 마커와 검색결과 항목을 클릭 했을 때
+            // 장소정보를 표출하도록 클릭 이벤트를 등록합니다
+            (function (marker, place) {
+                kakao.maps.event.addListener(marker, "click", function () {
+                    displayPlaceInfo(place);
+                });
+            })(marker, places[i]);
+        }
+    }
+
+    // 마커를 생성하고 지도 위에 마커를 표시하는 함수입니다
+    function addMarker(position, order) {
+        let imageSrc
+        if (order == 0) imageSrc = "/src/assets/icon/bank.png"
+        if (order == 1) imageSrc = "/src/assets/icon/mart.png"
+        if (order == 2) imageSrc = "/src/assets/icon/pharmacy.png"
+        if (order == 3) imageSrc = "/src/assets/icon/gas-station.png"
+        if (order == 4) imageSrc = "/src/assets/icon/cafe.png"
+        if (order == 5) imageSrc = "/src/assets/icon/convenience-store.png"
+
+        var imageSize = new kakao.maps.Size(27, 28), // 마커 이미지의 크기
+            imgOptions = {
+                offset: new kakao.maps.Point(11, 28), // 마커 좌표에 일치시킬 이미지 내에서의 좌표
+            },
+            markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imgOptions),
+            marker = new kakao.maps.Marker({
+                position: position, // 마커의 위치
+                image: markerImage,
+            });
+
+        marker.setMap(map); // 지도 위에 마커를 표출합니다
+        marker.order = order
+        markers.push(marker); // 배열에 생성된 마커를 추가합니다
+        return marker;
+    }
+
+    // 지도 위에 표시되고 있는 마커를 모두 제거합니다
+    function removeMarker(order) {
+        console.log("removeMarker", order)
+        for (var i = 0; i < markers.length; i++) {
+            if (markers[i].order == order) {
+                markers[i].setMap(null);
+                markers.splice(i, 1);
+                i--
+            }
+        }
+    }
+
+    // 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
+    function displayPlaceInfo(place) {
+        var content =
+            '<div class="placeinfo">' +
+            '   <a class="title" href="' +
+            place.place_url +
+            '" target="_blank" title="' +
+            place.place_name +
+            '">' +
+            place.place_name +
+            "</a>";
+
+        if (place.road_address_name) {
+            content +=
+                '    <span title="' +
+                place.road_address_name +
+                '">' +
+                place.road_address_name +
+                "</span>" +
+                '  <span class="jibun" title="' +
+                place.address_name +
+                '">(지번 : ' +
+                place.address_name +
+                ")</span>";
+        } else {
+            content +=
+                '    <span title="' +
+                place.address_name +
+                '">' +
+                place.address_name +
+                "</span>";
+        }
+
+        content +=
+            '    <span class="tel">' +
+            place.phone +
+            "</span>" +
+            "</div>" +
+            '<div class="after"></div>';
+
+        contentNode.innerHTML = content;
+        placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
+        placeOverlay.setMap(map);
+    }
+
+    // 각 카테고리에 클릭 이벤트를 등록합니다
+    function addCategoryClickEvent() {
+        var category = document.getElementById("category"),
+            children = category.children;
+
+        for (var i = 0; i < children.length; i++) {
+            children[i].onclick = onClickCategory;
+        }
+    }
+
+    // 카테고리를 클릭했을 때 호출되는 함수입니다
+    function onClickCategory() {
+        var id = this.id,
+            className = this.className;
+
+        placeOverlay.setMap(null);
+
+        if (className === "on") {
+            currCategory = "";
+            changeCategoryClass(this, false);
+            removeMarker(this.getAttribute('data-order'));
+        } else {
+            currCategory = id;
+            changeCategoryClass(this, true);
+            searchPlaces();
+        }
+    }
+
+    // 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
+    function changeCategoryClass(el, shouldOn) {
+        if (shouldOn) {
+            el.className = "on";
+        } else {
+            el.className = ""
+        }
+    }
+};
 
 </script>
 
 <template>
-    <div>
-        
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="text-center text-3xl font-bold my-5">{{ article.title }}</div>
+            </div>
+
+            <div class="col-lg-10 text-start">
+                <div class="flex flex-col">
+                    <div class="my-3">
+                        <div
+                            class="flex flex-row pb-4 justify-end items-center text-gray-500 border-b-2 border-inherit">
+                            <!-- 글쓴이 -->
+                            <i class="px-1 text-xl fa-regular fa-circle-user"></i>
+                            <div class="pl-2 pr-5 text-xl font-bold">
+                                {{ article.id }}
+                            </div>
+
+                            <!-- 작성시간 -->
+                            <i class="px-1 text-xl fa-regular fa-calendar-plus"></i>
+                            <div class="pl-2 pr-5 text-xl">
+                                {{ article.date }}
+                            </div>
+
+                            <!-- 조회수 -->
+                            <i class="pl-1 pr-2 text-xl fa-regular fa-eye"></i>
+                            <div class="pl-2 pr-5 text-xl">
+                                {{ article.hit }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 글 내용 -->
+                    <div>
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <span class="pb-1 text-xl text-black font-bold pr-3">거래 방식:</span>
+                                <span class="text-xl text-gray-600">{{ article.type }}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold pr-3">가격:</span>
+                                    <span class="text-xl text-gray-600">{{ article.price }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pl-1 pr-5">만원</span>
+                                </div>
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold pr-3">관리비:</span>
+                                    <span class="text-xl text-gray-600">{{ article.admin_price }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pl-1"> 만원</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <span class="pb-1 text-xl text-black font-bold pr-3">관리비 포함 항목:</span>
+                                <span class="text-xl text-gray-600">{{ article.admin_desc }}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold pr-3">방 개수:</span>
+                                    <span class="text-xl text-gray-600">{{ article.room_type }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pr-5 pl-1"> 개</span>
+                                </div>
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold pr-3">평 수:</span>
+                                    <span class="text-xl text-gray-600">{{ article.size }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pl-1">평</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold pr-3">층 수:</span>
+                                    <span class="text-xl text-gray-600">{{ article.floor_now }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pl-1 pr-5">층</span>
+                                </div>
+                                <div class="flex flex-row">
+                                    <span class="pb-1 text-xl text-black font-bold">건물 전체 층 수:</span>
+                                    <span class="text-xl text-gray-600">{{ article.floor_tot }}</span>
+                                    <span class="pb-1 text-xl text-black font-bold pl-1">층</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 mt-4 mx-7">
+                            <div class="flex flex-row">
+                                <span class="pb-1 text-xl text-black font-bold pr-3 mb-2">도로명 주소:</span>
+                                <span class="text-xl text-gray-600">{{ article.address }}</span>
+                            </div>
+                            <div class="flex flex-row">
+                                <span class="pb-1 text-xl text-black font-bold pr-3">상세 주소:</span>
+                                <span class="text-xl text-gray-600">{{ article.dong }}</span>
+                            </div>
+                            <div class="flex flex-row">
+                                <div id="map" style="width: 100%; height: 70vh; margin-top: 10px; display: none"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- category test start -->
+                    <div class="ms-3 absolute bottom-0">
+                        <ul id="category">
+                            <li id="BK9" data-order="0" style="background-image: url('/src/assets/icon/bank.png')">
+                                <span class="category_bg bank"></span>
+                                은행
+                            </li>
+                            <li id="MT1" data-order="1">
+                                <span class="category_bg mart"></span>
+                                마트
+                            </li>
+                            <li id="PM9" data-order="2">
+                                <span class="category_bg pharmacy"></span>
+                                약국
+                            </li>
+                            <li id="OL7" data-order="3">
+                                <span class="category_bg oil"></span>
+                                주유소
+                            </li>
+                            <li id="CE7" data-order="4">
+                                <span class="category_bg cafe"></span>
+                                카페
+                            </li>
+                            <li id="CS2" data-order="5">
+                                <span class="category_bg store"></span>
+                                편의점
+                            </li>
+                        </ul>
+                    </div>
+                    <!-- category test end -->
+
+                    <!-- 버튼 목록 -->
+                    <div class="flex flex-row my-5 justify-content-end">
+                        <button type="button"
+                            class="bg-blue-400 hover:bg-blue-500 text-gray-100 mx-2 px-5 py-2 text-base rounded-md tracking-wide shadow-md cursor-pointer transition ease-in duration-500"
+                            @click="moveList">
+                            글목록
+                        </button>
+                        <button v-if="isMe" type="button"
+                            class="bg-green-400 hover:bg-green-500 text-gray-100 mx-2 px-5 py-2 text-base rounded-md tracking-wide shadow-md cursor-pointer transition ease-in duration-500"
+                            @click="moveModify">
+                            글수정
+                        </button>
+                        <button v-if="isMe" type="button"
+                            class="bg-red-400 hover:bg-red-500 text-gray-100 mx-2 px-5 py-2 text-base rounded-md tracking-wide shadow-md cursor-pointer transition ease-in duration-500"
+                            @click="onDeleteArticle">
+                            글삭제
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
+.map_wrap,
+.map_wrap * {
+    margin: 0;
+    padding: 0;
+    font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
+    font-size: 12px;
+}
 
+.map_wrap {
+    position: relative;
+    width: 100%;
+    height: 350px;
+}
+
+#category {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border-radius: 5px;
+    border: 1px solid #909090;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.4);
+    background: #fff;
+    overflow: hidden;
+    z-index: 2;
+}
+
+#category li {
+    float: left;
+    list-style: none;
+    width: 50px;
+    border-right: 1px solid #acacac;
+    padding: 6px 0;
+    text-align: center;
+    cursor: pointer;
+}
+
+#category li.on {
+    background: rgba(220, 252, 231);
+    font-weight: bold;
+}
+
+#category li:hover {
+    background: rgba(134, 239, 172);
+    border-left: 1px solid #acacac;
+    margin-left: -1px;
+}
+
+#category li:last-child {
+    margin-right: 0;
+    border-right: 0;
+}
+
+#category li span {
+    display: block;
+    margin: 0 auto 3px;
+    width: 27px;
+    height: 28px;
+}
+
+#category li .bank {
+    background-image: url("/src/assets/icon/bank.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#category li .mart {
+    background-image: url("/src/assets/icon/mart.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#category li .pharmacy {
+    background-image: url("/src/assets/icon/pharmacy.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#category li .oil {
+    background-image: url("/src/assets/icon/gas-station.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#category li .cafe {
+    background-image: url("/src/assets/icon/cafe.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+#category li .store {
+    background-image: url("/src/assets/icon/convenience-store.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.placeinfo_wrap {
+    position: absolute;
+    bottom: 28px;
+    left: -150px;
+    width: 300px;
+}
+
+.placeinfo {
+    position: relative;
+    width: 100%;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    background: #fff;
+}
+
+.placeinfo:nth-of-type(n) {
+    border: 0;
+    box-shadow: 0px 1px 2px #888;
+}
+
+.placeinfo_wrap .after {
+    content: '';
+    position: relative;
+    margin-left: -12px;
+    left: 50%;
+    width: 22px;
+    height: 12px;
+    background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/vertex_white.png')
+}
+
+.placeinfo a,
+.placeinfo a:hover,
+.placeinfo a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.placeinfo a,
+.placeinfo span {
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.placeinfo span {
+    margin: 5px 5px 0 5px;
+    cursor: default;
+    font-size: 13px;
+}
+
+.placeinfo .title {
+    font-weight: bold;
+    font-size: 14px;
+    border-radius: 6px 6px 0 0;
+    margin: -1px -1px 0 -1px;
+    padding: 10px;
+    color: #fff;
+    background: #d95050;
+    background: #d95050 url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/arrow_white.png) no-repeat right 14px center;
+}
+
+.placeinfo .tel {
+    color: #0f7833;
+}
+
+.placeinfo .jibun {
+    color: #999;
+    font-size: 11px;
+    margin-top: 0;
+}
 </style>
