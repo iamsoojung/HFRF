@@ -2,6 +2,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { defineStore } from "pinia";
 import { jwtDecode } from "jwt-decode";
+import Swal from 'sweetalert2';
 
 import {
   userConfirm,
@@ -103,7 +104,12 @@ export const useMemberStore = defineStore(
                 } else {
                   console.log("리프레시 토큰 제거 실패");
                 }
-                alert("RefreshToken 기간 만료");
+                Swal.fire({
+                  icon: 'error',
+                  title: "RefreshToken 기간 만료",
+                  confirmButtonColor: '#ff9999',
+                });
+                // alert("RefreshToken 기간 만료");
                 isLogin.value = false;
                 userInfo.value = null;
                 isValidToken.value = false;
@@ -148,7 +154,13 @@ export const useMemberStore = defineStore(
         joinUser,
         (response) => {
           if (response.status === httpStatusCode.OK) {
-            alert("회원 가입 성공");
+            // alert("회원 가입 성공");
+            Swal.fire({
+              icon: 'success',
+              title: "회원 가입 완료",
+              text: '회원 가입이 완료되었습니다.',
+              confirmButtonColor: '#429f50',
+            })
             router.push({ name: "login" });
           } else {
             console.error("유저 정보 없음");
@@ -164,7 +176,13 @@ export const useMemberStore = defineStore(
         modifyUser.value,
         (response) => {
           if (response.status === httpStatusCode.OK) {
-            alert("정보 수정 성공");
+            Swal.fire({
+              icon: 'success',
+              title: "정보 수정 성공",
+              text: '정보가 수정되었습니다.',
+              confirmButtonColor: '#429f50',
+            })
+            // alert("정보 수정 성공");
             router.push({ name: "user-mypage" });
           } else {
             console.error("수정 실패");
@@ -180,8 +198,20 @@ export const useMemberStore = defineStore(
         userId,
         (response) => {
           if (response.status === httpStatusCode.OK) {
-            alert("회원 탈퇴 성공");
+            Swal.fire({
+              icon: 'success',
+              title: "회원 탈퇴 완료",
+              text: '탈퇴되었습니다.',
+              confirmButtonColor: '#429f50',
+            })
+            // alert("회원 탈퇴 성공");
           } else {
+            Swal.fire({
+              icon: 'error',
+              title: "탈퇴 실패",
+              text: '탈퇴에 실패하였습니다.',
+              confirmButtonColor: '#ff9999',
+            });
             console.error("탈퇴 실패");
           }
         },

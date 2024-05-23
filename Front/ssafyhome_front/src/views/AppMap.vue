@@ -9,6 +9,7 @@ import VSelect from '@/components/common/VSelect.vue';
 import Header from "@/components/layout/Header.vue";
 import Chart from '@/components/map/Chart.vue';
 import { useRoute } from 'vue-router';
+import Swal from 'sweetalert2';
 
 const route = useRoute()
 
@@ -301,7 +302,12 @@ const toggleLikeApt = (aptCode, isDetail) => {
             }
         })
     } else {
-        alert("로그인 해주세요")
+        Swal.fire({
+            icon: 'error',
+            title: '로그인 후 이용하세요.',
+            confirmButtonColor: '#ff9999',
+            });
+        // alert("로그인 해주세요")
     }
 }
 

@@ -139,9 +139,13 @@ const isPwdError = ref(false)
 const modify = async () => {
     console.log(modifyUser)
     if (isPwdError.value) {
-        alert("비밀번호가 다릅니다")
-        // Swal.fire("비밀번호가 다릅니다.")
-        // Vue.swal('Hello Vue world!!!');
+        Swal.fire({
+            icon: 'error',
+            title: '수정 실패',
+            text: "비밀번호가 다릅니다",
+            confirmButtonColor: '#ff9999',
+        });
+        // alert("비밀번호가 다릅니다")
     } else {
         await userModify(modifyUser)
     }

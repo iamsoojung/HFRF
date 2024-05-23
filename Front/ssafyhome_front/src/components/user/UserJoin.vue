@@ -10,6 +10,7 @@ import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { httpStatusCode } from "@/util/http-status";
 import { checkId, checkEmail } from "@/api/user";
 import { useMemberStore } from '@/stores/member'
+import Swal from 'sweetalert2';
 
 const memberStore = useMemberStore()
 const { userJoin } = memberStore
@@ -34,13 +35,37 @@ const isDupId = ref(false)
 
 const join = async () => {
   if (isDupId.value) {
-    alert("이미 존재하는 ID입니다.")
+    Swal.fire({
+      icon: 'error',
+      title: '회원 가입 실패',
+      text: "이미 존재하는 ID입니다.",
+      confirmButtonColor: '#ff9999',
+    });
+    // alert("이미 존재하는 ID입니다.")
   } else if (isPwdError.value) {
-    alert("비밀번호가 다릅니다.")
+    Swal.fire({
+      icon: 'error',
+      title: '회원 가입 실패',
+      text: "비밀번호가 다릅니다.",
+      confirmButtonColor: '#ff9999',
+    });
+    // alert("비밀번호가 다릅니다.")
   } else if (isDupEmail.value || emailInputNone.value) {
-    alert("이메일을 확인해주세요.")
+    Swal.fire({
+      icon: 'error',
+      title: '회원 가입 실패',
+      text: "이메일을 확인해주세요.",
+      confirmButtonColor: '#ff9999',
+    });
+    // alert("이메일을 확인해주세요.")
   } else if (!codeCorrect.value) {
-    alert("인증번호를 확인해주세요.")
+    Swal.fire({
+      icon: 'error',
+      title: '회원 가입 실패',
+      text: "인증번호를 확인해주세요.",
+      confirmButtonColor: '#ff9999',
+    });
+    // alert("인증번호를 확인해주세요.")
   } else {
     await userJoin(joinUser)
   }
@@ -90,9 +115,21 @@ const emailCheck = async () => {
 const checkCode = () => {
   if (emailCode.value == inputCode.value) {
     codeCorrect.value = true
-    alert("인증되었습니다.")
+    Swal.fire({
+      icon: 'success',
+      title: '인증 완료',
+      text: "인증되었습니다.",
+      confirmButtonColor: '#429f50',
+    });
+    // alert("인증되었습니다.")
   } else {
-    alert("인증번호가 다릅니다")
+    Swal.fire({
+      icon: 'error',
+      title: '인증 실패',
+      text: "인증번호가 다릅니다",
+      confirmButtonColor: '#ff9999',
+    });
+    // alert("인증번호가 다릅니다")
     codeCorrect.value = false
   }
 }

@@ -245,14 +245,14 @@ const toggleCategorySearch = (category) => {
       @onClickKakaoMapMarker="onClickMapMarker(marker)" />
   </KakaoMap>
   <div id="category">
-    <div id="MT1">마트</div>
-    <div id="CS2">편의점</div>
-    <div id="SC4">학교</div>
-    <div id="BK9">은행</div>
-    <div id="FD6">음식점</div>
-    <div id="CE7">카페</div>
-    <div id="HP8">병원</div>
-    <div id="PM9">약국</div>
+    <div id="MT1">📌 마트</div>
+    <div id="CS2">📌 편의점</div>
+    <div id="SC4">📌 학교</div>
+    <div id="BK9">📌 은행</div>
+    <div id="FD6">📌 음식점</div>
+    <div id="CE7">📌 카페</div>
+    <div id="HP8">📌 병원</div>
+    <div id="PM9">📌 약국</div>
   </div>
 </template>
 

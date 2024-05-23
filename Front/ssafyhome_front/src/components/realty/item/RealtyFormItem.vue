@@ -4,6 +4,7 @@ import { useRouter, useRoute } from "vue-router";
 import { useMemberStore } from '@/stores/member';
 import { storeToRefs } from "pinia";
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const memberStore = useMemberStore()
 const router = useRouter()
@@ -75,12 +76,24 @@ async function writeRealty() {
             },
             data: formData,
         });
-        alert("매물 등록이 완료되었습니다.");
+        Swal.fire({
+            icon: 'success',
+            title: '매물 등록 완료',
+            text: '매물 등록이 완료되었습니다.',
+            confirmButtonColor: '#429f50',
+        });
+        // alert("매물 등록이 완료되었습니다.");
     moveList();
 
     } catch (error) {
         console.error(error);
-        alert("매물 등록 중 오류가 발생했습니다.");
+        Swal.fire({
+            icon: 'error',
+            title: '등록 오류',
+            text: "매물 등록 중 오류가 발생했습니다.",
+            confirmButtonColor: '#ff9999',
+        });
+        // alert("매물 등록 중 오류가 발생했습니다.");
     }
 }
 
