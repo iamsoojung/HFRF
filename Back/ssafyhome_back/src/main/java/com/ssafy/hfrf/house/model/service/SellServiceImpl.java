@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.ssafy.hfrf.house.model.FileInfoSellDto;
 import com.ssafy.hfrf.house.model.HouseSell;
 import com.ssafy.hfrf.house.model.PageBean;
 import com.ssafy.hfrf.house.model.mapper.SellMapper;
@@ -38,6 +39,10 @@ public class SellServiceImpl implements SellService {
 	@Transactional
 	public void add(HouseSell houseSell) {
 		sellMapper.add(houseSell);
+		List<FileInfoSellDto> fileInfoSells = houseSell.getFileInfos();
+		if (fileInfoSells != null && !fileInfoSells.isEmpty()) {
+			sellMapper.add(houseSell);
+		}
 	}
 
 	@Override

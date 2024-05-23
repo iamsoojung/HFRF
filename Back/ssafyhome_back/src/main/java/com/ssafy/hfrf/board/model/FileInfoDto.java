@@ -15,8 +15,10 @@ public class FileInfoDto {
 
 	@Schema(description = "저장폴더")
 	private String saveFolder;
+	
 	@Schema(description = "원본 파일이름")
 	private String originalFile;
+	
 	@Schema(description = "저장 파일이름")
 	private String saveFile;
 	

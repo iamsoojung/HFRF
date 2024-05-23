@@ -159,10 +159,29 @@ CREATE TABLE IF NOT EXISTS `hfrf`.`housesell` (
     image VARCHAR(255),
     keyword VARCHAR(255),
     address VARCHAR(255) NOT NULL,
-    dong VARCHAR(255) NOT NULL,
+    detail_address VARCHAR(255) NOT NULL,
     lat VARCHAR(50),
     lng VARCHAR(50)
 );
+
+-- -----------------------------------------------------
+-- Table `hfrf`.`file_info_sell`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `hfrf`.`file_info_sell` ;
+
+CREATE TABLE IF NOT EXISTS `hfrf`.`file_info_sell` (
+  `idx` INT NOT NULL AUTO_INCREMENT,
+  `sell_no` INT NULL,
+  `save_folder` VARCHAR(45) NULL,
+  `original_file` VARCHAR(50) NULL,
+  `save_file` VARCHAR(50) NULL,
+  PRIMARY KEY (`idx`),
+  CONSTRAINT `file_info_sell_to_sell_idx_fk`
+    FOREIGN KEY (`sell_no`)
+    REFERENCES `hfrf`.`housesell` (`idx`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 -- -----------------------------------------------------
 -- Table `hfrf`.`houseinfo`

@@ -37,8 +37,8 @@
 	
 	<insert id="add" parameterType="HouseSell">
 		insert into
-	 	housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, image, keyword, address, dong,lat,lng)
-		values (#{id},#{title},now(), #{type},#{price},#{admin_price},#{admin_desc},#{room_type},#{floor_now},#{floor_tot},#{size},#{content},#{image},#{keyword},#{address},#{dong},#{lat},#{lng})
+	 	housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
+		values (#{id},#{title},now(), #{type},#{price},#{admin_price},#{admin_desc},#{room_type},#{floor_now},#{floor_tot},#{size},#{content},#{keyword},#{address},#{detail_address}, #{lat}, #{lng})
 	</insert>	
 
 	<update id="update" parameterType="HouseSell">

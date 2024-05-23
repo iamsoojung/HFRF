@@ -1,5 +1,9 @@
 package com.ssafy.hfrf.house.model;
 
+import java.util.List;
+
+import com.ssafy.hfrf.board.model.FileInfoDto;
+
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -52,21 +56,21 @@ public class HouseSell {
 	@Schema(description = "매물 설명", example = "남향으로 일조량이 좋고, 교통이 편리합니다.")
 	private String content;
 
-	@Schema(description = "매물 이미지 URL", example = "http://example.com/image.jpg")
-	private String image;
-
 	@Schema(description = "매물 키워드", example = "역세권, 학군좋음")
 	private String keyword;
 
 	@Schema(description = "매물 주소", example = "서울특별시 중구")
 	private String address;
 
-	@Schema(description = "동", example = "만리동2가")
-	private String dong;
+	@Schema(description = "매물 상세 주소", example = "만리동2가")
+	private String detail_address;
 
 	@Schema(description = "위도", example = "37.5556")
 	private String lat;
 
 	@Schema(description = "경도", example = "126.9707")
 	private String lng;
+	
+	@Schema(description = "업로드 파일정보")
+	private List<FileInfoSellDto> fileInfos;
 }
