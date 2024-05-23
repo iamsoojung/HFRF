@@ -74,11 +74,12 @@ const getGPTResponse = async () => {
             prompt += `  면적: ${entry.area}㎡\n`;
             prompt += `  층수: ${entry.floor}층\n\n`;
         }
-        prompt += "이 매물에 대해 다음을 분석해 주세요:\n";
+        prompt += "이 매물에 대해 다음 항목들을 분석 및 진단해 주세요:\n";
         prompt += "1. 최근 부동산 동향\n";
         prompt += "2. 매물의 장단점\n";
         prompt += "3. 투자 가치 평가\n";
         prompt += "4. 추천 코멘트\n";
+        prompt += "각 항목을 제목 없이 내용만 출력해 주세요.\n";
 
         const response = await openai.chat.completions.create({
             messages: [
