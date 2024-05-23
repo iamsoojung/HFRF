@@ -46,6 +46,11 @@ public class HouseServiceImpl implements HouseService{
 	}
 
 	@Override
+	public String getAptNameByCode(String aptCode) throws SQLException {
+		return houseMapper.getAptNameByCode(aptCode);
+	}
+
+	@Override
 	public List<HouseDealDto> getDealsByCode(String aptCode) throws SQLException {
 		return houseMapper.getDealsByCode(aptCode);
 	}

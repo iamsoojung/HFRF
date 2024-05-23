@@ -71,6 +71,13 @@ public class HouseController {
 		return new ResponseEntity<List<HouseInfoDto>>(houseService.getAptName(aptName), HttpStatus.OK);
 	}
 
+	@Operation(summary = "아파트 찾기(aptCode)", description = "aptCode로 아파트 찾기")
+	@GetMapping("/aptCode")
+	public ResponseEntity<?> getAptName(@RequestParam("aptCode") String aptCode) throws Exception {
+		log.debug("aptCode : {} ", aptCode);
+		return new ResponseEntity<String>(houseService.getAptNameByCode(aptCode), HttpStatus.OK);
+	}
+
 	@Operation(summary = "매매 정보 찾기(aptCode)", description = "aptCode로 매매 정보 찾기")
 	@GetMapping("/aptDeal")
 	public ResponseEntity<List<HouseDealDto>> aptDeals(@RequestParam("aptCode") String aptCode) throws Exception {

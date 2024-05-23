@@ -67,7 +67,11 @@
 		CONCAT('%', #{aptName}, '%')
 		ORDER BY
 		h.apartmentName;
-
+	</select>
+	
+	<select id="getAptNameByCode" parameterType="string" resultType="string">
+		select apartmentName from houseinfo
+		where aptCode = #{aptCode};
 	</select>
 
 	<select id="getDealsByCode" parameterType="string"

@@ -2,7 +2,7 @@
 import { ref, onMounted } from 'vue'
 import FavoriteListItem from './item/FavoriteListItem.vue';
 import { listLike, deleteLike } from '@/api/aptLike';
-import { dealByDong } from '@/api/map';
+import { dealByDong, aptNameByCode } from '@/api/map';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
 
@@ -33,7 +33,14 @@ const getLikeList = () => {
                             like.average = getAverageDealAmount(data)
                         }
                     )
-                    like.imgNum = Math.floor(Math.random() * 21) + 1
+                    like.imgNum = Math.floor(Math.random() * 21) + 1;
+
+                    aptNameByCode(
+                        { aptCode: like.aptCode },
+                        ({ data }) => {
+                            like.name = data;
+                        }
+                    )
                 })
             },
             (error) => {

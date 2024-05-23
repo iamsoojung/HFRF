@@ -1,30 +1,20 @@
 <script setup>
-import { reactive, ref, onMounted } from 'vue';
+import { reactive, ref } from 'vue';
 import Modal from "./AnalysisItem.vue";
 
 const props = defineProps({ likeApt: Object });
 const emit = defineEmits(["deleteLike"]);
-
-onMounted(() => {
-    console.log(props.likeApt)
-});
-
 
 function deleteLike(aptCode) {
     emit("deleteLike", aptCode);
 }
 
 const isModal = ref(false);
-const closeModal = () => {
-    isModal.value = false;
-}
-
 const modalData = reactive({
     aptCode: null,
     dongCode: null,
     aptName: null
 });
-
 const openModal = () => {
     modalData.aptCode = props.likeApt.aptCode;
     isModal.value = true;
@@ -41,7 +31,7 @@ const openModal = () => {
             </div>
             <div class="py-3 px-5 flex justify-between mt-3">
                 <div>
-                    <div class="font-bold">{{ likeApt.aptCode }}</div>
+                    <div class="font-bold">{{ likeApt.name }}</div>
                     <div class="text-sm text-orange-600">평균 매매가</div>
                     <div>{{ Math.round(likeApt.average / 10000) }}억 {{ likeApt.average % 10000 }}만원</div>
                 </div>

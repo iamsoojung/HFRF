@@ -31,6 +31,14 @@ function listAptByName(aptName, success, fail) {
     .then(success)
     .catch(fail);
 }
+
+function aptNameByCode(param, success, fail) {
+  local
+    .get(`/house/aptCode?aptCode=${param.aptCode}`)
+    .then(success)
+    .catch(fail);
+}
+
 export {
   listSido,
   listGugun,
@@ -38,4 +46,5 @@ export {
   listAptByDong,
   dealByDong,
   listAptByName,
+  aptNameByCode,
 };
