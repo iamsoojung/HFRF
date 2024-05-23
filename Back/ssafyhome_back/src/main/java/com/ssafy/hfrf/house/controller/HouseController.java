@@ -57,28 +57,28 @@ public class HouseController {
 		return new ResponseEntity<List<HouseInfoDto>>(houseService.getDongInGugun(gugun), HttpStatus.OK);
 	}
 
-	@Operation(summary = "아파트 찾기", description = "시/군구 코드로 아파트 찾기")
+	@Operation(summary = "아파트 찾기(dongCode)", description = "dongCode로 아파트 찾기")
 	@GetMapping("/apt")
 	public ResponseEntity<List<HouseInfoDto>> apt(@RequestParam("dongCode") String dongCode) throws Exception {
 		log.debug("dong : {}", dongCode);
 		return new ResponseEntity<List<HouseInfoDto>>(houseService.getAptInDong(dongCode), HttpStatus.OK);
 	}
 
-	@Operation(summary = "아파트 찾기", description = "키워드로 아파트 찾기")
+	@Operation(summary = "아파트 찾기(aptName)", description = "aptName으로 아파트 찾기")
 	@GetMapping("/aptName")
 	public ResponseEntity<List<HouseInfoDto>> aptName(@RequestParam("aptName") String aptName) throws Exception {
 		log.debug("aptName : {}", aptName);
 		return new ResponseEntity<List<HouseInfoDto>>(houseService.getAptName(aptName), HttpStatus.OK);
 	}
 
-	@Operation(summary = "매매 정보 찾기", description = "아파트 코드로 매매 정보 찾기")
+	@Operation(summary = "매매 정보 찾기(aptCode)", description = "aptCode로 매매 정보 찾기")
 	@GetMapping("/aptDeal")
 	public ResponseEntity<List<HouseDealDto>> aptDeals(@RequestParam("aptCode") String aptCode) throws Exception {
 		log.debug("aptCode : {}", aptCode);
 		return new ResponseEntity<List<HouseDealDto>>(houseService.getDealsByCode(aptCode), HttpStatus.OK);
 	}
 
-	@Operation(summary = "주소 찾기", description = "동 코드로 시도,구군,동 이름 찾기")
+	@Operation(summary = "주소 찾기(dongcode)", description = "dongcode로 시도,구군,동 이름 찾기")
 	@GetMapping("/address")
 	public ResponseEntity<?> getAddressName(@RequestParam("dongcode")String dongcode) throws Exception{
 		try {

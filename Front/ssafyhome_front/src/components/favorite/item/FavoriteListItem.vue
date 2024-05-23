@@ -1,9 +1,14 @@
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, onMounted } from 'vue';
 import Modal from "./AnalysisItem.vue";
 
 const props = defineProps({ likeApt: Object });
 const emit = defineEmits(["deleteLike"]);
+
+onMounted(() => {
+    console.log(props.likeApt)
+});
+
 
 function deleteLike(aptCode) {
     emit("deleteLike", aptCode);
@@ -16,7 +21,8 @@ const closeModal = () => {
 
 const modalData = reactive({
     aptCode: null,
-    dongCode: null
+    dongCode: null,
+    aptName: null
 });
 
 const openModal = () => {

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useMemberStore } from '@/stores/member';
-import { getModifyArticle } from "@/api/board";
+import { getModifyArticle, modifyArticle } from "@/api/board";
 import { Quill } from "@vueup/vue-quill";
 import { storeToRefs } from "pinia"
 import axios from 'axios';
@@ -131,45 +131,45 @@ async function writeArticle() {
 }
 
 async function updateArticle() {
-  // console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
-  // modifyArticle(
-  //   article.value,
-  //   (response) => {
-  //     const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
-  //     alert(msg);
-  //     moveList();
-  //   },
-  //   (error) => console.log(error)
-  // );
-  const formData = new FormData();
-  formData.append("articleno", route.params.articleno)
-  formData.append("userId", article.value.userId);
-  formData.append("userName", article.value.userName);
-  formData.append("subject", article.value.subject);
-  formData.append("content", article.value.content);
-  formData.append("hit", article.value.hit);
-  for (let i = 0; i < files.value.length; i++) {
-    formData.append("fileInfos", files.value[i]);
-  }
+  console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
+  modifyArticle(
+    article.value,
+    (response) => {
+      const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
+      alert(msg);
+      moveList();
+    },
+    (error) => console.log(error)
+  );
+  // const formData = new FormData();
+  // formData.append("articleno", route.params.articleno)
+  // formData.append("userId", article.value.userId);
+  // formData.append("userName", article.value.userName);
+  // formData.append("subject", article.value.subject);
+  // formData.append("content", article.value.content);
+  // formData.append("hit", article.value.hit);
+  // for (let i = 0; i < files.value.length; i++) {
+  //   formData.append("fileInfos", files.value[i]);
+  // }
 
-  try {
-    await axios({
-      method: "PUT",
-      url: 'http://localhost/board',
-      mode: "cors",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    });
-    // 성공 시에 필요한 작업 수행
-    alert("글 수정이 완료되었습니다.");
-    moveList();
-  } catch (error) {
-    // 실패 시에 필요한 작업 수행
-    console.error(error);
-    alert("글 수정 중 오류가 발생했습니다.");
-  }
+  // try {
+  //   await axios({
+  //     method: "PUT",
+  //     url: 'http://localhost/board',
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //     data: formData,
+  //   });
+  //   // 성공 시에 필요한 작업 수행
+  //   alert("글 수정이 완료되었습니다.");
+  //   moveList();
+  // } catch (error) {
+  //   // 실패 시에 필요한 작업 수행
+  //   console.error(error);
+  //   alert("글 수정 중 오류가 발생했습니다.");
+  // }
 }
 
 function moveList() {
@@ -182,9 +182,9 @@ const toolbarOptions = [
   ['blockquote', 'code-block'],
   ['link', 'image', 'formula'],
 
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
-  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+  [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
   [{ 'direction': 'rtl' }],                         // text direction
 
   [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
@@ -200,24 +200,24 @@ setTimeout(() => {
     },
     theme: 'snow',
   },)
-  if(type === 'modify') {
-  quill.value.setContents(JSON.parse(article.value.content));
-}
-quill.value.on(Quill.events.TEXT_CHANGE, update)
+  if (type === 'modify') {
+    quill.value.setContents(JSON.parse(article.value.content));
+  }
+  quill.value.on(Quill.events.TEXT_CHANGE, update)
 }, 150
 )
 function formatDelta(delta) {
   return JSON.stringify(delta.ops, null, 2)
 }
 function update(delta) {
-    const contents = quill.value.getContents();
-    console.log(contents)
-    let html = formatDelta(contents)
-    if(delta) {
-      html = html + formatDelta(delta);
-    }
-    article.value.content = html;
+  const contents = quill.value.getContents();
+  console.log(contents)
+  let html = formatDelta(contents)
+  if (delta) {
+    html = html + formatDelta(delta);
   }
+  article.value.content = html;
+}
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">
@@ -227,14 +227,15 @@ function update(delta) {
     </div>
     <div class="p-1 shadow-sm text-start">
       <label for="subject" class="ms-2 me-5 font-bold">제목 </label>
-      <input type="text" class="focus:ring-1 focus:ring-gray-200 min-w-[300px] border-0" v-model="article.subject" @input="validateSubject(article.subject)" placeholder="제목을 입력해주세요.." />
+      <input type="text" class="focus:ring-1 focus:ring-gray-200 min-w-[300px] border-0" v-model="article.subject"
+        @input="validateSubject(article.subject)" placeholder="제목을 입력해주세요.." />
       <span v-if="subjectErrMsg" class="error ms-5">{{ subjectErrMsg }}</span>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <div id="editor" class="min-h-[500px]">
-      <div id="input-text"></div>
-      <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
-    </div>
+        <div id="input-text"></div>
+        <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
+      </div>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <label for="upload-image" class="mb-2 block">이미지 업로드</label>
