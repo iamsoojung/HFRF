@@ -2,12 +2,16 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { listArticle } from "@/api/board.js";
+import { useMemberStore } from "@/stores/member";
+import { storeToRefs } from "pinia";
 
 import VSelect from "@/components/common/VSelect.vue";
 import BoardListItem from "@/components/board/item/BoardListItem.vue";
 import PageNavigation from "@/components/common/PageNavigation.vue";
 
 const router = useRouter();
+const memberStore = useMemberStore();
+const { isLogin } = storeToRefs(memberStore);
 
 const selectOption = ref([
   { text: "검색조건", value: "" },
@@ -77,7 +81,7 @@ const moveWrite = () => {
   <div>
     <div>
       <div class="flex justify-end mb-2">
-        <button type="button"
+        <button type="button" v-show="isLogin"
           class="hover:cursor-pointer hover:bg-gray-100 border-solid border-2 py-0.5 px-2 rounded-md me-2"
           @click="moveWrite">글쓰기</button>
       </div>

@@ -12,7 +12,13 @@ onMounted(() => {
 function getRealtyList() {
     listRealty(
         ({ data }) => {
-            realtyList.value = data
+            let options = []
+            data.forEach((realty) => {
+                realty.detail = false
+                options.push(realty)
+            })
+            realtyList.value = options
+            console.log(realtyList)
         },
         (error) => {
             console.log(error)

@@ -24,13 +24,13 @@ const openModal = () => {
 <template>
     <Modal v-if="isModal" @close-modal="isModal = false" :isModal="true" :aptCode="modalData.aptCode"
         :dongCode="modalData.dongCode" />
-    <div class="p-3 h-[450px]">
+    <div class="sm:basis-1/2 xl:basis-1/3 p-3 min-h-[450px]">
         <div class="border-[1px] shadow-lg border-gray-300 rounded-lg w-full h-full">
             <div class="w-full h-[300px] bg-pink-50 text-center rounded-lg">
-                <img class="h-[300px] w-[325px] rounded-t-lg rounded-x-lg" :src="`/src/assets/apartment/apartment` + likeApt.imgNum + `.jpg`">
+                <img class="h-[300px] w-full rounded-t-lg rounded-x-lg" :src="`/src/assets/apartment/apartment` + likeApt.imgNum + `.jpg`">
             </div>
             <div class="py-3 px-5 flex justify-between mt-3">
-                <div>
+                <div class="basis-2/5">
                     <div class="font-bold">{{ likeApt.name }}</div>
                     <div class="text-sm text-orange-600">평균 매매가</div>
                     <div>{{ Math.round(likeApt.average / 10000) }}억 {{ likeApt.average % 10000 }}만원</div>
