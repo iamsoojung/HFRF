@@ -22,10 +22,11 @@ const iconList = {
   CS2: 'icon-gs25.png',
   SC4: 'icon-school.png',
   BK9: 'icon-bank.png',
-  FD6: 'icon-cafe.png',
-  CE7: 'icon-subway.png',
-  HP8: 'icon-pharmacy.png',
+  FD6: 'icon-food.png',
+  CE7: 'icon-cafe.png',
+  HP8: 'icon-hospital.png',
   PM9: 'icon-pharmacy.png',
+  SW8: 'icon-subway.png',
 }
 
 let point; // point 변수를 밖에서 선언
@@ -215,7 +216,11 @@ const toggleCategorySearch = (category) => {
       case 'PM9':
         keyword = '약국';
         break;
+      case 'SW8':
+        keyword = '지하철역';
+        break;
     }
+    
     if (point != null) { // point 변수 사용
       console.log(point)
       ps.keywordSearch(keyword, placesSearchCB, { location: point, radius: 20000, useMapBounds: true });
