@@ -31,7 +31,6 @@ const getLikeList = () => {
                     )
                     like.imgNum = Math.floor(Math.random() * 21) + 1
                 })
-                console.log(likeAptList.value)
             },
             (error) => {
                 console.log(error)
@@ -71,9 +70,10 @@ onMounted(
 
 <template>
     <div class="mx-20 mt-10">
-        <div class="text-3xl font-bold border-b-[1px] pb-2">
+        <div class="text-3xl font-bold border-b-[1px] pb-2 mb-2">
             관심 목록
         </div>
+        <div v-show="likeAptList.length==0" class="text-center mt-[300px] text-lg">관심 매물이 없습니다.</div>
         <div class="flex flex-wrap">
             <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt"
                 class="sm:basis-1/2 xl:basis-1/3" @deleteLike="onDeleteLike" />
