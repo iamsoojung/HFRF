@@ -26,8 +26,8 @@ const openModal = () => {
         :dongCode="modalData.dongCode" />
     <div class="p-3 h-[450px]">
         <div class="border-[1px] shadow-lg border-gray-300 rounded-lg w-full h-full">
-            <div class="w-full h-[300px] bg-pink-50 text-center">
-                <img class="h-[300px] w-[325px]" :src="`/src/assets/apartment/apartment` + likeApt.imgNum + `.jpg`">
+            <div class="w-full h-[300px] bg-pink-50 text-center rounded-lg">
+                <img class="h-[300px] w-[325px] rounded-t-lg rounded-x-lg" :src="`/src/assets/apartment/apartment` + likeApt.imgNum + `.jpg`">
             </div>
             <div class="py-3 px-5 flex justify-between mt-3">
                 <div>

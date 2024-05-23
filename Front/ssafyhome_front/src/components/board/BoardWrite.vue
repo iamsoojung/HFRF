@@ -6,7 +6,7 @@ import BoardFormItem from "./item/BoardFormItem.vue";
   <div class="container">
     <div>
       <div>
-        <h2 class="my-3 py-3 text-center text-xl">
+        <h2 class="py-3 text-center text-3xl font-bold border-b-[1px]">
           글쓰기
         </h2>
       </div>
