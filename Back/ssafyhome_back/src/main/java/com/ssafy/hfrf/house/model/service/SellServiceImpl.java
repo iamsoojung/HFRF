@@ -37,11 +37,11 @@ public class SellServiceImpl implements SellService {
 
 	@Override
 	@Transactional
-	public void add(HouseSell houseSell) {
+	public void add(HouseSell houseSell) throws Exception {
 		sellMapper.add(houseSell);
 		List<FileInfoSellDto> fileInfoSells = houseSell.getFileInfos();
 		if (fileInfoSells != null && !fileInfoSells.isEmpty()) {
-			sellMapper.add(houseSell);
+			sellMapper.registerFile(houseSell);
 		}
 	}
 
