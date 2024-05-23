@@ -87,16 +87,16 @@ public class SellController {
 			houseSell.setTitle(title);
 			houseSell.setType(type);
 			houseSell.setPrice(price);
-			houseSell.setAdmin_price(admin_price);
-			houseSell.setAdmin_desc(admin_desc);
-			houseSell.setRoom_type(room_type);
-			houseSell.setFloor_now(floor_now);
-			houseSell.setFloor_tot(floor_tot);
+			houseSell.setAdminPrice(admin_price);
+			houseSell.setAdminDesc(admin_desc);
+			houseSell.setRoomType(room_type);
+			houseSell.setFloorNow(floor_now);
+			houseSell.setFloorTot(floor_tot);
 			houseSell.setSize(size);
 			houseSell.setContent(content);
 			houseSell.setKeyword(keyword);
 			houseSell.setAddress(address);
-			houseSell.setDetail_address(detail_address);
+			houseSell.setDetailAddress(detail_address);
 			houseSell.setLat(lat);
 			houseSell.setLng(lng);
             

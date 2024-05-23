@@ -4,6 +4,55 @@
 	
 	
 <mapper namespace="com.ssafy.hfrf.house.model.mapper.SellMapper">
+
+	<resultMap type="houseSell" id="sell">
+		<result column="idx" property="idx"/>
+		<result column="id" property="id"/>
+		<result column="title" property="title"/>
+		<result column="date" property="date"/>
+		<result column="type" property="type"/>
+		<result column="price" property="price"/>
+		<result column="adminPrice" property="admin_price"/>
+		<result column="adminDesc" property="admin_desc"/>
+		<result column="roomType" property="room_type"/>
+		<result column="floorNow" property="floor_now"/>
+		<result column="floorTot" property="floor_tot"/>
+		<result column="size" property="size"/>
+		<result column="content" property="content"/>
+		<result column="keyword" property="keyword"/>
+		<result column="address" property="address"/>
+		<result column="detailAddress" property="detail_address"/>
+		<result column="lat" property="lat"/>
+		<result column="lng" property="lng"/>
+	</resultMap>
+	
+	<resultMap type="houseSell" id="viewArticle" extends="sell">
+		<collection property="fileInfos" column="idx" javaType="list" ofType="fileInfoDto" select="fileInfoList"/>
+	</resultMap>
+
+	<resultMap type="fileInfoSellDto" id="file">
+		<result column="save_folder" property="saveFolder"/>
+		<result column="original_file" property="originalFile"/>
+		<result column="save_file" property="saveFile"/>
+	</resultMap>
+	
+	<insert id="add" parameterType="houseSell">
+    insert into housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
+    values (#{id}, #{title}, now(), #{type}, #{price}, #{adminPrice}, #{adminDesc}, #{roomType}, #{floorNow}, #{floorTot}, #{size}, #{content}, #{keyword}, #{address}, #{detailAddress}, #{lat}, #{lng})
+	    <selectKey resultType="int" keyProperty="idx" order="AFTER">
+	        select last_insert_id()
+	    </selectKey>
+	</insert>
+
+	<insert id="registerFile" parameterType="houseSell">
+	    insert into file_info (idx, save_folder, original_file, save_file)
+	    values
+	    <foreach collection="fileInfos" item="fileinfo" separator=",">
+	        (#{idx}, #{fileinfo.saveFolder}, #{fileinfo.originalFile}, #{fileinfo.saveFile})
+	    </foreach>
+	</insert>
+
+	
 	<sql id="listCond">
 		<if test="word != null and word !=''">
 			<choose>
@@ -34,12 +83,6 @@
 		from housesell
 		where idx = #{idx}
 	</select>
-	
-	<insert id="add" parameterType="HouseSell">
-		insert into
-	 	housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
-		values (#{id},#{title},now(), #{type},#{price},#{admin_price},#{admin_desc},#{room_type},#{floor_now},#{floor_tot},#{size},#{content},#{keyword},#{address},#{detail_address}, #{lat}, #{lng})
-	</insert>	
 
 	<update id="update" parameterType="HouseSell">
 		update housesell

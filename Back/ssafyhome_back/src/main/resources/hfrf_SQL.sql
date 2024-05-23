@@ -156,7 +156,6 @@ CREATE TABLE IF NOT EXISTS `hfrf`.`housesell` (
     floor_tot INT NOT NULL,
     size DOUBLE NOT NULL,
     content TEXT,
-    image VARCHAR(255),
     keyword VARCHAR(255),
     address VARCHAR(255) NOT NULL,
     detail_address VARCHAR(255) NOT NULL,

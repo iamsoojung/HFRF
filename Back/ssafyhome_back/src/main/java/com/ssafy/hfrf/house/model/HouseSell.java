@@ -36,19 +36,19 @@ public class HouseSell {
 	private String price;
 
 	@Schema(description = "관리비", example = "50000")
-	private String admin_price;
+	private String adminPrice;
 
 	@Schema(description = "관리비 설명", example = "관리비는 전기, 수도, 청소비 포함")
-	private String admin_desc;
+	private String adminDesc;
 
 	@Schema(description = "방 유형 (예: 원룸, 투룸 등)", example = "투룸")
-	private String room_type;
+	private String roomType;
 
 	@Schema(description = "현재 층", example = "5")
-	private int floor_now;
+	private int floorNow;
 
 	@Schema(description = "전체 층수", example = "15")
-	private int floor_tot;
+	private int floorTot;
 
 	@Schema(description = "면적 (㎡)", example = "84.5")
 	private double size;
@@ -63,7 +63,7 @@ public class HouseSell {
 	private String address;
 
 	@Schema(description = "매물 상세 주소", example = "만리동2가")
-	private String detail_address;
+	private String detailAddress;
 
 	@Schema(description = "위도", example = "37.5556")
 	private String lat;
