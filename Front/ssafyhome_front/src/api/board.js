@@ -3,8 +3,8 @@ import { localAxios } from "@/util/http-commons";
 const local = localAxios();
 
 // 게시글
-function listArticle(param, success, fail) {
-  local.get(`/board`, { params: param }).then(success).catch(fail);
+async function listArticle(param, success, fail) {
+  await local.get(`/board`, { params: param }).then(success).catch(fail);
 }
 
 function detailArticle(articleno, success, fail) {

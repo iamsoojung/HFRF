@@ -1,28 +1,20 @@
 <script setup>
 import Header from "@/components/layout/Header.vue";
-import { useRouter } from 'vue-router'
-import { listAptByName } from '@/api/map';
 import { listNews } from '@/api/news';
 import { listArticle } from "@/api/board.js";
 import { ref, onMounted } from 'vue'
 import { initializeChannelIO } from "@/util/initializeChannelIO";
 
-const router = useRouter()
 const newsList = ref([]);
-
 const isDropdownOpen = ref(false)
-
 const categories = [
   { id: 1, name: "아파트" },
   { id: 2, name: "빌라, 투룸+" },
   { id: 3, name: "원룸" },
   { id: 4, name: "오피스텔" }
 ]
-
 const selectedCategory = ref({ id: 1, name: "아파트" })
-
 const searchText = ref("")
-const aptList = ref([])
 
 const toggleDropdown = () => {
   isDropdownOpen.value = !isDropdownOpen.value
@@ -34,14 +26,22 @@ const selectCategory = (category) => {
 }
 
 const articles = ref([]);
+const notices = ref([]);
 const param = {
   pgno: 1,
   spp: 5,
   key: "",
   word: "",
 };
+const noticeParam = {
+  pgno: 1,
+  spp: 20,
+  key: "user_id",
+  word: "admin",
+}
 
 onMounted(() => {
+  getNoticeList();
   getArticleList();
   initializeChannelIO();
   getNewsList();
@@ -58,16 +58,57 @@ const getNewsList = () => {
     )
 };
 
-const getArticleList = () => {
-  listArticle(
-    param,
-    ({ data }) => {
-      articles.value = data.articles;
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
+const getNoticeList = async () => {
+  let count = 0;
+  let option = []
+  while(count < 5) {
+    await listArticle(
+      noticeParam,
+      ({ data }) => {
+        if(data.articles.length == 0) {
+          count = 5
+        }
+        data.articles.forEach((article) => {
+          if(count < 5) {
+            option.push(article)
+            count++
+          }
+        })
+      },
+      (error) => {
+        console.log(error);
+      }
+    )
+    noticeParam.pgno++
+  }
+  notices.value = option
+}
+const getArticleList = async () => {
+  let count = 0;
+  let option = []
+  while(count < 5) {
+    await listArticle(
+      param,
+      ({ data }) => {
+        if(data.articles.length == 0) {
+          count = 5
+        }
+        data.articles.forEach((article) => {
+          if(article.userId != 'admin') {
+          if(count < 5) {
+            option.push(article)
+            count++
+          }
+        }
+        })
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+    param.pgno++
+  }
+  articles.value = option
 };
 </script>
 
@@ -158,11 +199,11 @@ const getArticleList = () => {
         <div class="font-bold text-xl border-t-[1px] pt-2 pb-2">
           공지사항
         </div>
-        <div class="grid grid-cols-4 ps-4 pb-1" v-for="article in articles" :key="article.articleNo">
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
-            class="col-span-1 truncate">{{ article.userName }}</router-link>
-          <router-link :to="{ name: 'boardView', params: { articleno: article.articleNo } }"
-            class="col-span-3 truncate">{{ article.subject }}</router-link>
+        <div class="grid grid-cols-4 ps-4 pb-1" v-for="notice in notices" :key="notice.articleNo">
+          <router-link :to="{ name: 'boardView', params: { articleno: notice.articleNo } }"
+            class="col-span-1 truncate">{{ notice.userName }}</router-link>
+          <router-link :to="{ name: 'boardView', params: { articleno: notice.articleNo } }"
+            class="col-span-3 truncate">{{ notice.subject }}</router-link>
         </div>
       </div>
       <div class="col-span-1 xl:col-span-2 p-5 ms-5">

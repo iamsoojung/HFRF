@@ -8,9 +8,9 @@ import { storeToRefs } from "pinia"
 import axios from 'axios';
 
 const memberStore = useMemberStore()
-const { userInfo } = storeToRefs(memberStore)
 const router = useRouter();
 const route = useRoute();
+const { userInfo } = storeToRefs(memberStore)
 const { type } = defineProps({ type: String });
 
 const isUseId = ref(false);
@@ -88,7 +88,6 @@ function onSubmit() {
 
 const handleFileUpload = (event) => {
   files.value = event.target.files;
-  // console.log(event.target)
 };
 
 async function writeArticle() {
@@ -220,22 +219,6 @@ function update(delta) {
     article.value.content = html;
   }
 </script>
-
-<!-- 
-    
-</script>
-
-<template>
-  <button @click="onButton" class="border-2">asdfasdf</button>
-  <div>
-    
-    <div id="playground"></div>
-  </div>
-{{ text }}
-</template>
-
-<style scoped>
-</style> -->
 <template>
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">
     <div class="p-1 border-b-[1px] border-gray-400 text-start">
@@ -248,7 +231,6 @@ function update(delta) {
       <span v-if="subjectErrMsg" class="error ms-5">{{ subjectErrMsg }}</span>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
-      <!-- <textarea class="mx-[80px] size-11/12 resize-none " v-model="article.content" @input="validateContent(article.content)" rows="10"></textarea> -->
       <div id="editor" class="min-h-[500px]">
       <div id="input-text"></div>
       <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
