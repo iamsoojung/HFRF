@@ -1,11 +1,11 @@
 <template>
   <div class="mb-[100px]"></div>
   <header class="absolute inset-x-0 top-0 z-50">
-    <nav class="flex items-center justify-between lg:px-8" aria-label="Global">
-      <div class="flex lg:flex-1">
+    <nav class="flex items-center justify-between md:px-8" aria-label="Global">
+      <div class="flex w-[200px]">
         <RouterLink :to="{ name: 'home' }" class="p-1.5">
           <span class="sr-only">Go Home</span>
-          <img class="h-20 w-auto" src="@/assets/logo.png" alt="" />
+          <img class="h-20 w-full" src="@/assets/logo.png" alt="" />
         </RouterLink>
       </div>
       <div class="flex lg:hidden">
@@ -15,7 +15,7 @@
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-32">
+      <div class="hidden lg:flex xl:gap-x-32">
         <template v-for="item in menuList" :key="item.routeName">
           <template v-if="item.show">
             <RouterLink :to="{ name: item.routeName }" class="hover:font-bold text-lg font-semibold leading-6 text-gray-900">{{
@@ -23,7 +23,7 @@
           </template>
         </template>
       </div>
-      <div class="hidden lg:flex lg:flex-1 lg:justify-end me-5">
+      <div class="hidden lg:flex lg:justify-end me-5">
         <template v-if="isLogin">
           <Menu as="div" class="relative ml-3">
             <div>
@@ -52,7 +52,7 @@
               </MenuItems>
             </transition>
           </Menu>
-          <span class="my-auto" v-if="userInfo && userInfo.userId">
+          <span class="my-auto hidden xl:block" v-if="userInfo && userInfo.userId">
             <span class="font-bold">
               {{ userInfo.userName }}
             </span>
