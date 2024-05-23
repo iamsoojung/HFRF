@@ -129,7 +129,7 @@
             fis.original_file,
             fis.save_file
         from housesell hs
-        left join file_info_sell fis on hs.idx = fis.idx
+        left join file_info_sell fis on hs.idx = fis.sell_no
     </select>
 	
 	<select id="detail" parameterType="String" resultType="HouseSell">
