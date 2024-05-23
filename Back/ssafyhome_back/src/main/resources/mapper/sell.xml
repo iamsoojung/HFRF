@@ -35,6 +35,32 @@
 		<result column="save_file" property="saveFile"/>
 	</resultMap>
 	
+	<resultMap type="houseSell" id="sellWithFiles">
+        <result column="idx" property="idx"/>
+        <result column="id" property="id"/>
+        <result column="title" property="title"/>
+        <result column="date" property="date"/>
+        <result column="type" property="type"/>
+        <result column="price" property="price"/>
+        <result column="admin_price" property="adminPrice"/>
+        <result column="admin_desc" property="adminDesc"/>
+        <result column="room_type" property="roomType"/>
+        <result column="floor_now" property="floorNow"/>
+        <result column="floor_tot" property="floorTot"/>
+        <result column="size" property="size"/>
+        <result column="content" property="content"/>
+        <result column="keyword" property="keyword"/>  
+        <result column="address" property="address"/>
+        <result column="detail_address" property="detailAddress"/>
+        <result column="lat" property="lat"/>
+        <result column="lng" property="lng"/>
+        <collection property="fileInfos" ofType="fileInfoSellDto">
+            <result column="save_folder" property="saveFolder"/>
+            <result column="original_file" property="originalFile"/>
+            <result column="save_file" property="saveFile"/>
+        </collection>
+    </resultMap>
+	
 	<insert id="add" parameterType="houseSell">
         insert into housesell(id, title, date, type, price, admin_price, admin_desc, room_type, floor_now, floor_tot, size, content, keyword, address, detail_address, lat, lng)
         values (#{id}, #{title}, now(), #{type}, #{price}, #{adminPrice}, #{adminDesc}, #{roomType}, #{floorNow}, #{floorTot}, #{size}, #{content}, #{keyword}, #{address}, #{detailAddress}, #{lat}, #{lng})
@@ -73,11 +99,38 @@
 		</if>
 	</sql>
 
-	<select id="list" parameterType="PageBean" resultMap="sell">
+	<!-- <select id="list" parameterType="PageBean" resultMap="sell">
 		select * 
 		from housesell
-		<!-- limit #{start},#{interval} -->
-	</select>
+		limit #{start},#{interval}
+	</select> -->
+	
+	<select id="list" parameterType="PageBean"  resultMap="sellWithFiles">
+        select 
+            hs.idx,
+            hs.id,
+            hs.title,
+            hs.date,
+            hs.type,
+            hs.price,
+            hs.admin_price,
+            hs.admin_desc,
+            hs.room_type,
+            hs.floor_now,
+            hs.floor_tot,
+            hs.size,
+            hs.content,
+            hs.keyword,
+            hs.address,
+            hs.detail_address,
+            hs.lat,
+            hs.lng,
+            fis.save_folder,
+            fis.original_file,
+            fis.save_file
+        from housesell hs
+        left join file_info_sell fis on hs.idx = fis.idx
+    </select>
 	
 	<select id="detail" parameterType="String" resultType="HouseSell">
 		select * 

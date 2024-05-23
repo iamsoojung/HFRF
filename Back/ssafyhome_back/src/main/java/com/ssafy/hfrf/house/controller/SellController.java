@@ -125,6 +125,7 @@ public class SellController {
                 }
                 houseSell.setFileInfos(fileInfoSellList);
             }
+            System.out.println(detail_address);
             sellService.add(houseSell);
             return new ResponseEntity<Void>(HttpStatus.CREATED);
         } catch (Exception e) {
