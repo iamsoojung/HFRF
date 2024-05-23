@@ -38,6 +38,10 @@ const handleFileUpload = (event) => {
     files.value = event.target.files;
 };
 
+function moveList() {
+  router.replace({ name: "realtyList" });
+}
+
 async function writeRealty() {
     const formData = new FormData();
     formData.append("id", userInfo.value.userId)
@@ -72,6 +76,7 @@ async function writeRealty() {
             data: formData,
         });
         alert("매물 등록이 완료되었습니다.");
+    moveList();
 
     } catch (error) {
         console.error(error);
@@ -96,13 +101,20 @@ function openPostcode() {
         oncomplete: (data) => {
             console.log(data);
             realty.value.address = data.roadAddress;
+            const geocoder = new kakao.maps.services.Geocoder();
+            geocoder.addressSearch(realty.value.address, (result, status) => {
+                if(status === kakao.maps.services.Status.OK) {
+                    realty.value.lat = result[0].y;
+                    realty.value.lng = result[0].x;
+                }
+            })
         },
     }).open();
 }
 </script>
 
 <template>
-    <form @submit.prevent="onSubmit" enctype="multipart/form-data" class="max-w-[800px] mx-auto">
+    <form @submit.prevent="onSubmit" enctype="multipart/form-data" class="w-[900px] mx-auto">
         <div class="flex border-b-[1px] mb-4">
             <div class="my-auto w-[80px] text-center font-bold me-4" for="title">제목</div>
             <input type="text" id="title" v-model="realty.title" class="border-none w-full" placeholder="제목을 입력하세요">
@@ -131,7 +143,7 @@ function openPostcode() {
                 </div>
             </div>
             <div class="flex">
-                <div class="my-auto w-[80px] text-center font-bold me-3" for="price">가격</div>
+                <div class="my-auto w-[100px] text-center font-bold me-3" for="price">가격 (<span v-show="realty.type=='월세'">월/</span>만원)</div>
                 <input type="number" id="price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
                     v-model="realty.price">
             </div>
@@ -153,7 +165,7 @@ function openPostcode() {
                 </div>
             </div>
             <div class="flex">
-                <label class="my-auto w-[80px] text-center font-bold me-4" for="admin-price">관리비</label>
+                <label class="my-auto w-[110px] text-center font-bold me-4" for="admin-price">관리비 (월/만원)</label>
                 <input type="number" id="admin-price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
                     v-model="realty.adminPrice">
             </div>
@@ -165,7 +177,7 @@ function openPostcode() {
                     v-model="realty.floorNow">
             </div>
             <div class="flex">
-                <div class="my-auto w-[80px] text-center font-bold me-4" for="admin-desc">관리비<br>포함 항목</div>
+                <div class="my-auto w-[110px] text-center font-bold me-4" for="admin-desc">관리비 포함 항목</div>
                 <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="text" id="admin-desc"
                     v-model="realty.adminDesc">
             </div>
@@ -177,7 +189,7 @@ function openPostcode() {
                     v-model="realty.floorTot">
             </div>
             <div class="flex">
-                <label class="my-auto w-[80px] text-center font-bold me-4" for="size">면적</label>
+                <label class="my-auto w-[80px] text-center font-bold me-4" for="size">면적 (㎡)</label>
                 <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="number" id="size"
                     v-model="realty.size">
             </div>

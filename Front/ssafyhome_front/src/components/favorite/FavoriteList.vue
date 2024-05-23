@@ -24,7 +24,6 @@ const getLikeList = () => {
         listLike(
             userInfo.value,
             ({ data }) => {
-                console.log(data)
                 likeAptList.value = data
                 likeAptList.value.forEach((like) => {
                     dealByDong(
@@ -74,9 +73,9 @@ const onDeleteLike = (aptCode) => {
     }
 }
 
-onMounted(
+onMounted(() => {
     getLikeList
-)
+});
 </script>
 
 <template>

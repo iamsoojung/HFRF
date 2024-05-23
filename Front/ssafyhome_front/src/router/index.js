@@ -60,11 +60,6 @@ const router = createRouter({
           component: () => import("@/components/realty/RealtyWrite.vue"),
           beforeEnter: onlyAuthUser
         },
-        {
-          path: "/house/:idx",
-          name: "RealtyModify",
-          component: () => import("@/components/realty/RealtyModify.vue"),
-        },
       ]
     },
     {
