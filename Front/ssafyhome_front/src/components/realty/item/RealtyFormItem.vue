@@ -9,7 +9,6 @@ const memberStore = useMemberStore()
 const router = useRouter()
 const route = useRoute()
 const { userInfo } = storeToRefs(memberStore)
-const { type } = defineProps({ type: String });
 
 const checkedNames = ref([])
 
@@ -89,7 +88,7 @@ function onSubmit() {
         }
     }
     realty.value.keyword = keyword;
-    type === "regist" ? writeRealty() : writeRealty();
+    writeRealty();
 }
 
 function openPostcode() {
