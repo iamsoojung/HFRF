@@ -20,8 +20,8 @@
                     <dl class="divide-y divide-gray-100 mx-10">
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-lg font-medium leading-6 text-gray-900">이름</dt>
-                                <input v-model="modifyUser.userName" type="text"
-                                    class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
+                            <input v-model="modifyUser.userName" type="text"
+                                class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
 
                         </div>
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -31,8 +31,8 @@
                         </div>
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-lg font-medium leading-6 text-gray-900">비밀번호</dt>
-                                <input v-model="modifyUser.userPwd" type="password"
-                                    class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
+                            <input v-model="modifyUser.userPwd" type="password"
+                                class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
                         </div>
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-lg font-medium leading-6 text-gray-900">비밀번호 확인</dt>
@@ -46,31 +46,31 @@
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-lg font-medium leading-6 text-gray-900">이메일</dt>
                             <input v-model="modifyUser.emailId" type="text"
-                            class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
+                                class="ps-3 basis-5/6 w-full rounded-md border-0 py-1 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6" />
                             <div class="flex">
                                 <span class="me-4 my-auto">@</span>
                                 <Listbox name="emailDomain" as="div" v-model="selected">
                                     <div class="relative flex">
                                         <ListboxButton
-                                        class="relative w-40 cursor-default rounded-md bg-white py-1 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
-                                        <span class="flex items-center">
-                                            <span class="ml-3 block truncate">{{ selected.name }}</span>
-                                        </span>
-                                        <span
-                                        class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                                        <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                                    </span>
-                                </ListboxButton>
-                                <transition leave-active-class="transition ease-in duration-100"
-                                leave-from-class="opacity-100" leave-to-class="opacity-0">
-                                <ListboxOptions
-                                class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                                <ListboxOption as="template" v-for="email in emails" :key="email.id"
-                                :value="email" v-slot="{ active, selected }">
-                                <li :class="[
-                                    active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                                    'relative cursor-default select-none py-2 pl-3 pr-9',
-                                ]">
+                                            class="relative w-40 cursor-default rounded-md bg-white py-1 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                                            <span class="flex items-center">
+                                                <span class="ml-3 block truncate">{{ selected.name }}</span>
+                                            </span>
+                                            <span
+                                                class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                                                <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            </span>
+                                        </ListboxButton>
+                                        <transition leave-active-class="transition ease-in duration-100"
+                                            leave-from-class="opacity-100" leave-to-class="opacity-0">
+                                            <ListboxOptions
+                                                class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                                                <ListboxOption as="template" v-for="email in emails" :key="email.id"
+                                                    :value="email" v-slot="{ active, selected }">
+                                                    <li :class="[
+                                                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                                                        'relative cursor-default select-none py-2 pl-3 pr-9',
+                                                    ]">
                                                         <div class="flex items-center">
                                                             <span :class="[
                                                                 selected ? 'font-semibold' : 'font-normal',
@@ -90,7 +90,7 @@
                                     </div>
                                 </Listbox>
                             </div>
-                            </div>
+                        </div>
                         <div class="px-4 py-7 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                             <dt class="text-lg font-medium leading-6 text-gray-900">소개글</dt>
                             <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">안녕하세요 저는 {{
@@ -116,6 +116,8 @@ const memberStore = useMemberStore()
 const { userInfo } = storeToRefs(memberStore)
 const { userModify } = memberStore
 import { storeToRefs } from 'pinia'
+import Swal from 'sweetalert2';
+
 const emails = [
     { id: 1, name: "naver.com" },
     { id: 2, name: "google.com" },
@@ -138,6 +140,8 @@ const modify = async () => {
     console.log(modifyUser)
     if (isPwdError.value) {
         alert("비밀번호가 다릅니다")
+        // Swal.fire("비밀번호가 다릅니다.")
+        // Vue.swal('Hello Vue world!!!');
     } else {
         await userModify(modifyUser)
     }

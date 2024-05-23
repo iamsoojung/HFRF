@@ -4,6 +4,7 @@ import { storeToRefs } from 'pinia'
 import { useRouter } from 'vue-router'
 import { useMemberStore } from '@/stores/member'
 import { useMenuStore } from '@/stores/menu'
+import Swal from 'sweetalert2';
 
 const router = useRouter()
 
@@ -19,17 +20,33 @@ const loginUser = ref({
 })
 
 const login = async () => {
-  await userLogin(loginUser.value);
-  let token = sessionStorage.getItem("accessToken");
-  if (isLogin) {
-    getUserInfo(token);
-    changeMenuState();
-  } else {
-    const msg = "아이디와 비밀번호를 다시 확인해주세요!";
-    alert(msg)
+  try {
+    await userLogin(loginUser.value);
+    let token = sessionStorage.getItem("accessToken");
+
+    if (isLogin.value) {
+      getUserInfo(token);
+      changeMenuState();
+      Swal.fire({
+        icon: 'success',
+        title: '환영합니다',
+        text: '나에게 꼭 맞는 집을 찾아보세요!',
+        confirmButtonColor: '#ff9999',
+      });
+      router.push("/");
+    } else {
+      throw new Error("로그인 실패");
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: 'error',
+      title: '로그인 실패',
+      text: '아이디와 비밀번호를\n 다시 확인해주세요!',
+      confirmButtonColor: '#ff9999',
+    });
   }
-  router.push("/");
 };
+
 </script>
 
 <template>

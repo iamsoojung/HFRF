@@ -67,14 +67,14 @@ const emailCode = ref()
 const inputCode = ref()
 const codeCorrect = ref()
 const emailCheck = async () => {
-  if(joinUser.emailId.length == 0) {
+  if (joinUser.emailId.length == 0) {
     emailInputNone.value = true
   } else {
     emailInputNone.value = false
     await checkEmail(joinUser.emailId, joinUser.emailDomain,
       (response) => {
         console.log(response);
-        if(response.data.isDup === 1) {
+        if (response.data.isDup === 1) {
           isDupEmail.value = true;
         } else {
           isDupEmail.value = false;
@@ -88,7 +88,7 @@ const emailCheck = async () => {
   }
 }
 const checkCode = () => {
-  if(emailCode.value == inputCode.value) {
+  if (emailCode.value == inputCode.value) {
     codeCorrect.value = true
     alert("인증되었습니다.")
   } else {
@@ -155,64 +155,68 @@ watch(() => checkPwd.value, (newParam, oldParam) => {
         </div>
         <div class="grid grid-rows-2">
           <div class="flex">
-          <div class="text-lg basis-2/6 my-auto">이메일</div>
-          <div class="relative flex items-center basis-5/6">
-            <div class="absolute right-[-120px] z-10">
-              <div @click="emailCheck" class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">이메일 인증</div>
-            </div>
-            <input v-model="joinUser.emailId" name="emailId" type="text" required
-              class="ps-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
-            <span class="mx-2">@</span>
-            <Listbox name="emailDomain" as="div" v-model="selected">
-              <div class="relative flex">
-                <ListboxButton
-                  class="relative w-40 cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
-                  <span class="flex items-center">
-                    <span class="ml-3 block truncate">{{ selected.name }}</span>
-                  </span>
-                  <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
-                    <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
-                  </span>
-                </ListboxButton>
-                <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
-                  leave-to-class="opacity-0">
-                  <ListboxOptions
-                    class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
-                    <ListboxOption as="template" v-for="email in emails" :key="email.id" :value="email"
-                      v-slot="{ active, selected }">
-                      <li :class="[
-                        active ? 'bg-indigo-600 text-white' : 'text-gray-900',
-                        'relative cursor-default select-none py-2 pl-3 pr-9',
-                      ]">
-                        <div class="flex items-center">
-                          <span :class="[
-                            selected ? 'font-semibold' : 'font-normal',
-                            'ml-3 block truncate',
-                          ]">{{ email.name }}</span>
-                        </div>
-                        <span v-if="selected" :class="[
-                          active ? 'text-white' : 'text-indigo-600',
-                          'absolute inset-y-0 right-0 flex items-center pr-4',
-                        ]">
-                          <CheckIcon class="h-5 w-5" aria-hidden="true" />
-                        </span>
-                      </li>
-                    </ListboxOption>
-                  </ListboxOptions>
-                </transition>
+            <div class="text-lg basis-2/6 my-auto">이메일</div>
+            <div class="relative flex items-center basis-5/6">
+              <div class="absolute right-[-120px] z-10">
+                <div @click="emailCheck"
+                  class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">이메일 인증
+                </div>
               </div>
-            </Listbox>
+              <input v-model="joinUser.emailId" name="emailId" type="text" required
+                class="ps-3 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+              <span class="mx-2">@</span>
+              <Listbox name="emailDomain" as="div" v-model="selected">
+                <div class="relative flex">
+                  <ListboxButton
+                    class="relative w-40 cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 sm:text-sm sm:leading-6">
+                    <span class="flex items-center">
+                      <span class="ml-3 block truncate">{{ selected.name }}</span>
+                    </span>
+                    <span class="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
+                      <ChevronUpDownIcon class="h-5 w-5 text-gray-400" aria-hidden="true" />
+                    </span>
+                  </ListboxButton>
+                  <transition leave-active-class="transition ease-in duration-100" leave-from-class="opacity-100"
+                    leave-to-class="opacity-0">
+                    <ListboxOptions
+                      class="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm">
+                      <ListboxOption as="template" v-for="email in emails" :key="email.id" :value="email"
+                        v-slot="{ active, selected }">
+                        <li :class="[
+                          active ? 'bg-indigo-600 text-white' : 'text-gray-900',
+                          'relative cursor-default select-none py-2 pl-3 pr-9',
+                        ]">
+                          <div class="flex items-center">
+                            <span :class="[
+                              selected ? 'font-semibold' : 'font-normal',
+                              'ml-3 block truncate',
+                            ]">{{ email.name }}</span>
+                          </div>
+                          <span v-if="selected" :class="[
+                            active ? 'text-white' : 'text-indigo-600',
+                            'absolute inset-y-0 right-0 flex items-center pr-4',
+                          ]">
+                            <CheckIcon class="h-5 w-5" aria-hidden="true" />
+                          </span>
+                        </li>
+                      </ListboxOption>
+                    </ListboxOptions>
+                  </transition>
+                </div>
+              </Listbox>
+            </div>
           </div>
-        </div>
-        <div class="relative flex">
-        <div class="text-lg basis-2/6 my-auto"></div>
-        <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="emailInputNone">이메일을 입력해주세요.</div>
-        <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="isDupEmail">다른 이메일을 입력해주세요.</div>
-        <input v-show="emailCode==null?false:true" v-model="inputCode" class="absolute mt-5 w-[160px] border-[1px] right-0 text-sm p-1.5 px-6 rounded-lg border-gray-300">
-        <div class="mt-5 absolute right-[-75px] z-10">
-              <div v-show="emailCode==null?false:true" @click="checkCode" class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">확인</div>
-        </div>
-      </div>
+          <div class="relative flex">
+            <div class="text-lg basis-2/6 my-auto"></div>
+            <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="emailInputNone">이메일을 입력해주세요.</div>
+            <div class="mt-2 basis-5/6 text-red-600 text-sm" v-show="isDupEmail">다른 이메일을 입력해주세요.</div>
+            <input v-show="emailCode == null ? false : true" v-model="inputCode"
+              class="absolute mt-5 w-[160px] border-[1px] right-0 text-sm p-1.5 px-6 rounded-lg border-gray-300">
+            <div class="mt-5 absolute right-[-75px] z-10">
+              <div v-show="emailCode == null ? false : true" @click="checkCode"
+                class="hover:cursor-pointer hover:bg-slate-200 shadow-sm border-[1px] rounded-lg p-1 px-3">확인</div>
+            </div>
+          </div>
         </div>
         <div class="text-center p-5">
           <button type="submit"

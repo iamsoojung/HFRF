@@ -6,6 +6,7 @@ import { listComment, writeComment, getModifyComment, modifyComment, deleteComme
 import { useMemberStore } from '@/stores/member';
 import { storeToRefs } from 'pinia';
 import { Quill } from "@vueup/vue-quill";
+import Swal from 'sweetalert2';
 
 const memberStore = useMemberStore();
 const { userInfo } = storeToRefs(memberStore);
@@ -73,8 +74,7 @@ function onDeleteArticle() {
     articleno,
     (response) => {
       if (response.status == 200) {
-        let msg = "글삭제가 완료되었습니다.";
-        alert(msg);
+        Swal.fire('sfdfsd', 'dfsfd', 'sdfsfddfs')
         moveList();
       }
     },
@@ -89,8 +89,11 @@ function onDeleteComment(commentNo) {
     commentNo,
     (response) => {
       if (response.status == 200) {
-        let msg = "댓글이 삭제되었습니다.";
-        alert(msg);
+        Swal.fire({
+          icon: 'success',
+          title: '댓글이 삭제되었습니다.',
+          confirmButtonColor: '#429f50',
+        })
         comments.value = comments.value.filter(comment => comment.commentNo !== commentNo);
         commentCount.value--;
       }
@@ -109,7 +112,11 @@ function submitComment() {
     content: content
   };
   if (content == "") {
-    alert("내용을 입력해주세요.")
+    Swal.fire({
+      icon: 'error',
+      title: '내용을 입력해주세요.',
+      confirmButtonColor: '#ff9999',
+    })
   }
   else {
     writeComment(
@@ -118,6 +125,11 @@ function submitComment() {
         getComments();
         document.getElementById("comment-content").value = "";
         commentCount.value++;
+        Swal.fire({
+          icon: 'success',
+          title: '댓글이 등록되었습니다.',
+          confirmButtonColor: '#429f50',
+        })
       },
       (error) => {
         console.log(error);
@@ -224,7 +236,7 @@ setTimeout(() => {
               </div>
               <div class="col-span-4" id="with-login2" v-if="userInfo">
                 <textarea rows="2" class="border p-2 rounded w-full resize-none" id="comment-content"
-                  placeholder="Write something..."></textarea>
+                  placeholder="댓글을 입력하세요."></textarea>
               </div>
               <div class="flex my-2 justify-end" id="with-login3" v-if="userInfo">
                 <div>

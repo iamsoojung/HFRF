@@ -6,6 +6,7 @@ import { getModifyArticle, modifyArticle } from "@/api/board";
 import { Quill } from "@vueup/vue-quill";
 import { storeToRefs } from "pinia"
 import axios from 'axios';
+import Swal from 'sweetalert2';
 
 const memberStore = useMemberStore()
 const router = useRouter();
@@ -76,9 +77,19 @@ function base64(file) {
 
 function onSubmit() {
   if (subjectErrMsg.value) {
-    alert(subjectErrMsg.value);
+    // alert(subjectErrMsg.value);
+    Swal.fire({
+      icon: 'error',
+      title: subjectErrMsg.value,
+      confirmButtonColor: '#ff9999',
+    })
   } else if (contentErrMsg.value) {
-    alert(contentErrMsg.value);
+    // alert(contentErrMsg.value);
+    Swal.fire({
+      icon: 'success',
+      title: 'contentErrMsg.value',
+      confirmButtonColor: '#ff9999',
+    })
   } else {
     console.log(quill.value.getContents())
     article.value.content = JSON.stringify(quill.value.getContents())
@@ -121,12 +132,20 @@ async function writeArticle() {
       data: formData,
     });
     // 성공 시에 필요한 작업 수행
-    alert("글 등록이 완료되었습니다.");
+    Swal.fire({
+      icon: 'success',
+      title: '글 등록이 완료되었습니다.',
+      confirmButtonColor: '#429f50',
+    })
     moveList();
   } catch (error) {
     // 실패 시에 필요한 작업 수행
     console.error(error);
-    alert("글 등록 중 오류가 발생했습니다.");
+    Swal.fire({
+      icon: 'error',
+      title: '글 등록 중 오류가 발생했습니다.',
+      confirmButtonColor: '#ff9999',
+    })
   }
 }
 
@@ -135,8 +154,21 @@ async function updateArticle() {
   modifyArticle(
     article.value,
     (response) => {
-      const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
-      alert(msg);
+      // const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
+      // alert(msg);
+      if (response.status === 200) {
+        Swal.fire({
+          icon: 'success',
+          title: '글 정보가 수정되었습니다.',
+          confirmButtonColor: '#429f50',
+        })
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: '글 수정 처리 중 문제가 발생했습니다.',
+          confirmButtonColor: '#ff9999',
+        })
+      }
       moveList();
     },
     (error) => console.log(error)
