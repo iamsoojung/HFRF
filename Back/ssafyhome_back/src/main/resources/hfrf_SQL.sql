@@ -191,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `hfrf`.`file_info_sell` (
   CONSTRAINT `file_info_sell_to_sell_idx_fk`
     FOREIGN KEY (`sell_no`)
     REFERENCES `hfrf`.`housesell` (`idx`)
-    ON DELETE NO ACTION
+    ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
