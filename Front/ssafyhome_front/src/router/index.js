@@ -39,29 +39,29 @@ const router = createRouter({
       beforeEnter: onlyAuthUser
     },
     {
-      path: "/realty",
+      path: "/house",
       name: "realty",
       component: () => import("../views/AppRealty.vue"),
       redirect: { name: "realtyList" },
       children: [
         {
-          path: "/realty",
+          path: "/house",
           name: "realtyList",
           component: () => import("@/components/realty/RealtyList.vue"),
         },
         {
-          path: "/realty/:idx",
+          path: "/house/:idx",
           name: "realtyDetail",
           component: () => import("@/components/realty/RealtyDetail.vue"),
         },
         {
-          path: "/realty",
+          path: "/house",
           name: "realtyWrite",
           component: () => import("@/components/realty/RealtyWrite.vue"),
           beforeEnter: onlyAuthUser
         },
         {
-          path: "/realty/:idx",
+          path: "/house/:idx",
           name: "RealtyModify",
           component: () => import("@/components/realty/RealtyModify.vue"),
         },

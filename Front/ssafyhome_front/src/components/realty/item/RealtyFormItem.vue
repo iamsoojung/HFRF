@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useMemberStore } from '@/stores/member';
 import { storeToRefs } from "pinia";
-import axios from "axios";
+import axios from 'axios';
 
 const memberStore = useMemberStore()
 const router = useRouter()
@@ -66,7 +66,7 @@ async function writeRealty() {
     try {
         await axios({
             method: "POST",
-            url: 'http://localhost/realty',
+            url: 'http://localhost/house',
             mode: "cors",
             headers: {
                 "Content-Type": "multipart/form-data",
