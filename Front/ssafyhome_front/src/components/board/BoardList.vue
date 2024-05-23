@@ -40,7 +40,18 @@ const getArticleList = () => {
   listArticle(
     param.value,
     ({ data }) => {
-      articles.value = data.articles;
+      let options = []
+      data.articles.forEach((article) => {
+        if(article.userId == 'admin') {
+          options.push(article)
+        }
+      })
+      data.articles.forEach((article) => {
+        if(article.userId != 'admin') {
+          options.push(article)
+        }
+      })
+      articles.value = options;
       currentPage.value = data.currentPage;
       totalPage.value = data.totalPageCount;
     },

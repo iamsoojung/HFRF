@@ -13,7 +13,7 @@ const dateFormat = (date) => {
 </script>
 
 <template>
-  <tr class="flex text-center p-1 border-b-[1px]">
+  <tr :class="{'text-blue-600 font-bold' : article.userId == 'admin'}" class="flex text-center p-1 border-b-[1px]">
     <th class="basis-1/12">{{ article.articleNo }}</th>
     <td class="basis-7/12 text-start px-10">
       <router-link
