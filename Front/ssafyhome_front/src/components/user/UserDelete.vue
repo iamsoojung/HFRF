@@ -17,7 +17,7 @@ const deleteUser = async () => {
     } else {
         await userDelete(userInfo.value.userId)
         isLogin.value = false;
-        router.push({ name: "home"})
+        router.push({ name: "home" })
     }
 }
 </script>
