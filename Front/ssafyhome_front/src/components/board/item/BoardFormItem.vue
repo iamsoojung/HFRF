@@ -80,7 +80,6 @@ function onSubmit() {
   } else if (contentErrMsg.value) {
     alert(contentErrMsg.value);
   } else {
-    console.log(quill.value.getContents())
     article.value.content = JSON.stringify(quill.value.getContents())
     type === "regist" ? writeArticle() : updateArticle();
   }
@@ -182,9 +181,9 @@ const toolbarOptions = [
   ['blockquote', 'code-block'],
   ['link', 'image', 'formula'],
 
-  [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }],
-  [{ 'script': 'sub'}, { 'script': 'super' }],      // superscript/subscript
-  [{ 'indent': '-1'}, { 'indent': '+1' }],          // outdent/indent
+  [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'list': 'check' }],
+  [{ 'script': 'sub' }, { 'script': 'super' }],      // superscript/subscript
+  [{ 'indent': '-1' }, { 'indent': '+1' }],          // outdent/indent
   [{ 'direction': 'rtl' }],                         // text direction
 
   [{ 'color': [] }, { 'background': [] }],          // dropdown with defaults from theme
@@ -200,24 +199,24 @@ setTimeout(() => {
     },
     theme: 'snow',
   },)
-  if(type === 'modify') {
-  quill.value.setContents(JSON.parse(article.value.content));
-}
-quill.value.on(Quill.events.TEXT_CHANGE, update)
+  if (type === 'modify') {
+    quill.value.setContents(JSON.parse(article.value.content));
+  }
+  quill.value.on(Quill.events.TEXT_CHANGE, update)
 }, 150
 )
 function formatDelta(delta) {
   return JSON.stringify(delta.ops, null, 2)
 }
 function update(delta) {
-    const contents = quill.value.getContents();
-    console.log(contents)
-    let html = formatDelta(contents)
-    if(delta) {
-      html = html + formatDelta(delta);
-    }
-    article.value.content = html;
+  const contents = quill.value.getContents();
+  console.log(contents)
+  let html = formatDelta(contents)
+  if (delta) {
+    html = html + formatDelta(delta);
   }
+  article.value.content = html;
+}
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">
@@ -227,14 +226,15 @@ function update(delta) {
     </div>
     <div class="p-1 shadow-sm text-start">
       <label for="subject" class="ms-2 me-5 font-bold">제목 </label>
-      <input type="text" class="focus:ring-1 focus:ring-gray-200 min-w-[300px] border-0" v-model="article.subject" @input="validateSubject(article.subject)" placeholder="제목을 입력해주세요.." />
+      <input type="text" class="focus:ring-1 focus:ring-gray-200 min-w-[300px] border-0" v-model="article.subject"
+        @input="validateSubject(article.subject)" placeholder="제목을 입력해주세요.." />
       <span v-if="subjectErrMsg" class="error ms-5">{{ subjectErrMsg }}</span>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <div id="editor" class="min-h-[500px]">
-      <div id="input-text"></div>
-      <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
-    </div>
+        <div id="input-text"></div>
+        <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
+      </div>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <label for="upload-image" class="mb-2 block">이미지 업로드</label>

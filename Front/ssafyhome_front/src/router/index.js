@@ -39,10 +39,33 @@ const router = createRouter({
       beforeEnter: onlyAuthUser
     },
     {
-      path: "/property",
-      name: "property",
-      component: () => import("../views/AppProperty.vue"),
-      beforeEnter: onlyAuthUser
+      path: "/realty",
+      name: "realty",
+      component: () => import("../views/AppRealty.vue"),
+      redirect: { name: "realtyList" },
+      children: [
+        {
+          path: "/realty",
+          name: "realtyList",
+          component: () => import("@/components/realty/RealtyList.vue"),
+        },
+        {
+          path: "/realty/:idx",
+          name: "realtyDetail",
+          component: () => import("@/components/realty/RealtyDetail.vue"),
+        },
+        {
+          path: "/realty",
+          name: "realtyWrite",
+          component: () => import("@/components/realty/RealtyWrite.vue"),
+          beforeEnter: onlyAuthUser
+        },
+        {
+          path: "/realty/:idx",
+          name: "RealtyModify",
+          component: () => import("@/components/realty/RealtyModify.vue"),
+        },
+      ]
     },
     {
       path: "/user",
@@ -83,7 +106,7 @@ const router = createRouter({
       path: "/board",
       name: "board",
       component: () => import("../views/AppBoard.vue"),
-      redirect: { name: "board-list" },
+      redirect: { name: "boardList" },
       children: [
         {
           path: "/board",
