@@ -28,7 +28,7 @@ function getRealtyList() {
             <RouterLink :to="{ name: 'realtyWrite' }"
                 class="px-2 py-1 my-auto hover:bg-gray-900 bg-gray-700 text-white rounded-lg">매물 등록하기</RouterLink>
         </div>
-        <div class="flex flex-wrap px-5 justify-center">
+        <div class="flex flex-wrap px-5">
             <RealtyListItem class="sm:basis-1/2 lg:basis-1/3 xl:basis-1/4" v-for="realty in realtyList" :key="realty.idx" :realty="realty" />
         </div>
     </div>
