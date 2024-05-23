@@ -145,7 +145,7 @@ const closeModal = () => {
             <p v-else-if="!loadingSpinner" class="flex items-center justify-center py-8">
                 <div role="status">
                     <span class="sr-only">Loading...</span>
-                    <marquee direction=right><h3>진 단 중 . . .</h3></marquee>
+                    <marquee direction=right><b>진 단 중 . . .</b></marquee>
                     <svg aria-hidden="true" class=" text-gray-200 animate-spin dark:text-gray-600 fill-pink-600"
                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path

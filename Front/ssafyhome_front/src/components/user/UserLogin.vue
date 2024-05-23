@@ -27,12 +27,6 @@ const login = async () => {
     if (isLogin.value) {
       getUserInfo(token);
       changeMenuState();
-      Swal.fire({
-        icon: 'success',
-        title: '환영합니다',
-        text: '나에게 꼭 맞는 집을 찾아보세요!',
-        confirmButtonColor: '#ff9999',
-      });
       router.push("/");
     } else {
       throw new Error("로그인 실패");
