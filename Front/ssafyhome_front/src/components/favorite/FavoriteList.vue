@@ -33,7 +33,7 @@ const getLikeList = () => {
                             like.average = getAverageDealAmount(data)
                         }
                     )
-                    like.imgNum = Math.floor(Math.random() * 21) + 1;
+                    like.imgNum = Math.floor(Math.random() * 20) + 1;
 
                     aptNameByCode(
                         { aptCode: like.aptCode },

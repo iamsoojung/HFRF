@@ -91,7 +91,6 @@ function onSubmit() {
       confirmButtonColor: '#ff9999',
     })
   } else {
-    console.log(quill.value.getContents())
     article.value.content = JSON.stringify(quill.value.getContents())
     type === "regist" ? writeArticle() : updateArticle();
   }
@@ -272,9 +271,6 @@ function update(delta) {
     <div class="mb-3 pb-3 shadow-sm">
       <label for="upload-image" class="mb-2 block">이미지 업로드</label>
       <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
-      <label for="upload-image">
-        <img src="@/assets/logo.png" id="preview" width="300px" />
-      </label>
     </div>
     <div class="text-center">
       <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'" @click="eventlogin">
