@@ -147,7 +147,7 @@ const options = {
 const quill = ref()
 setTimeout(() => {
   quill.value = new Quill("#editor", options)
-  quill.value.setContents(JSON.parse(article.value.content))
+  quill.value.container.firstChild.innerHTML = JSON.parse(article.value.content)
 },
   75)
 

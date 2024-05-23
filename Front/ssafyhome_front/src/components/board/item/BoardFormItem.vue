@@ -91,7 +91,7 @@ function onSubmit() {
       confirmButtonColor: '#ff9999',
     })
   } else {
-    article.value.content = JSON.stringify(quill.value.getContents())
+    article.value.content = JSON.stringify(quill.value.container.firstChild.innerHTML)
     type === "regist" ? writeArticle() : updateArticle();
   }
 }
@@ -232,23 +232,10 @@ setTimeout(() => {
     theme: 'snow',
   },)
   if (type === 'modify') {
-    quill.value.setContents(JSON.parse(article.value.content));
+    quill.value.container.firstChild.innerHTML = JSON.parse(article.value.content)
   }
-  quill.value.on(Quill.events.TEXT_CHANGE, update)
 }, 150
 )
-function formatDelta(delta) {
-  return JSON.stringify(delta.ops, null, 2)
-}
-function update(delta) {
-  const contents = quill.value.getContents();
-  console.log(contents)
-  let html = formatDelta(contents)
-  if (delta) {
-    html = html + formatDelta(delta);
-  }
-  article.value.content = html;
-}
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">

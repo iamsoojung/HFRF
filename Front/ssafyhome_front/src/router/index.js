@@ -50,11 +50,6 @@ const router = createRouter({
           component: () => import("@/components/realty/RealtyList.vue"),
         },
         {
-          path: "/house/:idx",
-          name: "realtyDetail",
-          component: () => import("@/components/realty/RealtyDetail.vue"),
-        },
-        {
           path: "/house",
           name: "realtyWrite",
           component: () => import("@/components/realty/RealtyWrite.vue"),
