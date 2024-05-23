@@ -74,5 +74,4 @@ export {
   modifyComment,
   deleteComment,
   getCommentCnt,
-  sendFileInfo,
 };

@@ -75,7 +75,7 @@
 		<where>
 			<include refid="listCond"/>
 		</where>
-		limit #{start},#{interval}
+		<!-- limit #{start},#{interval} -->
 	</select>
 	
 	<select id="detail" parameterType="String" resultType="HouseSell">
