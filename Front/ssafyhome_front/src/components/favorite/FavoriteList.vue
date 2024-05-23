@@ -73,9 +73,9 @@ const onDeleteLike = (aptCode) => {
     }
 }
 
-onMounted(() => {
+onMounted(
     getLikeList
-});
+)
 </script>
 
 <template>

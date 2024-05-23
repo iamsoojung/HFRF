@@ -41,37 +41,44 @@ const getHouse = (value) => {
     );
 };
 
-// ChatGPT의 결과를 담을 상태 변수
-const gptResult = ref('');
 // 로딩 스피너 제어할 변수
 const loadingSpinner = ref(true);
+// 실행 버튼 토글 변수
+const startBtn = ref(false);
+
+// ChatGPT의 결과를 담을 상태 변수
+const gptResult = ref('');
 // chatgpt api
 const getGPTResponse = async () => {
     try {
         gptResult.value = '';
         loadingSpinner.value = false;
+        startBtn.value = true;
 
-        let data = houseData.value
+        const data = houseData.value
         if (!data) {
             console.log("매물 정보가 로드되지 않았습니다.");
+            loadingSpinner.value = true;
             return;
         }
-        console.log(data)
 
         const openai = new OpenAI({
-            apiKey: `${import.meta.env.VITE_OPENAI_API_KEY}`,
+            apiKey: import.meta.env.VITE_OPENAI_API_KEY,
             dangerouslyAllowBrowser: true,
         })
 
-        // 데이터를 문자열로 변환하여 prompt에 추가
-        let prompt = "매물 정보에 다음 데이터가 있습니다:\n";
+        let prompt = "아래는 매물 정보입니다:\n\n";
         for (const entry of data) {
-            prompt += `거래 일자: ${entry.dealYear}년 ${entry.dealMonth}월 ${entry.dealDay}일, `;
-            prompt += `거래 금액: ${entry.dealAmount}만원, `;
-            prompt += `면적: ${entry.area}㎡, `;
-            prompt += `층수: ${entry.floor}층\n`;
+            prompt += `- 거래 일자: ${entry.dealYear}년 ${entry.dealMonth}월 ${entry.dealDay}일\n`;
+            prompt += `  거래 금액: ${entry.dealAmount}만원\n`;
+            prompt += `  면적: ${entry.area}㎡\n`;
+            prompt += `  층수: ${entry.floor}층\n\n`;
         }
-        prompt += "매물에 대한 분석과 최근 동향, 추천 코멘트 등 간략하게 이야기해주세요.";
+        prompt += "이 매물에 대해 다음을 분석해 주세요:\n";
+        prompt += "1. 최근 부동산 동향\n";
+        prompt += "2. 매물의 장단점\n";
+        prompt += "3. 투자 가치 평가\n";
+        prompt += "4. 추천 코멘트\n";
 
         const response = await openai.chat.completions.create({
             messages: [
@@ -80,18 +87,29 @@ const getGPTResponse = async () => {
                     content: prompt,
                 },
             ],
-            model: 'gpt-3.5-turbo',
+            model: 'gpt-3.5-turbo'
         })
-        console.log(prompt)
-        // console.log('chatGPT 결과: ', response.choices[0].message.content)
+        console.log("prompt 내용 : ", prompt)
 
-        gptResult.value = response.choices[0].message.content;
-        loadingSpinner.value = false;
+        const formattedResponse = formatResponse(response.choices[0].message.content);
+        gptResult.value = formattedResponse;
     } catch (error) {
         console.log('chatGPT: 🚨 에러가 발생했습니다.')
-        console.log(error)
+        gptResult.value = '분석 중 에러가 발생했습니다. 다시 시도해주세요.';
+    } finally {
+        loadingSpinner.value = false;
     }
 }
+
+const formatResponse = (response) => {
+    const sections = response.split(/\d\.\s+/).slice(1);
+    return {
+        recentTrends: sections[0].trim(),
+        advantagesAndDisadvantages: sections[1].trim(),
+        investmentEvaluation: sections[2].trim(),
+        recommendations: sections[3].trim()
+    };
+};
 
 // 모달 닫기
 const emit = defineEmits(['close-modal']);
@@ -104,9 +122,26 @@ const closeModal = () => {
     <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75" v-if="props.isModal"
         @click="closeModal">
         <div class="modal bg-white rounded-lg shadow-md max-w-lg w-full mx-4 text-center" @click.stop>
-            <h3 class="text-lg font-semibold py-4 border-b border-gray-300">ChatGPT가 해주는 매물 분석~~!</h3>
+            <h3 class="text-lg font-semibold py-4 border-b border-gray-300">🌱 ChatGPT 기반 매물 진단 🌱</h3>
             <!-- <div>{{ props.aptCode }}</div> -->
-            <h5 v-if="gptResult" class="m-8">{{ gptResult }}</h5>
+            <h5 v-if="gptResult" class="m-8 text-left">
+                <div v-if="gptResult.recentTrends">
+                    <h3><b>📌 최근 부동산 동향</b></h3><br/>
+                    <p>{{ gptResult.recentTrends }}</p><br/>
+                </div>
+                <div v-if="gptResult.advantagesAndDisadvantages">
+                    <h3><b>📌 매물의 장단점</b></h3><br/>
+                    <p>{{ gptResult.advantagesAndDisadvantages }}</p><br/>
+                </div>
+                <div v-if="gptResult.investmentEvaluation">
+                    <h3><b>📌 투자 가치 평가</b></h3><br/>
+                    <p>{{ gptResult.investmentEvaluation }}</p><br/>
+                </div>
+                <div v-if="gptResult.recommendations">
+                    <h3><b>📌 추천 코멘트</b></h3><br/>
+                    <p>{{ gptResult.recommendations }}</p>
+                </div>
+            </h5>
             <p v-else-if="!loadingSpinner" class="flex items-center justify-center py-8">
             <div role="status">
                 <svg aria-hidden="true" class="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
@@ -122,9 +157,11 @@ const closeModal = () => {
             </div>
             </p>
             <button class="close-button bg-red-500 text-white rounded-md px-4 py-2 mt-4 m-8"
-                @click="getGPTResponse">시작</button>
+                @click="getGPTResponse" v-if="!startBtn">진단 시작</button>
             <button class="close-button bg-red-500 text-white rounded-md px-4 py-2 mt-4 m-8"
-                @click="closeModal">닫기</button>
+                @click="closeModal" v-else-if="gptResult">닫기</button>
+            <button class="close-button bg-red-500 text-white rounded-md px-4 py-2 mt-4 m-8"
+                @click="closeModal" v-else>중지</button>
         </div>
     </div>
 </template>
