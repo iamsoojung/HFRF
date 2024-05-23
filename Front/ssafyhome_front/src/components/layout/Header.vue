@@ -9,7 +9,7 @@
         </RouterLink>
       </div>
       <div class="flex lg:hidden">
-        <button type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+        <button type="button" class="m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
           @click="mobileMenuOpen = true">
           <span class="sr-only">Open main menu</span>
           <Bars3Icon class="h-6 w-6" aria-hidden="true" />
@@ -28,11 +28,11 @@
           <Menu as="div" class="relative ml-3">
             <div>
               <MenuButton
-                class="border-2 border-black me-3 relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                class="shadow-lg border-[1px] border-gray-300 hover:border-gray-600 me-4 relative flex rounded-full text-sm">
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                <img class="h-10 w-10 bg- rounded-full"
+                  src="@/assets/logo_onlyHouse.png"
                   alt="" />
               </MenuButton>
             </div>
@@ -62,7 +62,7 @@
         <template v-else>
           <RouterLink :to="{ name: 'login' }"
             class="my-auto me-2 text-xl font-semibold leading-6 text-gray-900 hover:text-gray-700">
-            Log in
+            로그인
           </RouterLink>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">
@@ -75,21 +75,17 @@
       <div class="fixed inset-0 z-50" />
       <DialogPanel
         class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
-        <div class="flex items-center justify-between">
-          <a href="#" class="-m-1.5 p-1.5">
-            <span class="sr-only">Go Home</span>
-            <img class="h-8 w-auto" src="@/assets/logo.png" alt="" />
-          </a>
+        <div class="flex items-center justify-end">
           <div class="flex">
           <div v-show="isLogin" class="flex me-5">
-          <Menu as="div" class="relative ml-3">
+            <Menu as="div" class="relative ml-3">
             <div>
               <MenuButton
-                class="border-2 border-black me-3 relative flex rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-1 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
+                class="shadow-lg border-[1px] border-gray-300 hover:border-gray-600 me-4 relative flex rounded-full text-sm">
                 <span class="absolute -inset-1.5" />
                 <span class="sr-only">Open user menu</span>
-                <img class="h-8 w-8 rounded-full"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+                <img class="h-10 w-10 bg- rounded-full"
+                  src="@/assets/logo_onlyHouse.png"
                   alt="" />
               </MenuButton>
             </div>
@@ -109,12 +105,6 @@
               </MenuItems>
             </transition>
           </Menu>
-          <span class="my-auto" v-if="userInfo && userInfo.userId">
-            <span class="font-bold">
-              {{ userInfo.userName }}
-            </span>
-            님, 안녕하세요
-          </span>
           <div>
             
           </div>
@@ -139,7 +129,7 @@
             <div v-show="!isLogin" class="py-6 flex justify-end me-3">
               <RouterLink :to="{ name: 'login' }"
                 class="my-auto me-2 text-xl font-semibold leading-6 text-gray-900 hover:text-gray-700">
-                Log in
+                로그인
               </RouterLink>
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-6 h-6">
