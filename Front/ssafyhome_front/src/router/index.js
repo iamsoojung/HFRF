@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { storeToRefs } from "pinia";
 import { useMemberStore } from "@/stores/member";
+import Swal from 'sweetalert2';
 
 const onlyAuthUser = async (to, from, next) => {
   const memberStore = useMemberStore();
@@ -13,6 +14,11 @@ const onlyAuthUser = async (to, from, next) => {
   }
   if (!isValidToken.value || userInfo.value.userId == null) {
     isLogin.value = false;
+    Swal.fire({
+      icon: 'error',
+      title: '로그인 후 이용하세요.',
+      confirmButtonColor: '#ff9999',
+  });
     next({ name: "login" });
   } else {
     next();
