@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import RealtyListItem from './item/RealtyListItem.vue'
 import { listRealty } from '@/api/realty'
 

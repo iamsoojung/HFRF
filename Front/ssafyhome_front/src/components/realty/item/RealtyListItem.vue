@@ -3,15 +3,16 @@ import { defineProps } from 'vue';
 import { storeToRefs } from "pinia";
 import { useMemberStore } from '@/stores/member';
 import { deleteRealty } from '@/api/realty'
-defineProps({ realty: Object });
+const props = defineProps({ realty: Object });
 
 const memberStore = useMemberStore()
 const { userInfo } = storeToRefs(memberStore)
 function onDeleteRealty(idx) {
+    console.log(props)
     deleteRealty(
         idx,
         (response) => {
-            console.log(response)
+            props.realty.idx = 0
         },
         (error) => {
             console.log(error)
@@ -21,11 +22,11 @@ function onDeleteRealty(idx) {
 </script>
 
 <template>
-    <div class="p-3">
+    <div v-show="realty.idx != 0" class="p-3">
     <div class="border-[1px] border-gray-200 rounded-xl shadow-lg h-[455px]">
         <div class="p-4">
-            <div class="relative mx-auto w-[290px] bg-red-50 h-[190px] rounded-xl">
-                <img class="w-full h-full rounded-lg" :src="`src/assets/file/${realty.fileInfos[0].saveFolder}/${realty.fileInfos[0].saveFile}`"/>
+            <div class="relative mx-auto w-[290px] h-[190px] rounded-xl border-[1px]">
+                <img alt="이미지 없음" class="text-center w-full h-full rounded-lg" :src="`src/assets/file/${realty.fileInfos.length != 0 ? realty.fileInfos[0].saveFolder : null}/${realty.fileInfos.length != 0 ? realty.fileInfos[0].saveFile : null}`"/>
                 <div class="left-2 top-2 absolute bg-sky-500 rounded-md p-1 text-white">{{ realty.type }}</div>
                 <button @click="onDeleteRealty(realty.idx)" v-show="userInfo.userId == realty.id" class="right-2 top-2 absolute bg-red-500 hover:bg-red-600 rounded-md p-1 text-white">삭제</button>
             </div>
