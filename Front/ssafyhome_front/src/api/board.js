@@ -19,9 +19,9 @@ function getModifyArticle(articleno, success, fail) {
   local.get(`/board/modify/${articleno}`).then(success).catch(fail);
 }
 
-// function modifyArticle(article, success, fail) {
-//   local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
-// }
+function modifyArticle(article, success, fail) {
+  local.put(`/board`, JSON.stringify(article)).then(success).catch(fail);
+}
 
 function deleteArticle(articleno, success, fail) {
   local.delete(`/board/${articleno}`).then(success).catch(fail);
@@ -33,7 +33,10 @@ function listComment(articleNo, success, fail) {
 }
 
 function writeComment(comment, success, fail) {
-  local.post(`/comment/write`, JSON.stringify(comment)).then(success).catch(fail);
+  local
+    .post(`/comment/write`, JSON.stringify(comment))
+    .then(success)
+    .catch(fail);
 }
 
 function getModifyComment(commentNo, success, fail) {
@@ -41,11 +44,17 @@ function getModifyComment(commentNo, success, fail) {
 }
 
 function modifyComment(comment, success, fail) {
-  local.put(`/comment/modify`, JSON.stringify(comment)).then(success).catch(fail);
+  local
+    .put(`/comment/modify`, JSON.stringify(comment))
+    .then(success)
+    .catch(fail);
 }
 
 function deleteComment(commentNo, success, fail) {
-  local.delete(`/comment/delete?commentNo=${commentNo}`).then(success).catch(fail);
+  local
+    .delete(`/comment/delete?commentNo=${commentNo}`)
+    .then(success)
+    .catch(fail);
 }
 
 function getCommentCnt(articleNo, success, fail) {
@@ -54,23 +63,25 @@ function getCommentCnt(articleNo, success, fail) {
 
 // 파일 업로드
 function sendFileInfo(fileData, success, fail) {
-
   const formData = new FormData();
   formData.append("fileData", fileData);
 
-  local.post(`/board/upload`, formData, {
-    headers: {
-      'Context-Type': 'multipart/form-data'
-    }
-  }).then(success).catch(fail)
-} 
+  local
+    .post(`/board/upload`, formData, {
+      headers: {
+        "Context-Type": "multipart/form-data",
+      },
+    })
+    .then(success)
+    .catch(fail);
+}
 
 export {
   listArticle,
   detailArticle,
   // registArticle,
   getModifyArticle,
-  // modifyArticle,
+  modifyArticle,
   deleteArticle,
   listComment,
   writeComment,
@@ -78,5 +89,5 @@ export {
   modifyComment,
   deleteComment,
   getCommentCnt,
-  sendFileInfo
+  sendFileInfo,
 };

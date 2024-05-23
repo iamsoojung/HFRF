@@ -50,7 +50,8 @@ CREATE TABLE IF NOT EXISTS `hfrf`.`board` (
   INDEX `board_to_members_user_id_fk` (`user_id` ASC) VISIBLE,
   CONSTRAINT `board_to_members_user_id_fk`
     FOREIGN KEY (`user_id`)
-    REFERENCES `hfrf`.`members` (`user_id`))
+    REFERENCES `hfrf`.`members` (`user_id`)
+    ON DELETE CASCADE)
 ENGINE = InnoDB
 AUTO_INCREMENT = 1
 DEFAULT CHARACTER SET = utf8mb4

@@ -2,12 +2,14 @@
 import { ref, onMounted } from 'vue'
 import FavoriteListItem from './item/FavoriteListItem.vue';
 import { listLike, deleteLike } from '@/api/aptLike';
-import { dealByDong } from '@/api/map';
+import { dealByDong, aptNameByCode } from '@/api/map';
 import { storeToRefs } from 'pinia'
 import { useMemberStore } from '@/stores/member'
+
 const memberStore = useMemberStore()
 const { userInfo, isLogin } = storeToRefs(memberStore)
 const likeAptList = ref([])
+
 const getAverageDealAmount = (aparts) => {
     let totalDealAmount = 0;
     aparts.forEach((apt) => {
@@ -15,12 +17,14 @@ const getAverageDealAmount = (aparts) => {
     });
     let average = totalDealAmount / aparts.length;
     return Math.round(average);
-}   
+}
+
 const getLikeList = () => {
     if (isLogin.value) {
         listLike(
             userInfo.value,
             ({ data }) => {
+                console.log(data)
                 likeAptList.value = data
                 likeAptList.value.forEach((like) => {
                     dealByDong(
@@ -29,7 +33,18 @@ const getLikeList = () => {
                             like.average = getAverageDealAmount(data)
                         }
                     )
+<<<<<<< HEAD
                     like.imgNum = Math.floor(Math.random() * 20) + 1
+=======
+                    like.imgNum = Math.floor(Math.random() * 21) + 1;
+
+                    aptNameByCode(
+                        { aptCode: like.aptCode },
+                        ({ data }) => {
+                            like.name = data;
+                        }
+                    )
+>>>>>>> 738cb4586b6a4022df5e4ca92d5b44ad217f59bb
                 })
             },
             (error) => {
@@ -55,8 +70,8 @@ const onDeleteLike = (aptCode) => {
             console.log(error)
         }
     )
-    for(let i=0; i<likeAptList.value.length; i++) {
-        if(likeAptList.value[i].aptCode == aptCode) {
+    for (let i = 0; i < likeAptList.value.length; i++) {
+        if (likeAptList.value[i].aptCode == aptCode) {
             likeAptList.value.splice(i, 1);
             i--;
         }
@@ -73,7 +88,7 @@ onMounted(
         <div class="text-3xl font-bold border-b-[1px] pb-2 mb-2">
             관심 목록
         </div>
-        <div v-show="likeAptList.length==0" class="text-center mt-[300px] text-lg">관심 매물이 없습니다.</div>
+        <div v-show="likeAptList.length == 0" class="text-center mt-[300px] text-lg">관심 매물이 없습니다.</div>
         <div class="flex flex-wrap">
             <FavoriteListItem v-for="likeApt in likeAptList" :key="likeApt.aptCode" :likeApt="likeApt"
                 class="sm:basis-1/2 xl:basis-1/3" @deleteLike="onDeleteLike" />

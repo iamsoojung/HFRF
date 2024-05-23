@@ -40,13 +40,9 @@ const handleFileUpload = (event) => {
     files.value = event.target.files;
 };
 
-function moveList() {
-    router.replace({ name: "realtyList" });
-}
-
 async function writeRealty() {
     const formData = new FormData();
-    formData.append("id", userInfo.userId)
+    formData.append("id", userInfo.value.userId)
     formData.append("title", realty.value.title)
     formData.append("type", realty.value.type)
     formData.append("price", realty.value.price)
@@ -54,14 +50,14 @@ async function writeRealty() {
     formData.append("admin_desc", realty.value.adminDesc)
     formData.append("room_type", realty.value.roomType)
     formData.append("floor_now", realty.value.floorNow)
-    formData.append("floor_tot", realty.value.Tot)
+    formData.append("floor_tot", realty.value.floorTot)
     formData.append("size", realty.value.size)
     formData.append("content", realty.value.content)
     formData.append("image", realty.value.image)
     formData.append("keyword", realty.value.keyword)
     formData.append("address", realty.value.address)
     formData.append("lat", realty.value.lat)
-    formData.append("lng", realty, value, lng)
+    formData.append("lng", realty.value.lng)
 
     for (let i = 0; i < files.value.length; i++) {
         formData.append("fileInfos", files.value[i]);
@@ -102,7 +98,7 @@ function onSubmit() {
     <form @submit.prevent="onSubmit" enctype="multipart/form-data" class="max-w-[800px] mx-auto">
         <div class="flex border-b-[1px] mb-4">
             <div class="my-auto w-[80px] text-center font-bold me-4" for="title">제목</div>
-            <input type="text" id="title" v-model="realty.title" class="border-none w-full">
+            <input type="text" id="title" v-model="realty.title" class="border-none w-full" placeholder="제목을 입력하세요">
         </div>
         <div class="flex border-b-[1px] pb-4 mb-4">
             <div class="my-auto w-[80px] text-center font-bold me-4" for="content">내용</div>
@@ -129,7 +125,7 @@ function onSubmit() {
             </div>
             <div class="flex">
                 <div class="my-auto w-[80px] text-center font-bold me-3" for="price">가격</div>
-                <input type="text" id="price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
+                <input type="number" id="price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
                     v-model="realty.price">
             </div>
         </div>
@@ -151,14 +147,14 @@ function onSubmit() {
             </div>
             <div class="flex">
                 <label class="my-auto w-[80px] text-center font-bold me-4" for="admin-price">관리비</label>
-                <input type="text" id="admin-price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
+                <input type="number" id="admin-price" class="border-[1px] border-gray-400 rounded-lg w-[225px]"
                     v-model="realty.adminPrice">
             </div>
         </div>
         <div class="flex border-b-[1px] pb-4 mb-4 justify-between">
             <div class="flex">
                 <div class="my-auto w-[80px] text-center font-bold me-4" for="floor-now">층수</div>
-                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="text" id="floor-now"
+                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="number" id="floor-now"
                     v-model="realty.floorNow">
             </div>
             <div class="flex">
@@ -170,12 +166,12 @@ function onSubmit() {
         <div class="flex border-b-[1px] pb-4 mb-4 justify-between">
             <div class="flex">
                 <div class="my-auto w-[80px] text-center font-bold me-4" for="floor-tot">건물 전체 층</div>
-                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="text" id="floor-tot"
+                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="number" id="floor-tot"
                     v-model="realty.floorTot">
             </div>
             <div class="flex">
                 <label class="my-auto w-[80px] text-center font-bold me-4" for="size">면적</label>
-                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="text" id="size"
+                <input class="border-[1px] border-gray-400 rounded-lg w-[225px]" type="number" id="size"
                     v-model="realty.size">
             </div>
         </div>
@@ -208,7 +204,11 @@ function onSubmit() {
                 <label for="infra" class="ms-2 text-sm font-medium text-gray-900">인프라</label>
             </div>
         </div>
-        <div class="my-auto w-[80px] text-center font-bold me-4">이미지</div>
+        <div class="flex">
+            <div class="my-auto w-[80px] text-center font-bold me-4">이미지</div>
+            <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
+        </div>
+
         <div class="text-end">
             <button class="me-2 bg-blue-500 text-white hover:bg-blue-600 rounded-lg py-1 px-2 border-[1px]"
                 type="submit">등록</button>

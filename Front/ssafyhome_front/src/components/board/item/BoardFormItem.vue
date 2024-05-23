@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useMemberStore } from '@/stores/member';
-import { getModifyArticle } from "@/api/board";
+import { getModifyArticle, modifyArticle } from "@/api/board";
 import { Quill } from "@vueup/vue-quill";
 import { storeToRefs } from "pinia"
 import axios from 'axios';
@@ -130,45 +130,45 @@ async function writeArticle() {
 }
 
 async function updateArticle() {
-  // console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
-  // modifyArticle(
-  //   article.value,
-  //   (response) => {
-  //     const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
-  //     alert(msg);
-  //     moveList();
-  //   },
-  //   (error) => console.log(error)
-  // );
-  const formData = new FormData();
-  formData.append("articleno", route.params.articleno)
-  formData.append("userId", article.value.userId);
-  formData.append("userName", article.value.userName);
-  formData.append("subject", article.value.subject);
-  formData.append("content", article.value.content);
-  formData.append("hit", article.value.hit);
-  for (let i = 0; i < files.value.length; i++) {
-    formData.append("fileInfos", files.value[i]);
-  }
+  console.log(`${article.articleNo}번 글을 수정합니다.`, article.value);
+  modifyArticle(
+    article.value,
+    (response) => {
+      const msg = response.status === 200 ? "글 정보가 수정되었습니다." : "글 수정 처리 중 문제가 발생했습니다.";
+      alert(msg);
+      moveList();
+    },
+    (error) => console.log(error)
+  );
+  // const formData = new FormData();
+  // formData.append("articleno", route.params.articleno)
+  // formData.append("userId", article.value.userId);
+  // formData.append("userName", article.value.userName);
+  // formData.append("subject", article.value.subject);
+  // formData.append("content", article.value.content);
+  // formData.append("hit", article.value.hit);
+  // for (let i = 0; i < files.value.length; i++) {
+  //   formData.append("fileInfos", files.value[i]);
+  // }
 
-  try {
-    await axios({
-      method: "PUT",
-      url: 'http://localhost/board',
-      mode: "cors",
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-      data: formData,
-    });
-    // 성공 시에 필요한 작업 수행
-    alert("글 수정이 완료되었습니다.");
-    moveList();
-  } catch (error) {
-    // 실패 시에 필요한 작업 수행
-    console.error(error);
-    alert("글 수정 중 오류가 발생했습니다.");
-  }
+  // try {
+  //   await axios({
+  //     method: "PUT",
+  //     url: 'http://localhost/board',
+  //     mode: "cors",
+  //     headers: {
+  //       "Content-Type": "multipart/form-data",
+  //     },
+  //     data: formData,
+  //   });
+  //   // 성공 시에 필요한 작업 수행
+  //   alert("글 수정이 완료되었습니다.");
+  //   moveList();
+  // } catch (error) {
+  //   // 실패 시에 필요한 작업 수행
+  //   console.error(error);
+  //   alert("글 수정 중 오류가 발생했습니다.");
+  // }
 }
 
 function moveList() {
@@ -239,9 +239,6 @@ function update(delta) {
     <div class="mb-3 pb-3 shadow-sm">
       <label for="upload-image" class="mb-2 block">이미지 업로드</label>
       <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
-      <label for="upload-image">
-        <img src="@/assets/logo.png" id="preview" width="300px" />
-      </label>
     </div>
     <div class="text-center">
       <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'" @click="eventlogin">
