@@ -29,7 +29,7 @@ const realty = ref({
     content: "",
     keyword: "",
     address: "",
-    detail_address: "",
+    detailAddress: "",
     lat: "",
     lng: ""
 })
@@ -57,7 +57,7 @@ async function writeRealty() {
     formData.append("content", realty.value.content)
     formData.append("keyword", realty.value.keyword)
     formData.append("address", realty.value.address)
-    formData.append("detail_address", realty.value.detail_address)
+    formData.append("detail_address", realty.value.detailAddress)
     formData.append("lat", realty.value.lat)
     formData.append("lng", realty.value.lng)
 
