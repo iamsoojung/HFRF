@@ -252,15 +252,15 @@ function update(delta) {
 </script>
 <template>
   <form @submit.prevent="onSubmit" class="form" enctype="multipart/form-data">
-    <div class="p-1 border-b-[1px] border-gray-400 text-start">
-      <label for="userid" class="ms-2 me-4 font-bold">작성자 </label>
+    <div class="p-2 border-b-[1px] border-gray-400 text-start">
+      <label for="userid" class="ms-2 me-4 font-bold text-lg">작성자 </label>
       <span>{{ userInfo.userName }}</span>
     </div>
-    <div class="p-1 shadow-sm text-start">
-      <label for="subject" class="ms-2 me-5 font-bold">제목 </label>
-      <input type="text" class="focus:ring-1 focus:ring-gray-200 min-w-[300px] border-0" v-model="article.subject"
+    <div class="p-2 shadow-sm text-start">
+      <label for="subject" class="ms-2 me-5 font-bold text-lg text-end">제목 </label>
+      <input type="text" class="focus:ring-0 focus:ring-gray-200 w-[600px] border-0 focus:border-0" v-model="article.subject"
         @input="validateSubject(article.subject)" placeholder="제목을 입력해주세요.." />
-      <span v-if="subjectErrMsg" class="error ms-5">{{ subjectErrMsg }}</span>
+      <span v-if="subjectErrMsg" class="error">{{ subjectErrMsg }}</span>
     </div>
     <div class="mb-3 pb-3 shadow-sm">
       <div id="editor" class="min-h-[500px]">
@@ -268,18 +268,18 @@ function update(delta) {
         <span v-if="contentErrMsg" class="error">{{ contentErrMsg }}</span>
       </div>
     </div>
-    <div class="mb-3 pb-3 shadow-sm">
-      <label for="upload-image" class="mb-2 block">이미지 업로드</label>
+    <div class="mb-3 pb-3 shadow-sm text-start">
+      <label for="upload-image" class="mb-2 block">이미지</label>
       <input type="file" class="form-control border" id="upfile" @change="handleFileUpload" multiple>
     </div>
     <div class="text-center">
-      <button type="submit" class="border-solid border-2 p-1 rounded-md" v-if="type === 'regist'" @click="eventlogin">
+      <button type="submit" class="bg-green-500 text-white hover:bg-green-600 p-1 rounded-md" v-if="type === 'regist'" @click="eventlogin">
         글 작성
       </button>
-      <button type="submit" class="border-solid border-2 rounded-md p-1 m-2" v-else>
+      <button type="submit" class="bg-blue-500 text-white hover:bg-blue-600 rounded-md p-1 m-2" v-else>
         글 수정
       </button>
-      <button type="button" class="border-solid border-2 rounded-md p-1 m-2" @click="moveList">
+      <button type="button" class="hover:bg-gray-100 border-solid border-[1px] rounded-md p-1 m-2" @click="moveList">
         목록으로
       </button>
     </div>

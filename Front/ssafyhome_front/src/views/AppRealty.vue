@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header.vue';
     <Header/>
     <div class="border-t-[1px] min-h-[805px] flex">
         <div class="basis-2/12 bg-gray-100"></div>
-        <div class="basis-8/12">
+        <div class="basis-8/12 px-20">
             <RouterView/>
         </div>
         <div class="basis-2/12 bg-gray-100"></div>
