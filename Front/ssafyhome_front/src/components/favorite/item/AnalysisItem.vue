@@ -119,7 +119,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75" v-if="props.isModal"
+    <div class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 z-50" v-if="props.isModal"
         @click="closeModal">
         <div class="modal bg-white rounded-lg shadow-md max-w-lg w-full mx-4 text-center" @click.stop>
             <h3 class="text-lg font-semibold py-4 border-b border-gray-300">🌱 ChatGPT 기반 매물 진단 🌱</h3>
@@ -146,7 +146,7 @@ const closeModal = () => {
                 <div role="status">
                     <span class="sr-only">Loading...</span>
                     <marquee direction=right><b>진 단 중 . . .</b></marquee>
-                    <svg aria-hidden="true" class=" text-gray-200 animate-spin dark:text-gray-600 fill-pink-600"
+                    <svg aria-hidden="true" class=" text-gray-200 animate-spin dark:text-gray-600 fill-pink-600 w-6 h-6 mx-auto"
                         viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path
                             d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
