@@ -65,6 +65,12 @@ const customOverlays = ref([]);
 const onClickKakaoMapMarker = (marker) => {
   // 클릭된 마커에 해당하는 정보를 찾습니다.
   const clickedMarker = markerInfoList.value.find(item => item.key === marker.key);
+  customOverlays.value.forEach((overlay) => {
+    if (marker.key == overlay.key) {
+      overlay.visible = !overlay.visible
+    }
+  })
+
   if (clickedMarker) {
     // 클릭된 마커에 대한 로드맵을 표시합니다.
     const infowindow = new kakao.maps.InfoWindow({
@@ -72,7 +78,6 @@ const onClickKakaoMapMarker = (marker) => {
       removable: true
     });
     const position = new kakao.maps.LatLng(clickedMarker.lat, clickedMarker.lng);
-    infowindow.open(map.value, new kakao.maps.Marker({ position }));
   }
 };
 
@@ -223,7 +228,7 @@ const toggleCategorySearch = (category) => {
 <template>
   <KakaoMap width="100%" height="100%" :lat="coordinate.lat" :lng="coordinate.lng" :draggable="true"
     @onLoadKakaoMap="onLoadKakaoMap">
-    <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker.key)"
+    <KakaoMapMarker v-for="marker in markerInfoList" @onClickKakaoMapMarker="onClickKakaoMapMarker(marker)"
       :clickable="true" :key="marker.key" :lng="marker.lng" :lat="marker.lat"
       :image="{ imageSrc: `src/assets/ping/icon-house.png`, imageWidth: 64, imageHeight: 64, imageOption: {} }" />
     <template v-for="overlay in customOverlays" :key="overlay.key">

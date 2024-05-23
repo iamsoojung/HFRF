@@ -321,7 +321,7 @@ const toggleMenu = () => {
                         <div class="flex">
                             <div class="relative flex mt-2 px-2 w-[400px]">
                                 <input v-model="searchText"
-                                    class="w-full pl-5 pr-10 py-2 text-sm text-gray-900 rounded-lg focus:ring-0 focus:border-gray-900 focus:outline-none border-[1px]"
+                                    class="w-full pl-5 pr-10 py-2 text-sm text-gray-900 rounded-lg focus:ring-0 focus:border-gray-400 focus:outline-none border-[1px] shadow-sm"
                                     placeholder="지역명, 아파트명을 입력해주세요." required />
                                 <button @click="getListByName(searchText)"
                                     class="absolute inset-y-0 right-2 p-3 text-sm font-medium h-full text-white bg-pink-400 rounded-e-lg border hover:bg-pink-500 focus:outline-none">
