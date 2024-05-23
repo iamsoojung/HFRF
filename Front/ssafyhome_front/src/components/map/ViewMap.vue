@@ -91,7 +91,7 @@ const placesSearchCB = (data, status) => {
         lat: marker.y,
         lng: marker.x,
         infoWindow: {
-          content: marker.place_name,
+          content: '<div style="width:150px;text-align:center;">'+marker.place_name+'</div>',
           visible: false
         },
         icon: iconList[activeCategory.value] // 아이콘 설정
